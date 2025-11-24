@@ -21,7 +21,13 @@ const Stack = createStackNavigator();
 export default function RootNavigator() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+        headerStyle: { backgroundColor: '#104E8B' }, // header arka planı mavi
+        headerTintColor: '#fff', // yazı rengi beyaz
+        headerTitleStyle: { fontWeight: 'bold' },
+      }}
+      >
 
         {/* Ana Sayfa */}
         <Stack.Screen 
