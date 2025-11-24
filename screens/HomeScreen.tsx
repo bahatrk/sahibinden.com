@@ -36,7 +36,11 @@ export default function HomeScreen({navigation}: Props){
                         <View style={{backgroundColor: 'orange', borderRadius: '50%', padding: 10}}>
                             <Entypo name="home" size={24} color="white" />
                         </View>
-                        <Text style={styles.buttonText}>Emlak</Text>
+
+                        <View style={styles.textContainer}>
+                            <Text style={styles.buttonTitleText}>Emlak</Text>
+                            <Text style={styles.buttonSubtitleText}>Konut, İş Yeri, Arsa, Konut Projeleri, Bina,...</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
 
@@ -49,7 +53,11 @@ export default function HomeScreen({navigation}: Props){
                         <View style={{backgroundColor: 'red', borderRadius: '50%', padding: 10}}>
                             <MaterialCommunityIcons name="steering" size={24} color="white" />
                         </View>
-                        <Text style={styles.buttonText}>Araba</Text>
+
+                        <View style={styles.textContainer}>
+                            <Text style={styles.buttonTitleText}>Araba</Text>
+                            <Text style={styles.buttonSubtitleText}>Otomobil, Arazi, SUV & Pickup, Elektrikli...</Text>
+                        </View>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -81,9 +89,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
     },
-    buttonText: { 
+    textContainer: {
+        flexDirection: "column",
+        marginLeft: 12,
+    },
+    buttonTitleText: { 
         fontSize: 18, 
         fontWeight: '600', 
-        marginLeft: 12,
+    },
+    buttonSubtitleText: {
+        fontSize: 12,
+        color: "gray",
+        marginTop: 2,
     },
 });
