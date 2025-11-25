@@ -1,61 +1,40 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, Image } from "react-native";
-import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/RootNavigator";
-import { getIlanlar } from "../assets/database/db"; // helper fonksiyon
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, StyleSheet, Image} from 'react-native';
+import { getCars } from '../assets/database/db';
+import { Listing } from '../types/Listing';
 
-type CarListNavigationProp = StackNavigationProp<RootStackParamList, "CarList">;
-
-type Props = {
-  navigation: CarListNavigationProp;
-};
-
-type Ilan = {
-  id: number;
-  kategori: string;
-  baslik: string;
-  aciklama: string;
-  fiyat: string;
-  konum: string;
-  image: string;
-};
-
-export default function CarListScreen({ navigation }: Props) {
-  const [ilanlar, setIlanlar] = useState<Ilan[]>([]);
+export default function CarListScreen() {
+  const [cars, setCars] = useState<Listing[]>([]);
 
   useEffect(() => {
-    // Helper fonksiyon ile verileri çekiyoruz
-    getIlanlar((rows) => {
-      const arabaIlanlari = rows.filter((r) => r.kategori === "Araba");
-      setIlanlar(arabaIlanlari);
-    });
+    const data =getCars();
+    console.log("Gelen Veriler:", data);
+
+    // Filtreleme sadece araba kategorisi
+    const filtered = data.filter(item => item.kategori === "Araba");
+
+    console.log("Filtrelenmiş (Araba) Veriler:", filtered);
+    setCars(filtered);
   }, []);
 
   return (
     <View style={styles.container}>
+      <Text style={styles.title}>Araba İlanları</Text>
+
       <FlatList
-        data={ilanlar}
+        data={cars}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            {/* Resim */}
-            {item.image ? (
-              <Image
-                source={{ uri: item.image }}
-                style={styles.image}
-                resizeMode="cover"
-              />
-            ) : null}
-
-            {/* Başlık */}
-            <Text style={styles.title}>{item.baslik}</Text>
-
-            {/* Konum */}
-            <Text style={styles.location}>{item.konum}</Text>
-
-            {/* Açıklama ve Fiyat */}
-            <Text style={styles.desc}>{item.aciklama}</Text>
-            <Text style={styles.price}>{item.fiyat} ₺</Text>
+          <View style={styles.item}>
+            <Text style={styles.name}>{item.baslik}</Text>
+            <Text style={styles.sub}>{item.aciklama}</Text>
+            <Text style={styles.sub}>{item.fiyat} ₺</Text>
+            <Text style={styles.sub}>{item.konum}</Text>
+            <Image 
+              source = {{uri: item.image}}
+              style = {styles.image}
+              resizeMode= 'cover'
+            />
           </View>
         )}
       />
@@ -64,21 +43,18 @@ export default function CarListScreen({ navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
-  card: {
-    padding: 15,
-    marginBottom: 10,
+  container: { flex: 1, padding: 20, backgroundColor: 'white' },
+  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 15 },
+  item: {
+    padding: 12,
+    backgroundColor: '#eee',
     borderRadius: 10,
-    backgroundColor: "#f2f2f2",
+    marginBottom: 10,
   },
+  name: { fontSize: 18, fontWeight: '600' },
+  sub: { fontSize: 14, color: 'gray' },
   image: {
     width: "100%",
-    height: 180,
-    borderRadius: 10,
-    marginBottom: 10,
+    height: 150,
   },
-  title: { fontSize: 18, fontWeight: "bold" },
-  location: { fontSize: 12, color: "#555", marginVertical: 2 },
-  desc: { fontSize: 14, color: "gray", marginVertical: 5 },
-  price: { fontSize: 16, fontWeight: "600" },
 });
