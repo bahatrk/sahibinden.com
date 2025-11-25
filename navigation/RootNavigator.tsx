@@ -20,7 +20,7 @@ export type RootStackParamList = {
     RealEstateDetail: {id: string};
 };
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>(); // tüm ekranlar parametreleri dogru tanır
 
 export default function RootNavigator() {
   return (
