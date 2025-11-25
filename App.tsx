@@ -1,29 +1,27 @@
-import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
 import RootNavigator from './navigation/RootNavigator';
 import { useEffect } from 'react';
-import * as FileSystem from 'expo-file-system';
 import { Asset } from 'expo-asset';
+import * as FileSystem from 'expo-file-system/legacy';
 
 async function loadDatabase() {
   console.log("DB yükleniyor...");
 
-  // @ts-ignore (Expo assets TS bug fix)
+  // assets/database içindeki dosyayı al
   const asset = Asset.fromModule(require('./assets/database/sahibinden.db'));
 
   await asset.downloadAsync();
 
-  // documentDirectory TS bug olduğu için güvenli çözüm:
-  const docDir = FileSystem.documentDirectory ?? FileSystem.cacheDirectory;
+  // cihazda SQLite klasörü oluştur
+  const sqliteFolder = FileSystem.documentDirectory + 'SQLite/';
+  const folderInfo = await FileSystem.getInfoAsync(sqliteFolder);
 
-  const sqliteFolder = docDir + 'SQLite/';
-  const dbPath = sqliteFolder + 'sahibinden.db';
-
-  const folder = await FileSystem.getInfoAsync(sqliteFolder);
-  if (!folder.exists) {
+  if (!folderInfo.exists) {
     await FileSystem.makeDirectoryAsync(sqliteFolder, { intermediates: true });
   }
 
+  // Dosyayı buraya kopyala
+  const dbPath = sqliteFolder + 'sahibinden.db';
   await FileSystem.copyAsync({
     from: asset.localUri!,
     to: dbPath
