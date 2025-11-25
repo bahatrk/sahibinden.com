@@ -13,23 +13,32 @@ export default function RealEstateListScreen({ route }: Props) {
 
   useEffect(() => {
     const data = getIlanlar();
-    const filtered = data.filter(item => item.kategori === "Emlak" && item.type === type && item.saleType === saleType);
+    console.log("DB'den gelen veri:",data);
+    console.log("Route params:",type,saleType);
+
+    const filtered = data.filter(item => item.kategori === "Emlak");
+
+    console.log("Filtrelenmiş veri:",filtered);
     setListings(filtered);
   }, [type, saleType]);
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>{type} - {saleType}</Text>
       <FlatList
         data={listings}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Text style={styles.name}>{item.baslik}</Text>
-            <Text style={styles.sub}>{item.aciklama}</Text>
-            <Text style={styles.sub}>{item.fiyat} ₺</Text>
-            <Text style={styles.sub}>{item.konum}</Text>
             <Image source={{ uri: item.image }} style={styles.image} />
+
+            {/* Sağ taraf: baslık, konum, fiyat*/}
+            <View style={styles.info}>
+              <Text style={styles.name}>{item.baslik}</Text>
+              <View style={styles.subContainer}>
+                <Text style={styles.konum}>{item.konum}</Text>
+                <Text style={styles.fiyat}>{item.fiyat} TL</Text>
+              </View>
+            </View>
           </View>
         )}
       />
@@ -38,10 +47,46 @@ export default function RealEstateListScreen({ route }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: 'white' },
-  title: { fontSize: 22, fontWeight: 'bold', marginBottom: 15 },
-  item: { padding: 12, backgroundColor: '#eee', borderRadius: 10, marginBottom: 10 },
-  name: { fontSize: 18, fontWeight: '600' },
-  sub: { fontSize: 14, color: 'gray' },
-  image: { width: "100%", height: 150 },
+  container: { 
+    flex: 1, 
+    padding: 10, 
+    backgroundColor: 'white', 
+  },
+  item: { 
+    padding: 12,
+    height: 100,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ccc',
+    alignItems: 'center',
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  info: {
+    flex: 1, // kalan alanı kaplar
+    justifyContent: "center",
+  },
+  name: { 
+    fontSize: 18, 
+    fontWeight: '600',
+    marginBottom: 30,
+  },
+  subContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  fiyat: { 
+    fontSize: 14, 
+    color: '#104E8B', 
+    fontWeight: "bold",
+  },
+  konum: {
+    fontSize: 14,
+    color: "gray",
+  },
+  image: {
+    width: 80,   // resim genişliği
+    height: 80,  // resim yüksekliği
+    borderRadius: 8,
+    marginRight: 12, // resim ile info arası boşluk
+  },
 });
