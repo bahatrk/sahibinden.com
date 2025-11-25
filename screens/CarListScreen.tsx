@@ -13,14 +13,13 @@ export default function CarListScreen() {
     // Filtreleme sadece araba kategorisi
     const filtered = data.filter(item => item.kategori === "Araba");
 
-    console.log("Filtrelenmiş (Araba) Veriler:", filtered);
+    console.log("Filtrelenmiş (Araba) Veriler:", filtered.map(i => i.image));
     setCars(filtered);
   }, []);
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Araba İlanları</Text>
-
       <FlatList
         data={cars}
         keyExtractor={(item) => item.id.toString()}
@@ -31,9 +30,9 @@ export default function CarListScreen() {
             <Text style={styles.sub}>{item.fiyat} ₺</Text>
             <Text style={styles.sub}>{item.konum}</Text>
             <Image 
-              source = {{uri: item.image}}
-              style = {styles.image}
-              resizeMode= 'cover'
+              source={{ uri: item.image }} 
+              style={styles.image} 
+              resizeMode="cover" 
             />
           </View>
         )}

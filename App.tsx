@@ -1,4 +1,3 @@
-import { StyleSheet, Text, View } from 'react-native';
 import RootNavigator from './navigation/RootNavigator';
 import { useEffect } from 'react';
 import { Asset } from 'expo-asset';
@@ -14,17 +13,25 @@ async function loadDatabase() {
 
   // cihazda SQLite klasörü oluştur
   const sqliteFolder = FileSystem.documentDirectory + 'SQLite/';
-  const folderInfo = await FileSystem.getInfoAsync(sqliteFolder);
+  const dbPath = sqliteFolder + 'sahibinden.db';
 
+  // SQLite klasörü yoksa olustur
+  const folderInfo = await FileSystem.getInfoAsync(sqliteFolder);
   if (!folderInfo.exists) {
     await FileSystem.makeDirectoryAsync(sqliteFolder, { intermediates: true });
   }
 
-  // Dosyayı buraya kopyala
-  const dbPath = sqliteFolder + 'sahibinden.db';
+  // Eski database varsa sil
+  const dbInfo = await FileSystem.getInfoAsync(dbPath);
+  if (dbInfo.exists) {
+    console.log("Eski database siliniyor...");
+    await FileSystem.deleteAsync(dbPath);
+  }
+
+  // Yeni database i kopyala
   await FileSystem.copyAsync({
     from: asset.localUri!,
-    to: dbPath
+    to: dbPath,
   });
 
   console.log("Database başarıyla yüklendi:", dbPath);
@@ -38,11 +45,3 @@ export default function App() {
   return <RootNavigator />;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
