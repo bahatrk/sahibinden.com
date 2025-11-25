@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput,TouchableOpacity} from "react-native";
 import Entypo from '@expo/vector-icons/Entypo';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 
@@ -15,16 +16,16 @@ type Props = {
 export default function HomeScreen({navigation}: Props){
     return (
         <View style={styles.container}>
+            <View style={styles.searchContainer}>
 
-            {/* Arama Barı */}
-            <TextInput
-                style={styles.searchBar}
-                placeholder="Araba, ev ara..."
-                placeholderTextColor={'black'}
-            />
-
-            {/* Kategoriler Başlığı */}
-            <Text style={styles.title}>Kategoriler</Text>
+                <Ionicons name="search" size={24} color="gray" style={styles.icon} />
+                {/* Arama Barı */}
+                <TextInput
+                    style={styles.searchBar}
+                    placeholder="Araba, ev ara..."
+                    placeholderTextColor={'gray'}
+                />
+            </View>
 
             <View style={styles.categoriesContainer}>
                  <View style={styles.categoryWrapper}>
@@ -68,15 +69,23 @@ export default function HomeScreen({navigation}: Props){
 
 const styles = StyleSheet.create({
     container:{ flex: 1, padding: 20, backgroundColor: '#fff'},
-    searchBar: {
-        padding: 12,
-        borderWidth: 1,
-        borderRadius: 10,
-        marginBottom: 20,
-        width: '100%',
-        backgroundColor: '#D3D3D3',
+    searchContainer: {
+        width: "100%",
+        height: 45,
+        justifyContent: "center",
+        marginVertical: 10,
+        borderWidth: 0.5,
     },
-    title: { fontSize: 20, fontWeight: 'bold', marginBottom: 15 },
+    icon: {
+        position: "absolute",
+        left: 10,
+        zIndex: 1,
+    },
+    searchBar: {
+        height: "100%",
+        paddingLeft: 40, 
+        fontSize: 16,
+    },
     categoriesContainer: { flexDirection: 'column', marginTop: 10},
     categoryWrapper: {
         marginBottom: 5, // her buton arasına boşluk
@@ -95,7 +104,7 @@ const styles = StyleSheet.create({
     },
     buttonTitleText: { 
         fontSize: 18, 
-        fontWeight: '600', 
+        fontWeight: '400', 
     },
     buttonSubtitleText: {
         fontSize: 12,

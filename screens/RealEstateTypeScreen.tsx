@@ -8,23 +8,23 @@ type Props = { navigation: StackNavigationProp<RootStackParamList, 'RealEstateTy
 
 export default function RealEstateTypeScreen({ navigation }: Props) {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('RealEstateSale', { type: 'Konut' })}
-      >
-        <Text style={styles.text}>Konut</Text>
-        <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon} />
-      </TouchableOpacity>
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('RealEstateSale', { type: 'Konut' })}
+          >
+            <Text style={styles.text}>Konut</Text>
+            <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon} />
+          </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('RealEstateSale', { type: 'Bina' })}
-      >
-        <Text style={styles.text}>Bina</Text>
-        <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => navigation.navigate('RealEstateSale', { type: 'Bina' })}
+          >
+            <Text style={styles.text}>Bina</Text>
+            <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
+          </TouchableOpacity>
+        </View>
   );
 }
 
