@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image} from 'react-native';
-import { getCars } from '../assets/database/db';
+import { getIlanlar } from '../assets/database/db';
 import { Listing } from '../types/Listing';
 
 export default function CarListScreen() {
   const [cars, setCars] = useState<Listing[]>([]);
 
   useEffect(() => {
-    const data =getCars();
+    const data =getIlanlar();
     console.log("Gelen Veriler:", data);
 
     // Filtreleme sadece araba kategorisi
