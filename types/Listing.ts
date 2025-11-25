@@ -7,4 +7,7 @@ export interface Listing {
   fiyat: number;
   konum: string;
   image: string;
+
+  type: string; // Konut veya Bina
+  saleType: string; // Kiralık veya Satılık
 }
