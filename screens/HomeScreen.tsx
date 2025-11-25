@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput,TouchableOpacity} from "react-native";
 import Entypo from '@expo/vector-icons/Entypo';
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -31,7 +31,7 @@ export default function HomeScreen({navigation}: Props){
                     {/* Emlak Butonu */}
                     <TouchableOpacity
                     style={styles.categoryButton}
-                    onPress={() => navigation.navigate('RealEstateList')}
+                    onPress={() => navigation.navigate('RealEstateType')}
                     >
                         <View style={{backgroundColor: 'orange', borderRadius: '50%', padding: 10}}>
                             <Entypo name="home" size={24} color="white" />
@@ -101,5 +101,13 @@ const styles = StyleSheet.create({
         fontSize: 12,
         color: "gray",
         marginTop: 2,
+    },
+    subButton: {
+        padding: 10,
+        backgroundColor: '#eee',
+        marginTop: 5,
+        borderRadius: 8,
+        width: 120,
+        alignItems: 'center',
     },
 });
