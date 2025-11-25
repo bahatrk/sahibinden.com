@@ -36,9 +36,9 @@ export default function RootNavigator() {
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Anasayfa' }} />
         <Stack.Screen name="CarList" component={CarListScreen} options={{ title: 'Araba İlanları' }} />
         <Stack.Screen name="CarDetail" component={CarDetailScreen} options={{ title: 'İlan Detayı' }} />
-        <Stack.Screen name="RealEstateType" component={RealEstateTypeScreen} options={{ title: 'Emlak Tipi' }} />
-        <Stack.Screen name="RealEstateSale" component={RealEstateSaleScreen} options={{ title: 'Satış Tipi' }} />
-        <Stack.Screen name="RealEstateList" component={RealEstateListScreen} options={{ title: 'Emlak İlanları' }} />
+        <Stack.Screen name="RealEstateType" component={RealEstateTypeScreen} options={{ title: 'Kategori Seçimi' }} />
+        <Stack.Screen name="RealEstateSale" component={RealEstateSaleScreen} options={{ title: 'Kategori Seçimi' }} />
+        <Stack.Screen name="RealEstateList" component={RealEstateListScreen} options={{ title: 'Arama Sonucu' }} />
         <Stack.Screen name="RealEstateDetail" component={RealEstateDetailScreen} options={{ title: 'İlan Detayı' }} />
       </Stack.Navigator>
     </NavigationContainer>
