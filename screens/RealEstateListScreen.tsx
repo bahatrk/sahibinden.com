@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
-import { getIlanlar } from '../assets/database/db';
+import { getEmlakIlanlar } from '../assets/database/db';
 import { Listing } from '../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
@@ -12,7 +12,7 @@ export default function RealEstateListScreen({ route }: Props) {
   const [listings, setListings] = useState<Listing[]>([]);
 
   useEffect(() => {
-    const data = getIlanlar();
+    const data = getEmlakIlanlar();
     console.log("DB'den gelen veri:",data);
     console.log("Route params:",type,saleType);
 
