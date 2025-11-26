@@ -56,7 +56,7 @@ export default function HomeScreen({navigation}: Props){
                         </View>
 
                         <View style={styles.textContainer}>
-                            <Text style={styles.buttonTitleText}>Araba</Text>
+                            <Text style={styles.buttonTitleText}>Vasıta</Text>
                             <Text style={styles.buttonSubtitleText}>Otomobil, Arazi, SUV & Pickup, Elektrikli...</Text>
                         </View>
                     </TouchableOpacity>
