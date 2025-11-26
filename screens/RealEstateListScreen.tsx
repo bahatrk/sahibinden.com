@@ -16,7 +16,13 @@ export default function RealEstateListScreen({ route }: Props) {
     console.log("DB'den gelen veri:",data);
     console.log("Route params:",type,saleType);
 
-    const filtered = data.filter(item => item.kategori === "Emlak");
+    const filtered = data.filter(item => {
+      return (
+        item.kategori === "Emlak" &&
+        (type ? item.type === type : true) &&
+        (saleType ? item.saleType === saleType : true)
+      );
+    });
 
     console.log("Filtrelenmiş veri:",filtered);
     setListings(filtered);
