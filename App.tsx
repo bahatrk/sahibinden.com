@@ -24,11 +24,12 @@ async function loadDatabase() {
   // Eski database varsa sil
   const dbInfo = await FileSystem.getInfoAsync(dbPath);
   if (dbInfo.exists) {
-    console.log("Eski database siliniyor...");
-    await FileSystem.deleteAsync(dbPath);
+    console.log("Database zaten yüklü tekrar kopyalanmayacak.");
+    return;
   }
 
-  // Yeni database i kopyala
+  // İlk kurulumda sadece 1 kez kopyalanacak
+  console.log("Database bulunamadı, ilk kez kopyalanıyor...");
   await FileSystem.copyAsync({
     from: asset.localUri!,
     to: dbPath,
