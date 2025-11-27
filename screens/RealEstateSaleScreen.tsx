@@ -7,13 +7,13 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 type Props = StackScreenProps<RootStackParamList, 'RealEstateSale'>;
 
 export default function RealEstateSaleScreen({ navigation, route }: Props) {
-  const { type } = route.params;
+  const { kategori } = route.params;
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('RealEstateList', { type, saleType: 'Satılık' })}
+        onPress={() => navigation.navigate('RealEstateList', { kategori, satisTuru: 'Satılık' })}
       >
         <Text style={styles.text}>Satılık</Text>
         <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
@@ -21,7 +21,7 @@ export default function RealEstateSaleScreen({ navigation, route }: Props) {
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('RealEstateList', { type, saleType: 'Kiralık' })}
+        onPress={() => navigation.navigate('RealEstateList', { kategori, satisTuru: 'Kiralık' })}
       >
         <Text style={styles.text}>Kiralık</Text>
         <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>

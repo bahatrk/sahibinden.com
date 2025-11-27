@@ -9,6 +9,7 @@ import { runMigrations } from '../assets/database/migrate';
 type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
 export default function RealEstateListScreen({ route }: Props) {
+  const { kategori, satisTuru } = route.params;
   const [listings, setListings] = useState<RealEstateListing[]>([]);
 
   useEffect(() => {
@@ -16,6 +17,12 @@ export default function RealEstateListScreen({ route }: Props) {
       try {
         runMigrations();               // Migration tamam
         const data = getEmlakIlanlar(); // Veriyi çek
+
+        const filtered = data.filter(item => 
+          item.kategori === kategori &&
+          item.satisTuru === satisTuru
+        );
+
         setListings(data);
       } catch (err) {
         console.log("DB HATA:", err);
