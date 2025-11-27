@@ -12,20 +12,18 @@ export default function RealEstateListScreen({ route }: Props) {
   const [listings, setListings] = useState<RealEstateListing[]>([]);
 
   useEffect(() => {
-    // Async fonksiyon oluştur
-    const loadData = async () => {
+    const loadData = () => {
       try {
-        await runMigrations();              // migration tamamlandı
-        const data = getEmlakIlanlar();    // DB’den veriyi çek
-        console.log("DB'den gelen veri:", data);
-        setListings(data);                  // state’i güncelle
+        runMigrations();               // Migration tamam
+        const data = getEmlakIlanlar(); // Veriyi çek
+        setListings(data);
       } catch (err) {
         console.log("DB HATA:", err);
       }
     };
 
-    loadData(); // async fonksiyonu çağır
-  }, [])
+    loadData();
+  }, []);
 
   return (
     <View style={styles.container}>
