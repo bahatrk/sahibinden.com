@@ -1,12 +1,12 @@
 import { openDatabaseSync } from 'expo-sqlite';
-import { Listing } from '../../types/Listing';
+import { RealEstateListing, CarListing } from '../../types/Listing';
 
 // DB cihazdaki gerçek yoldan açılır
 export const db = openDatabaseSync('sahibinden.db');
 
-export function getEmlakIlanlar(): Listing[] {
+export function getEmlakIlanlar(): RealEstateListing[] {
   try {
-    const rows = db.getAllSync<Listing>('SELECT * FROM emlak_ilanlari'); // database den gelen her satırın Listing tipinde olacak
+    const rows = db.getAllSync<RealEstateListing>('SELECT * FROM emlak_ilanlari'); // database den gelen her satırın Listing tipinde olacak
     return rows;
   } catch (err) {
     console.log("DB HATA:", err);
@@ -14,9 +14,9 @@ export function getEmlakIlanlar(): Listing[] {
   }
 }
 
-export function getArabaIlanlar(): Listing[] {
+export function getArabaIlanlar(): CarListing[] {
   try {
-    const rows = db.getAllSync<Listing>('SELECT * FROM araba_ilanlari'); // database den gelen her satırın Listing tipinde olacak
+    const rows = db.getAllSync<CarListing>('SELECT * FROM araba_ilanlari'); // database den gelen her satırın Listing tipinde olacak
     return rows;
   } catch (err) {
     console.log("DB HATA:", err);

@@ -11,7 +11,7 @@ export default function RealEstateTypeScreen({ navigation }: Props) {
         <View style={styles.container}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('RealEstateSale', { type: 'Konut' })}
+            onPress={() => navigation.navigate('RealEstateSale', { kategori: 'Konut' })}
           >
             <Text style={styles.text}>Konut</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon} />
@@ -19,7 +19,7 @@ export default function RealEstateTypeScreen({ navigation }: Props) {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('RealEstateSale', { type: 'Bina' })}
+            onPress={() => navigation.navigate('RealEstateSale', { kategori: 'Bina' })}
           >
             <Text style={styles.text}>Bina</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>

@@ -1,13 +1,23 @@
 // her ilan kaydı nasıl gözükecek onu tanımladık
-export interface Listing {
+export interface RealEstateListing {
   id: number;
-  kategori: string; // "araba", "emlak" vs.
+  kategori: string; 
+  satisTuru: string;
   baslik: string;
   aciklama: string;
   fiyat: number;
   konum: string;
   image: string;
+}
 
-  type: string; // Konut veya Bina
-  saleType: string; // Kiralık veya Satılık
+export interface CarListing {
+  id: number;
+  kategori: string;
+  altKategori: string;
+  marka: string;
+  baslik: string;
+  aciklama: string;
+  fiyat: number;
+  konum: string;
+  image: string;
 }
