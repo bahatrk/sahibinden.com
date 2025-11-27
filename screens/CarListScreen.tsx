@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image} from 'react-native';
 import { getArabaIlanlar } from '../assets/database/db';
-import { Listing } from '../types/Listing';
+import { CarListing } from '../types/Listing';
 
 export default function CarListScreen() {
-  const [cars, setCars] = useState<Listing[]>([]);
+  const [cars, setCars] = useState<CarListing[]>([]);
 
   useEffect(() => {
     const data =getArabaIlanlar();
