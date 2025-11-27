@@ -6,7 +6,7 @@ export const db = openDatabaseSync('sahibinden.db');
 
 export function getEmlakIlanlar(): Listing[] {
   try {
-    const rows = db.getAllSync<Listing>('SELECT * FROM emlak_ilanları'); // database den gelen her satırın Listing tipinde olacak
+    const rows = db.getAllSync<Listing>('SELECT * FROM emlak_ilanlari'); // database den gelen her satırın Listing tipinde olacak
     return rows;
   } catch (err) {
     console.log("DB HATA:", err);
@@ -16,7 +16,7 @@ export function getEmlakIlanlar(): Listing[] {
 
 export function getArabaIlanlar(): Listing[] {
   try {
-    const rows = db.getAllSync<Listing>('SELECT * FROM araba_ilanları'); // database den gelen her satırın Listing tipinde olacak
+    const rows = db.getAllSync<Listing>('SELECT * FROM araba_ilanlari'); // database den gelen her satırın Listing tipinde olacak
     return rows;
   } catch (err) {
     console.log("DB HATA:", err);
