@@ -1,32 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
 import { getEmlakIlanlar } from '../assets/database/db';
-import { Listing } from '../types/Listing';
+import { RealEstateListing } from '../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
+import { runMigrations } from '../assets/database/migrate';
 
 type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
 export default function RealEstateListScreen({ route }: Props) {
-  const { type, saleType } = route.params;
-  const [listings, setListings] = useState<Listing[]>([]);
+  const [listings, setListings] = useState<RealEstateListing[]>([]);
 
   useEffect(() => {
-    const data = getEmlakIlanlar();
-    console.log("DB'den gelen veri:",data);
-    console.log("Route params:",type,saleType);
+    // Async fonksiyon oluştur
+    const loadData = async () => {
+      try {
+        await runMigrations();              // migration tamamlandı
+        const data = getEmlakIlanlar();    // DB’den veriyi çek
+        console.log("DB'den gelen veri:", data);
+        setListings(data);                  // state’i güncelle
+      } catch (err) {
+        console.log("DB HATA:", err);
+      }
+    };
 
-    const filtered = data.filter(item => {
-      return (
-        item.kategori === "Emlak" &&
-        (type ? item.type === type : true) &&
-        (saleType ? item.saleType === saleType : true)
-      );
-    });
-
-    console.log("Filtrelenmiş veri:",filtered);
-    setListings(filtered);
-  }, [type, saleType]);
+    loadData(); // async fonksiyonu çağır
+  }, [])
 
   return (
     <View style={styles.container}>

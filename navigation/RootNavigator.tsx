@@ -19,8 +19,8 @@ export type RootStackParamList = {
     CarList: undefined;
     CarDetail: {id: string};
     RealEstateType: undefined;
-    RealEstateSale: {type: string};
-    RealEstateList: {type: string; saleType: string};
+    RealEstateSale: {kategori: string};
+    RealEstateList: {kategori: string; satisTuru: string};
     RealEstateDetail: {id: string};
 };
 
