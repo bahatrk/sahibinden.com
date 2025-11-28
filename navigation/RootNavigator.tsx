@@ -10,12 +10,12 @@ import RealEstateDetailScreen from '../screens/RealEstateDetailScreen';
 import RealEstateTypeScreen from '../screens/RealEstateTypeScreen'
 import RealEstateSaleScreen from '../screens/RealEstateSaleScreen'
 import CarTypeScreen from '../screens/CarTypeScreen';
-import CarModelTypeScreen from '../screens/CarModelTypeScreen';
+import CarMarkaTypeScreen from '../screens/CarMarkaTypeScreen';
 
 export type RootStackParamList = {
     Home: undefined;
     CarType: undefined;
-    CarModelType: undefined;
+    CarMarkaType: {altKategori: string};
     CarList: undefined;
     CarDetail: {id: string};
     RealEstateType: undefined;
@@ -39,7 +39,7 @@ export default function RootNavigator() {
 
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Anasayfa' }} />
         <Stack.Screen name="CarType" component={CarTypeScreen} options={{title:'Kategori Seçimi'}} />
-        <Stack.Screen name="CarModelType" component={CarModelTypeScreen} options={{ title: 'Kategori Seçimi'}} />
+        <Stack.Screen name="CarMarkaType" component={CarMarkaTypeScreen} options={{ title: 'Kategori Seçimi'}} />
         <Stack.Screen name="CarList" component={CarListScreen} options={{ title: 'Araba İlanları' }} />
         <Stack.Screen name="CarDetail" component={CarDetailScreen} options={{ title: 'İlan Detayı' }} />
         <Stack.Screen name="RealEstateType" component={RealEstateTypeScreen} options={{ title: 'Kategori Seçimi' }} />

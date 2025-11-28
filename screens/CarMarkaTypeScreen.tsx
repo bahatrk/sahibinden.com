@@ -4,9 +4,9 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/RootNavigator';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-type Props = StackScreenProps<RootStackParamList, 'CarModelType'>;
+type Props = StackScreenProps<RootStackParamList, 'CarMarkaType'>;
 
-export default function CarModelTypeScreen({ navigation }: Props) {
+export default function CarmarkaTypeScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
@@ -14,7 +14,7 @@ export default function CarModelTypeScreen({ navigation }: Props) {
         style={styles.button}
         onPress={() => navigation.navigate('CarList')}
       >
-        <Text style={styles.text}>Satılık</Text>
+        <Text style={styles.text}>Audi</Text>
         <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
       </TouchableOpacity>
 
@@ -22,7 +22,7 @@ export default function CarModelTypeScreen({ navigation }: Props) {
         style={styles.button}
         onPress={() => navigation.navigate('CarList')}
       >
-        <Text style={styles.text}>Kiralık</Text>
+        <Text style={styles.text}>BMW</Text>
         <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
       </TouchableOpacity>
     </View>

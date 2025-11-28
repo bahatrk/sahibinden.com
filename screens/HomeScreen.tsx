@@ -49,7 +49,7 @@ export default function HomeScreen({navigation}: Props){
                     {/* Araba Butonu */}
                     <TouchableOpacity
                     style={styles.categoryButton}
-                    onPress={() => navigation.navigate('CarList')}
+                    onPress={() => navigation.navigate('CarType')}
                     >
                         <View style={{backgroundColor: 'red', borderRadius: '50%', padding: 10}}>
                             <MaterialCommunityIcons name="steering" size={24} color="white" />
