@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image} from 'react-native';
-import { getArabaIlanlar } from '../assets/database/db';
-import { CarListing } from '../types/Listing';
+import { getArabaIlanlar } from '../../assets/database/db';
+import { CarListing } from '../../types/Listing';
 
 export default function CarListScreen() {
   const [cars, setCars] = useState<CarListing[]>([]);
