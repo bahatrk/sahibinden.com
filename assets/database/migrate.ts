@@ -1,6 +1,7 @@
 import { openDatabaseSync } from 'expo-sqlite';
 import { initSQL } from '../migrations/001_init';
 import { seedSQL } from '../migrations/002_seed_data';
+import { updateImageSQL } from '../migrations/003_update_images';
 
 const db = openDatabaseSync('sahibinden.db');
 
@@ -11,6 +12,9 @@ export function runMigrations() {
 
     db.execSync(seedSQL);
     console.log('Migration 002_seed_data başarıyla uygulandı');
+
+    db.execSync(updateImageSQL);
+    console.log('Migration 003_update_images başarıyla uygulandı');
   } catch (err) {
     console.log('Migration HATA:', err);
   }
