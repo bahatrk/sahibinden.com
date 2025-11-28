@@ -5,30 +5,28 @@ import { RootStackParamList } from '../../navigation/RootNavigator';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {carData} from './CarData'
 
-type Props = StackScreenProps<RootStackParamList, 'CarMarkaType'>;
+type Props = StackScreenProps<RootStackParamList, 'CarModelType'>;
 
-export default function CarMarkaTypeScreen({ navigation, route}: Props) {
+export default function CarModelTypeScreen({ navigation, route }: Props) {
 
-  const { altKategori} = route.params;
+  const { brand, altKategori } = route.params;
+  const selectedBrand = carData.find(c => c.brand === brand);
+
+  // Gösterilecek modeller altKategoriye göre seçiliyor
+  const selectedModel = altKategori === "Otomobil" ? selectedBrand?.otomobilModels : selectedBrand?.suvModels
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scroll}>
-        {carData.map((item, index) => (
+
+        {/* Otomobil veya SUV Modelleri */}
+        {selectedModel?.map((model, index) => (
           <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => navigation.navigate('CarModelType', { 
-              brand: item.brand,
-              altKategori: altKategori // altKategori ileri gönderiliyor
-            })}
+            onPress={() => navigation.navigate('CarList')}
           >
-            <Image 
-              source={{uri: item.logo}}
-              style={styles.logo}
-            />
-
-            <Text style={styles.text}>{item.brand}</Text>
+            <Text style={styles.text}>{model}</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
           </TouchableOpacity>
         ))}
