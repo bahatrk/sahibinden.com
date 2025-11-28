@@ -24,7 +24,12 @@ export default function CarModelTypeScreen({ navigation, route }: Props) {
           <TouchableOpacity
             key={index}
             style={styles.button}
-            onPress={() => navigation.navigate('CarList')}
+            onPress={() => navigation.navigate('CarList', {
+                altKategori: altKategori,
+                brand: brand,
+                model: model
+              })
+            }
           >
             <Text style={styles.text}>{model}</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
