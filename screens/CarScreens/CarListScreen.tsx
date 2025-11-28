@@ -102,9 +102,10 @@ const styles = StyleSheet.create({
     color: "gray",
   },
   image: {
-    width: 80,   // resim genişliği
-    height: 80,  // resim yüksekliği
+    width: 120,   // resim genişliği
+    height: 120,  // resim yüksekliği
     borderRadius: 8,
     marginRight: 12, // resim ile info arası boşluk
+    resizeMode: "contain"
   },
 });

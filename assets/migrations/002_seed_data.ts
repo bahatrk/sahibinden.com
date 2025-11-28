@@ -1,7 +1,7 @@
 export const seedSQL = `
 -- Emlak verileri
 INSERT INTO emlak_ilanlari (id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image)
-VALUES (1, 'Konut', 'Satılık', '3+1 Daire', 'Merkezi konumda, geniş daire', 450000, 'İstanbul/Kadıköy', 'https://plus.unsplash.com/premium_photo-1689609950112-d66095626efb?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (1, 'Konut', 'Satılık', '3+1 Daire', 'Merkezi konumda, geniş daire', 450000, 'İstanbul/Kadıköy', 'https://i.pinimg.com/1200x/72/e0/41/72e041cdc97711fd10e5352551fe7d7d.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
@@ -12,7 +12,7 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 INSERT INTO emlak_ilanlari (id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image)
-VALUES (2, 'Konut', 'Kiralık', '2+1 Daire', 'Yeni tadilatlı', 2000, 'Ankara/Çankaya', 'https://images.unsplash.com/photo-1628592102751-ba83b0314276?q=80&w=1397&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (2, 'Konut', 'Kiralık', '2+1 Daire', 'Yeni tadilatlı', 2000, 'Ankara/Çankaya', 'https://i.pinimg.com/1200x/dd/1b/58/dd1b5839fd303de1033d17464e027317.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
@@ -23,7 +23,7 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 INSERT INTO emlak_ilanlari (id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image)
-VALUES (3, 'Bina', 'Satılık', 'Ofis Binası', 'Şehir merkezinde', 750000, 'İzmir/Karşıyaka', 'https://images.unsplash.com/photo-1580216643062-cf460548a66a?q=80&w=627&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (3, 'Bina', 'Satılık', 'Ofis Binası', 'Şehir merkezinde', 750000, 'İzmir/Karşıyaka', 'https://i.pinimg.com/1200x/cd/43/59/cd4359eb5b895ce4cda433d55de3d608.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
@@ -34,7 +34,7 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 INSERT INTO emlak_ilanlari (id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image)
-VALUES (4, 'Bina', 'Kiralık', 'İş Yeri', 'Şehir merkezinde', 75000, 'Erzurum/Palandöken', 'https://plus.unsplash.com/premium_photo-1661963090306-dca2fdd3ab95?q=80&w=1506&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (4, 'Bina', 'Kiralık', 'İş Yeri', 'Şehir merkezinde', 75000, 'Erzurum/Palandöken', 'https://i.pinimg.com/1200x/49/36/d5/4936d5fb85480d6f5e7082aadbffe051.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
@@ -46,7 +46,7 @@ ON CONFLICT(id) DO UPDATE SET
 
 -- Araba verileri
 INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (1, 'Vasıta', 'SUV', 'Toyota', 'RAV4', 'Temiz araç', 'degisenı boyası yoktur', 350000, 'İstanbul', 'https://images.unsplash.com/photo-1706509234538-9831b1b33d66?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (1, 'Vasıta', 'SUV', 'Toyota', 'RAV4', 'Temiz araç', 'degisenı boyası yoktur', 350000, 'İstanbul', 'https://i.pinimg.com/736x/79/2b/d4/792bd4b628a91b9534846fc6c67891ea.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   altKategori = excluded.altKategori,
@@ -59,7 +59,7 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (2, 'Vasıta', 'Otomobil', 'Honda', 'Civic', 'Bakımlı', 'degisenı boyası yoktur', 250000, 'Ankara', 'https://images.unsplash.com/photo-1610768207795-72169abdf0d4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (2, 'Vasıta', 'Otomobil', 'Honda', 'Civic', 'Bakımlı', 'degisenı boyası yoktur', 250000, 'Ankara', 'https://i.pinimg.com/1200x/73/a7/0e/73a70e9efebbfe96681bfc80709366d1.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   altKategori = excluded.altKategori,
@@ -72,7 +72,7 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (3, 'Vasıta', 'SUV', 'BMW', 'X5', 'BMW X5 çok temiz', 'degisenı boyası yoktur', 95000, 'Trabzon/Merkez', 'https://images.unsplash.com/photo-1610768207795-72169abdf0d4?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')
+VALUES (3, 'Vasıta', 'SUV', 'BMW', 'X5', 'BMW X5 çok temiz', 'degisenı boyası yoktur', 95000, 'Trabzon/Merkez', 'https://i.pinimg.com/1200x/ff/b9/62/ffb96240508798a4be995f8a2d6046c5.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   altKategori = excluded.altKategori,
