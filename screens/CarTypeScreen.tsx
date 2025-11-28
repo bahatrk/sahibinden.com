@@ -11,17 +11,17 @@ export default function CarTypeScreen({ navigation }: Props) {
         <View style={styles.container}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('CarModelType', { type: 'Otomobil' })}
+            onPress={() => navigation.navigate('CarMarkaType', { altKategori: 'Otomobil' })}
           >
-            <Text style={styles.text}>Konut</Text>
+            <Text style={styles.text}>Otomobil</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon} />
           </TouchableOpacity>
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('CarModelType', { type: 'Arazi, SUV & Pickup' })}
+            onPress={() => navigation.navigate('CarMarkaType', { altKategori: 'Arazi, SUV & Pickup' })}
           >
-            <Text style={styles.text}>Bina</Text>
+            <Text style={styles.text}>Arazi, SUV & Pickup</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
           </TouchableOpacity>
         </View>
