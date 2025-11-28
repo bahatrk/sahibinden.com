@@ -19,7 +19,7 @@ export default function CarListScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Araba İlanları</Text>
+
       <FlatList
         data={cars}
         keyExtractor={(item) => item.id.toString()}

@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS araba_ilanlari (
   kategori TEXT,
   altKategori TEXT,
   marka TEXT,
+  model TEXT,
   baslik TEXT,
   aciklama TEXT,
   fiyat REAL,

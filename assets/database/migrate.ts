@@ -11,6 +11,7 @@ export function runMigrations() {
 
     db.execSync(seedSQL);
     console.log('Migration 002_seed_data başarıyla uygulandı');
+    
   } catch (err) {
     console.log('Migration HATA:', err);
   }
