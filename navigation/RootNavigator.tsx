@@ -18,7 +18,7 @@ export type RootStackParamList = {
     CarModelType: {brand: string; altKategori: string};
     CarType: undefined;
     CarMarkaType: {altKategori: string};
-    CarList: undefined;
+    CarList: {altKategori: string; brand: string; model: string};
     CarDetail: {id: string};
     RealEstateType: undefined;
     RealEstateSale: {kategori: string};
