@@ -23,7 +23,9 @@ export default function RealEstateListScreen({ route }: Props) {
           item.satisTuru === satisTuru
         );
 
-        setListings(data);
+        console.log("Filtreli sonuç: ", filtered);
+
+        setListings(filtered);
       } catch (err) {
         console.log("DB HATA:", err);
       }
@@ -39,7 +41,9 @@ export default function RealEstateListScreen({ route }: Props) {
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.item}>
-            <Image source={{ uri: item.image }} style={styles.image} />
+            <Image 
+              source={{ uri: item.image }} style={styles.image} 
+            />
 
             {/* Sağ taraf: baslık, konum, fiyat*/}
             <View style={styles.info}>
