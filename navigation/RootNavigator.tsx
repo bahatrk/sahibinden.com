@@ -3,14 +3,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import HomeScreen from '../screens/HomeScreen';
-import CarListScreen from '../screens/CarListScreen';
-import CarDetailScreen from '../screens/CarDetailScreen';
-import RealEstateListScreen from '../screens/RealEstateListScreen';
-import RealEstateDetailScreen from '../screens/RealEstateDetailScreen';
-import RealEstateTypeScreen from '../screens/RealEstateTypeScreen'
-import RealEstateSaleScreen from '../screens/RealEstateSaleScreen'
-import CarTypeScreen from '../screens/CarTypeScreen';
-import CarMarkaTypeScreen from '../screens/CarMarkaTypeScreen';
+import CarListScreen from '../screens/CarScreens/CarListScreen';
+import CarDetailScreen from '../screens/CarScreens/CarDetailScreen';
+import RealEstateListScreen from '../screens/RealEstateScreens/RealEstateListScreen';
+import RealEstateDetailScreen from '../screens/RealEstateScreens/RealEstateDetailScreen';
+import RealEstateTypeScreen from '../screens/RealEstateScreens/RealEstateTypeScreen'
+import RealEstateSaleScreen from '../screens/RealEstateScreens/RealEstateSaleScreen'
+import CarTypeScreen from '../screens/CarScreens/CarTypeScreen';
+import CarMarkaTypeScreen from '../screens/CarScreens/CarMarkaTypeScreen';
 
 export type RootStackParamList = {
     Home: undefined;

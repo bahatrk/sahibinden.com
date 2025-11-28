@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
-import { getEmlakIlanlar } from '../assets/database/db';
-import { RealEstateListing } from '../types/Listing';
+import { getEmlakIlanlar } from '../../assets/database/db';
+import { RealEstateListing } from '../../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
-import { RootStackParamList } from '../navigation/RootNavigator';
-import { runMigrations } from '../assets/database/migrate';
+import { RootStackParamList } from '../../navigation/RootNavigator';
+import { runMigrations } from '../../assets/database/migrate';
 
 type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
