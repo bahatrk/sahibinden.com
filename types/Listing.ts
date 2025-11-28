@@ -15,6 +15,7 @@ export interface CarListing {
   kategori: string;
   altKategori: string;
   marka: string;
+  model: string;
   baslik: string;
   aciklama: string;
   fiyat: number;
