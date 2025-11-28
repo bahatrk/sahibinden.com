@@ -19,7 +19,7 @@ export default function CarTypeScreen({ navigation }: Props) {
 
           <TouchableOpacity
             style={styles.button}
-            onPress={() => navigation.navigate('CarMarkaType', { altKategori: 'Arazi, SUV & Pickup' })}
+            onPress={() => navigation.navigate('CarMarkaType', { altKategori: 'SUV' })}
           >
             <Text style={styles.text}>Arazi, SUV & Pickup</Text>
             <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
