@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getEmlakIlanlar } from '../../assets/database/db';
 import { RealEstateListing } from '../../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -8,7 +8,7 @@ import { runMigrations } from '../../assets/database/migrate';
 
 type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
-export default function RealEstateListScreen({ route }: Props) {
+export default function RealEstateListScreen({ navigation,route }: Props) {
   const { kategori, satisTuru } = route.params;
   const [listings, setListings] = useState<RealEstateListing[]>([]);
 
@@ -40,7 +40,11 @@ export default function RealEstateListScreen({ route }: Props) {
         data={listings}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate("RealEstateDetail", {id: item.id})}
+          >
+
             <Image 
               source={{ uri: item.image }} style={styles.image} 
             />
@@ -53,7 +57,7 @@ export default function RealEstateListScreen({ route }: Props) {
                 <Text style={styles.fiyat}>{item.fiyat} TL</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
