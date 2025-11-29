@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Image } from 'react-native';
+import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { getArabaIlanlar } from '../../assets/database/db';
 import { CarListing } from '../../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
@@ -9,7 +9,7 @@ import { runMigrations } from '../../assets/database/migrate';
 type Props = StackScreenProps<RootStackParamList, 'CarList'>;
 
 
-export default function CarListScreen({ route }: Props) {
+export default function CarListScreen({ navigation,route }: Props) {
 
   const {altKategori, brand, model} = route.params;
   const [cars, setCars] = useState<CarListing[]>([]);
@@ -44,7 +44,10 @@ export default function CarListScreen({ route }: Props) {
         data={cars}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
-          <View style={styles.item}>
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() => navigation.navigate("CarDetail", {id: item.id})}
+          >
             <Image 
               source={{ uri: item.image }} style={styles.image} 
             />
@@ -57,7 +60,7 @@ export default function CarListScreen({ route }: Props) {
                 <Text style={styles.fiyat}>{item.fiyat} TL</Text>
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
