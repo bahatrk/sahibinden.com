@@ -45,96 +45,193 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 -- Araba verileri
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (1, 'Vasıta', 'SUV', 'Toyota', 'RAV4', 'Temiz araç', 'degisenı boyası yoktur', 350000, 'İstanbul/Ataşehir', 'https://i.pinimg.com/736x/79/2b/d4/792bd4b628a91b9534846fc6c67891ea.jpg')
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(1, 'Vasıta', 'SUV', 'Toyota', 'RAV4', 'Temiz araç', 'degisenı boyası yoktur', 
+ 350000, 'İstanbul/Ataşehir', 'https://i.pinimg.com/736x/79/2b/d4/792bd4b628a91b9534846fc6c67891ea.jpg',
+ 2025, 'Benzin', 'Otomatik', 'İkinci El', 45000, 170, 'Kırmızı', 'Sahibinden', 'Var')
 ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km, 
+  motorGucu=excluded.motorGucu, 
+  renk=excluded.renk, 
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
 
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (2, 'Vasıta', 'Otomobil', 'Honda', 'Civic', 'Bakımlı', 'degisenı boyası yoktur', 250000, 'Ankara/Keçiören', 'https://i.pinimg.com/1200x/73/a7/0e/73a70e9efebbfe96681bfc80709366d1.jpg')
-ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
 
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (3, 'Vasıta', 'SUV', 'BMW', 'X5', 'BMW X5 çok temiz', 'degisenı boyası yoktur', 95000, 'Trabzon/Merkez', 'https://i.pinimg.com/1200x/ff/b9/62/ffb96240508798a4be995f8a2d6046c5.jpg')
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(2, 'Vasıta', 'Otomobil', 'Honda', 'Civic', 'Bakımlı', 'degisenı boyası yoktur', 
+ 250000, 'Ankara/Keçiören', 'https://i.pinimg.com/1200x/73/a7/0e/73a70e9efebbfe96681bfc80709366d1.jpg',
+ 2020, 'Benzin', 'Manuel', 'İkinci El', 98000, 125, 'Gri', 'Galeriden', 'Yok')
 ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km,
+  motorGucu=excluded.motorGucu,
+  renk=excluded.renk, 
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
 
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (4, 'Vasıta', 'Otomobil', 'Porsche', 'Taycan', 'çok temiz', 'degisenı boyası yoktur', 5000000, 'Erzurum/Köprüköy', 'https://i.pinimg.com/1200x/b9/bf/9d/b9bf9d9e6435ca59795c6440d24daf25.jpg')
-ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
 
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (5, 'Vasıta', 'Otomobil', 'TOGG', 'T10F', 'SIFIR', 'degisenı boyası yoktur', '2000000', 'Konya/Merkez', 'https://i.pinimg.com/736x/c2/97/1b/c2971bcf52a4426dc15b854eb87b157c.jpg')
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(3, 'Vasıta', 'SUV', 'BMW', 'X5', 'BMW X5 çok temiz', 'degisenı boyası yoktur',
+ 95000, 'Trabzon/Merkez', 'https://i.pinimg.com/1200x/ff/b9/62/ffb96240508798a4be995f8a2d6046c5.jpg',
+ 2012, 'Dizel', 'Otomatik', 'İkinci El', 185000, 235, 'Siyah', 'Sahibinden', 'Var')
 ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km, 
+  motorGucu=excluded.motorGucu, 
+  renk=excluded.renk, 
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
 
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (6, 'Vasıta', 'SUV', 'Kia', 'XCeed', 'SIFIR SAYILIR', 'degisenı boyası yoktur', 2200000, 'Antalya/Kepez', 'https://i.pinimg.com/736x/7d/aa/c9/7daac90550c96a2222d05a3b9ec3d165.jpg')
-ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
 
-INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (7, 'Vasıta', 'SUV', 'Hyundai', 'Bayon', 'SIFIR SAYILIR', 'degisenı boyası yoktur', 1500000, 'Giresun/Alucra', 'https://i.pinimg.com/1200x/04/42/bd/0442bda8f10bbf0b257f93802fe5a4ab.jpg')
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(4, 'Vasıta', 'Otomobil', 'Porsche', 'Taycan', 'çok temiz', 'degisenı boyası yoktur',
+ 5000000, 'Erzurum/Köprüköy', 'https://i.pinimg.com/1200x/b9/bf/9d/b9bf9d9e6435ca59795c6440d24daf25.jpg',
+ 2009, 'Elektrik', 'Otomatik', 'İkinci El', 55000, 350, 'Beyaz', 'Sahibinden', 'Yok')
 ON CONFLICT(id) DO UPDATE SET
-  kategori = excluded.kategori,
-  altKategori = excluded.altKategori,
-  marka = excluded.marka,
-  model = excluded.model,
-  baslik = excluded.baslik,
-  aciklama = excluded.aciklama,
-  fiyat = excluded.fiyat,
-  konum = excluded.konum,
-  image = excluded.image;
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km, 
+  motorGucu=excluded.motorGucu, 
+  renk=excluded.renk, 
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
+
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(5, 'Vasıta', 'Otomobil', 'TOGG', 'T10F', 'SIFIR', 'degisenı boyası yoktur',
+ 2000000, 'Konya/Merkez', 'https://i.pinimg.com/736x/c2/97/1b/c2971bcf52a4426dc15b854eb87b157c.jpg',
+ 2003, 'Elektrik', 'Otomatik', 'İkinci El', 85000, 160, 'Mavi', 'Galeriden', 'Var')
+ON CONFLICT(id) DO UPDATE SET
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km, 
+  motorGucu=excluded.motorGucu, 
+  renk=excluded.renk, 
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
+
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(6, 'Vasıta', 'SUV', 'Kia', 'XCeed', 'SIFIR SAYILIR', 'degisenı boyası yoktur',
+ 2200000, 'Antalya/Kepez', 'https://i.pinimg.com/736x/7d/aa/c9/7daac90550c96a2222d05a3b9ec3d165.jpg',
+ 2024, 'Benzin', 'Otomatik', 'Sıfır', 500, 140, 'Turuncu', 'Sahibinden', 'Yok')
+ON CONFLICT(id) DO UPDATE SET
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km, 
+  motorGucu=excluded.motorGucu, 
+  renk=excluded.renk, 
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
+
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image,
+  yil, yakitTipi, vites, aracDurumu, km, motorGucu, renk, kimden, takas)
+VALUES 
+(7, 'Vasıta', 'SUV', 'Hyundai', 'Bayon', 'SIFIR SAYILIR', 'degisenı boyası yoktur',
+ 1500000, 'Giresun/Alucra', 'https://i.pinimg.com/1200x/04/42/bd/0442bda8f10bbf0b257f93802fe5a4ab.jpg',
+ 1990, 'LPG', 'Manuel', 'İkinci El', 230000, 95, 'Yeşil', 'Sahibinden', 'Var')
+ON CONFLICT(id) DO UPDATE SET
+  kategori=excluded.kategori, 
+  altKategori=excluded.altKategori, 
+  marka=excluded.marka,
+  model=excluded.model, 
+  baslik=excluded.baslik, 
+  aciklama=excluded.aciklama, 
+  fiyat=excluded.fiyat,
+  konum=excluded.konum, 
+  image=excluded.image,
+  yil=excluded.yil, 
+  yakitTipi=excluded.yakitTipi, 
+  vites=excluded.vites, 
+  aracDurumu=excluded.aracDurumu,
+  km=excluded.km, 
+  motorGucu=excluded.motorGucu, 
+  renk=excluded.renk,
+  kimden=excluded.kimden, 
+  takas=excluded.takas;
 `;
 
 
