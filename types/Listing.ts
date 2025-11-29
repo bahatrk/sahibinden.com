@@ -8,7 +8,7 @@ export interface RealEstateListing {
   fiyat: number;
   konum: string;
   image: string;
-  metreKare: number;
+  metreKareBrut: number;
   metreKareNet: number;
   odaSayisi: string;
   binaYasi: number;

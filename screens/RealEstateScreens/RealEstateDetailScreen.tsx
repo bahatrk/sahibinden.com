@@ -53,7 +53,7 @@ export default function RealEstateDetailScreen({ route }: any) {
 
       <View style={styles.detailsBox}>
         <Text style={styles.label}>m² (Brüt)</Text>
-        <Text style={styles.value}>{item.metreKare}</Text>
+        <Text style={styles.value}>{item.metreKareBrut}</Text>
       </View>
 
       <View style={styles.detailsBox}>
