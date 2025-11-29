@@ -125,27 +125,31 @@ const styles = StyleSheet.create({
   },
 
   detailsBox: {
-    paddingVertical: 12,
+    paddingVertical: 3,
     width: '100%',
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderBottomColor: '#ccc',
     flexDirection: 'row',
-    justifyContent: "space-between"
+    justifyContent: "space-between",
+    alignItems: "center"
   },
 
   label: {
-    marginTop: 10,
+    marginTop: 5,
+    marginBottom: 5,
     color: "#808080"
   },
   value: {
     fontSize: 14,
     color: "#808080",
-    marginTop: 10
+    marginTop: 5,
+    marginBottom: 5
   },
   fiyatValue: {
     fontWeight: "bold",
     fontSize: 15,
     color: '#104E8B',
-    marginTop: 10
+    marginTop: 5,
+    marginBottom: 5
   },
 });
