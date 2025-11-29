@@ -21,4 +21,13 @@ export interface CarListing {
   fiyat: number;
   konum: string;
   image: string;
+  yil: number;
+  yakitTipi: string;
+  vites: string;
+  aracDurumu: string;
+  km: number;
+  motorGucu: number;
+  renk: string;
+  kimden: string;
+  takas: string; 
 }

@@ -57,13 +57,48 @@ export default function RealEstateDetailScreen({ route }: any) {
       </View>
 
       <View style={styles.detailsBox}>
-        <Text style={styles.label}>Konum</Text>
-        <Text style={styles.value}>{item.konum}</Text>
+        <Text style={styles.label}>Yıl</Text>
+        <Text style={styles.value}>{item.yil}</Text>
       </View>
 
       <View style={styles.detailsBox}>
-        <Text style={styles.label}>Açıklama</Text>
-        <Text style={styles.value}>{item.aciklama}</Text>
+        <Text style={styles.label}>Yakıt Tipi</Text>
+        <Text style={styles.value}>{item.yakitTipi}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Vites</Text>
+        <Text style={styles.value}>{item.vites}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Araç Durumu</Text>
+        <Text style={styles.value}>{item.aracDurumu}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>KM</Text>
+        <Text style={styles.value}>{item.km}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Motor Gücü</Text>
+        <Text style={styles.value}>{item.motorGucu} hp</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Renk</Text>
+        <Text style={styles.value}>{item.renk}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Kimden</Text>
+        <Text style={styles.value}>{item.kimden}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Takas</Text>
+        <Text style={styles.value}>{item.takas}</Text>
       </View>
 
     </ScrollView>
