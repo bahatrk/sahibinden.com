@@ -83,4 +83,58 @@ ON CONFLICT(id) DO UPDATE SET
   fiyat = excluded.fiyat,
   konum = excluded.konum,
   image = excluded.image;
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
+VALUES (4, 'Vasıta', 'Otomobil', 'Porsche', 'Taycan', 'çok temiz', 'degisenı boyası yoktur', 5000000, 'Erzurum/Köprüköy', 'https://i.pinimg.com/1200x/b9/bf/9d/b9bf9d9e6435ca59795c6440d24daf25.jpg')
+ON CONFLICT(id) DO UPDATE SET
+  kategori = excluded.kategori,
+  altKategori = excluded.altKategori,
+  marka = excluded.marka,
+  model = excluded.model,
+  baslik = excluded.baslik,
+  aciklama = excluded.aciklama,
+  fiyat = excluded.fiyat,
+  konum = excluded.konum,
+  image = excluded.image;
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
+VALUES (5, 'Vasıta', 'Otomobil', 'TOGG', 'T10F', 'SIFIR', 'degisenı boyası yoktur', '2000000', 'Konya/Merkez', 'https://i.pinimg.com/736x/c2/97/1b/c2971bcf52a4426dc15b854eb87b157c.jpg')
+ON CONFLICT(id) DO UPDATE SET
+  kategori = excluded.kategori,
+  altKategori = excluded.altKategori,
+  marka = excluded.marka,
+  model = excluded.model,
+  baslik = excluded.baslik,
+  aciklama = excluded.aciklama,
+  fiyat = excluded.fiyat,
+  konum = excluded.konum,
+  image = excluded.image;
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
+VALUES (6, 'Vasıta', 'SUV', 'Kia', 'XCeed', 'SIFIR SAYILIR', 'degisenı boyası yoktur', 2200000, 'Antalya/Kepez', 'https://i.pinimg.com/736x/7d/aa/c9/7daac90550c96a2222d05a3b9ec3d165.jpg')
+ON CONFLICT(id) DO UPDATE SET
+  kategori = excluded.kategori,
+  altKategori = excluded.altKategori,
+  marka = excluded.marka,
+  model = excluded.model,
+  baslik = excluded.baslik,
+  aciklama = excluded.aciklama,
+  fiyat = excluded.fiyat,
+  konum = excluded.konum,
+  image = excluded.image;
+
+INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
+VALUES (7, 'Vasıta', 'SUV', 'Hyundai', 'Bayon', 'SIFIR SAYILIR', 'degisenı boyası yoktur', 1500000, 'Giresun/Alucra', 'https://i.pinimg.com/1200x/04/42/bd/0442bda8f10bbf0b257f93802fe5a4ab.jpg')
+ON CONFLICT(id) DO UPDATE SET
+  kategori = excluded.kategori,
+  altKategori = excluded.altKategori,
+  marka = excluded.marka,
+  model = excluded.model,
+  baslik = excluded.baslik,
+  aciklama = excluded.aciklama,
+  fiyat = excluded.fiyat,
+  konum = excluded.konum,
+  image = excluded.image;
 `;
+
+
