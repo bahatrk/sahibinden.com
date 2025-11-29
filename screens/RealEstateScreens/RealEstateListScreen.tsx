@@ -54,7 +54,7 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
               <Text style={styles.name}>{item.baslik}</Text>
               <View style={styles.subContainer}>
                 <Text style={styles.konum}>{item.konum}</Text>
-                <Text style={styles.fiyat}>{item.fiyat} TL</Text>
+                <Text style={styles.fiyat}>{item.fiyat.toLocaleString("tr-TR")} TL</Text>
               </View>
             </View>
           </TouchableOpacity>
