@@ -46,7 +46,7 @@ ON CONFLICT(id) DO UPDATE SET
 
 -- Araba verileri
 INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (1, 'Vasıta', 'SUV', 'Toyota', 'RAV4', 'Temiz araç', 'degisenı boyası yoktur', 350000, 'İstanbul', 'https://i.pinimg.com/736x/79/2b/d4/792bd4b628a91b9534846fc6c67891ea.jpg')
+VALUES (1, 'Vasıta', 'SUV', 'Toyota', 'RAV4', 'Temiz araç', 'degisenı boyası yoktur', 350000, 'İstanbul/Ataşehir', 'https://i.pinimg.com/736x/79/2b/d4/792bd4b628a91b9534846fc6c67891ea.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   altKategori = excluded.altKategori,
@@ -59,7 +59,7 @@ ON CONFLICT(id) DO UPDATE SET
   image = excluded.image;
 
 INSERT INTO araba_ilanlari (id, kategori, altKategori, marka, model, baslik, aciklama, fiyat, konum, image)
-VALUES (2, 'Vasıta', 'Otomobil', 'Honda', 'Civic', 'Bakımlı', 'degisenı boyası yoktur', 250000, 'Ankara', 'https://i.pinimg.com/1200x/73/a7/0e/73a70e9efebbfe96681bfc80709366d1.jpg')
+VALUES (2, 'Vasıta', 'Otomobil', 'Honda', 'Civic', 'Bakımlı', 'degisenı boyası yoktur', 250000, 'Ankara/Keçiören', 'https://i.pinimg.com/1200x/73/a7/0e/73a70e9efebbfe96681bfc80709366d1.jpg')
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   altKategori = excluded.altKategori,
