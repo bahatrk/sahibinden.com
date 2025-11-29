@@ -43,7 +43,7 @@ export default function RealEstateDetailScreen({ route }: any) {
       {/* DETAYLAR */}
       <View style={styles.detailsBox}>
         <Text style={styles.label}>Fiyat</Text>
-        <Text style={styles.fiyatValue}>{item.fiyat} TL</Text>
+        <Text style={styles.fiyatValue}>{item.fiyat.toLocaleString("tr-TR")} TL</Text>
       </View>
 
       <View style={styles.detailsBox}>
