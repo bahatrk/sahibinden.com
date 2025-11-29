@@ -3,6 +3,7 @@ import { initSQL } from '../migrations/001_init';
 import { seedSQL } from '../migrations/002_seed_data';
 import { addCarColumnSQL } from '../migrations/003_add_columns_to_araba';
 import { addEmlakColumnSQL } from '../migrations/004_add_columns_to_emlak';
+import { renameMetreKareBrutName } from '../migrations/005_rename_metreKareBrut_column';
 
 const db = openDatabaseSync('sahibinden.db');
 
@@ -19,6 +20,9 @@ export function runMigrations() {
 
     db.execSync(addEmlakColumnSQL);
     console.log('Migration 004_add_columns_to_emlak başarıyla uygulandı');
+
+    db.execSync(renameMetreKareBrutName);
+    console.log('Migration 005_rename_metreKareBrut_column başarıyla uygulandı');
     
   } catch (err) {
     console.log('Migration HATA:', err);

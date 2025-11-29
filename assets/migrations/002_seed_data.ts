@@ -2,7 +2,7 @@ export const seedSQL = `
 -- Emlak verileri
 INSERT INTO emlak_ilanlari (
   id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
-  metreKareBrut, metreKareNet, odaSayisi, binaYasi,
+  metreKare, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
@@ -18,7 +18,7 @@ ON CONFLICT(id) DO UPDATE SET
   fiyat = excluded.fiyat,
   konum = excluded.konum,
   image = excluded.image,
-  metreKareBrut = excluded.metreKareBrut,
+  metreKare = excluded.metreKare,
   metreKareNet = excluded.metreKareNet,
   odaSayisi = excluded.odaSayisi,
   binaYasi = excluded.binaYasi,
@@ -32,7 +32,7 @@ ON CONFLICT(id) DO UPDATE SET
 
 INSERT INTO emlak_ilanlari (
   id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
-  metreKareBrut, metreKareNet, odaSayisi, binaYasi,
+  metreKare, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
@@ -48,7 +48,7 @@ ON CONFLICT(id) DO UPDATE SET
   fiyat = excluded.fiyat,
   konum = excluded.konum,
   image = excluded.image,
-  metreKareBrut = excluded.metreKareBrut,
+  metreKare = excluded.metreKare,
   metreKareNet = excluded.metreKareNet,
   odaSayisi = excluded.odaSayisi,
   binaYasi = excluded.binaYasi,
@@ -62,7 +62,7 @@ ON CONFLICT(id) DO UPDATE SET
 
 INSERT INTO emlak_ilanlari (
   id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
-  metreKareBrut, metreKareNet, odaSayisi, binaYasi,
+  metreKare, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
@@ -78,7 +78,7 @@ ON CONFLICT(id) DO UPDATE SET
   fiyat = excluded.fiyat,
   konum = excluded.konum,
   image = excluded.image,
-  metreKareBrut = excluded.metreKareBrut,
+  metreKare = excluded.metreKare,
   metreKareNet = excluded.metreKareNet,
   odaSayisi = excluded.odaSayisi,
   binaYasi = excluded.binaYasi,
@@ -92,7 +92,7 @@ ON CONFLICT(id) DO UPDATE SET
 
 INSERT INTO emlak_ilanlari (
   id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
-  metreKareBrut, metreKareNet, odaSayisi, binaYasi,
+  metreKare, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
@@ -108,7 +108,7 @@ ON CONFLICT(id) DO UPDATE SET
   fiyat = excluded.fiyat,
   konum = excluded.konum,
   image = excluded.image,
-  metreKareBrut = excluded.metreKareBrut,
+  metreKare = excluded.metreKare,
   metreKareNet = excluded.metreKareNet,
   odaSayisi = excluded.odaSayisi,
   binaYasi = excluded.binaYasi,
