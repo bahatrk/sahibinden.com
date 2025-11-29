@@ -1,17 +1,106 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
+import { db } from '../../assets/database/db';
 
-export default function RealEstateDetailScreen({ route }: any){
+export default function RealEstateDetailScreen({ route }: any) {
 
   const { id } = route.params;
+  const [item, setItem] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  // emlak_ilanlari tablosuna gidip id kısmını buluyor ve o id yi çekiyor ve bu id nın degerlerını setitem a atıyor
+  useEffect(() => {
+    const result = db.getFirstSync(
+      `SELECT * FROM emlak_ilanlari WHERE id = ?`,
+      [id]
+    );
+    setItem(result);
+    setLoading(false);
+  }, []);
+
+  if (loading || !item) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large"/>
+      </View>
+    );
+  }
 
   return (
-    <View style={styles.container}>
-      <Text>Real Estate Detail Screen</Text>
-    </View>
+    <ScrollView contentContainerStyle={styles.container}>
+      {/* BAŞLIK */}
+      <Text style={styles.title}>{item.baslik}</Text>
+
+      {/* RESİMLER */}
+      {item.image && (
+        <Image 
+          source={{ uri: item.image }} 
+          style={styles.image}
+          resizeMode="cover"
+        />
+      )}
+
+      {/* DETAYLAR */}
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Fiyat</Text>
+        <Text style={styles.fiyatValue}>{item.fiyat} TL</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Konum</Text>
+        <Text style={styles.value}>{item.konum}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Açıklama</Text>
+        <Text style={styles.value}>{item.aciklama}</Text>
+      </View>
+
+    </ScrollView>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  loading: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+
+  container: { padding: 15 },
+  
+  title: { 
+    fontSize: 24, 
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center'
+  },
+
+  image: {
+    width: '100%',
+    height: 250,
+    borderRadius: 10,
+    marginBottom: 20
+  },
+
+  detailsBox: {
+    paddingVertical: 12,
+    width: '100%',
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
+    flexDirection: 'row',
+    justifyContent: "space-between"
+  },
+
+  label: {
+    marginTop: 10,
+    color: "#808080"
+  },
+  value: {
+    fontSize: 14,
+    color: "#808080",
+    marginTop: 10
+  },
+  fiyatValue: {
+    fontWeight: "bold",
+    fontSize: 15,
+    color: '#104E8B',
+    marginTop: 10
+  },
 });
