@@ -8,6 +8,17 @@ export interface RealEstateListing {
   fiyat: number;
   konum: string;
   image: string;
+  emlakTipi: string;
+  metreKareBrüt: number;
+  metreKareNet: number;
+  odaSayisi: string;
+  binaYasi: number;
+  bulunduguKat: number;
+  katSayisi: number;
+  isitma: string;
+  asansor: string;
+  kimden: string;
+  takas: string;
 }
 
 export interface CarListing {
