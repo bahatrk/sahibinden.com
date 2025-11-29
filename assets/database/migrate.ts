@@ -2,6 +2,7 @@ import { openDatabaseSync } from 'expo-sqlite';
 import { initSQL } from '../migrations/001_init';
 import { seedSQL } from '../migrations/002_seed_data';
 import { addCarColumnSQL } from '../migrations/003_add_columns_to_araba';
+import { addEmlakColumnSQL } from '../migrations/004_add_columns_to_emlak';
 
 const db = openDatabaseSync('sahibinden.db');
 
@@ -15,6 +16,9 @@ export function runMigrations() {
 
     db.execSync(addCarColumnSQL);
     console.log('Migration 003_add_columns_to_araba başarıyla uygulandı');
+
+    db.execSync(addEmlakColumnSQL);
+    console.log('Migration 004_add_columns_to_emlak başarıyla uygulandı');
     
   } catch (err) {
     console.log('Migration HATA:', err);
