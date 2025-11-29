@@ -1,7 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function RealEstateDetailScreen(){
+export default function RealEstateDetailScreen({ route }: any){
+
+  const { id } = route.params;
+
   return (
     <View style={styles.container}>
       <Text>Real Estate Detail Screen</Text>

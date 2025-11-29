@@ -23,7 +23,7 @@ export type RootStackParamList = {
     RealEstateType: undefined;
     RealEstateSale: {kategori: string};
     RealEstateList: {kategori: string; satisTuru: string};
-    RealEstateDetail: {id: string};
+    RealEstateDetail: {id: number};
 };
 
 const Stack = createStackNavigator<RootStackParamList>(); // tüm ekranlar parametreleri dogru tanır
