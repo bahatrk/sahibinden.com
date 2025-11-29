@@ -47,13 +47,58 @@ export default function RealEstateDetailScreen({ route }: any) {
       </View>
 
       <View style={styles.detailsBox}>
-        <Text style={styles.label}>Konum</Text>
-        <Text style={styles.value}>{item.konum}</Text>
+        <Text style={styles.label}>Emlak Tipi</Text>
+        <Text style={styles.value}>{item.satisTuru}</Text>
       </View>
 
       <View style={styles.detailsBox}>
-        <Text style={styles.label}>Açıklama</Text>
-        <Text style={styles.value}>{item.aciklama}</Text>
+        <Text style={styles.label}>m² (Brüt)</Text>
+        <Text style={styles.value}>{item.metreKareBrut}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>m² (Net)</Text>
+        <Text style={styles.value}>{item.metreKareNet}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Oda Sayısı</Text>
+        <Text style={styles.value}>{item.odaSayisi}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Bina Yaşı</Text>
+        <Text style={styles.value}>{item.binaYasi}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Bulunduğu Kat</Text>
+        <Text style={styles.value}>{item.bulunduguKat}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Kat Sayısı</Text>
+        <Text style={styles.value}>{item.katSayisi}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Isıtma</Text>
+        <Text style={styles.value}>{item.isitma}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Asansör</Text>
+        <Text style={styles.value}>{item.asansor}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Kimden</Text>
+        <Text style={styles.value}>{item.kimden}</Text>
+      </View>
+
+      <View style={styles.detailsBox}>
+        <Text style={styles.label}>Takas</Text>
+        <Text style={styles.value}>{item.takas}</Text>
       </View>
 
     </ScrollView>
