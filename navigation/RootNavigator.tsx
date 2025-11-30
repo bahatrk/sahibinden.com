@@ -12,6 +12,7 @@ import RealEstateSaleScreen from '../screens/RealEstateScreens/RealEstateSaleScr
 import CarTypeScreen from '../screens/CarScreens/CarTypeScreen';
 import CarMarkaTypeScreen from '../screens/CarScreens/CarMarkaTypeScreen';
 import CarModelTypeScreen from '../screens/CarScreens/CarModelTypeScreen'
+import LoginScreen from '../screens/LoginScreen';
 
 export type RootStackParamList = {
     Home: undefined;
@@ -24,6 +25,7 @@ export type RootStackParamList = {
     RealEstateSale: {kategori: string};
     RealEstateList: {kategori: string; satisTuru: string};
     RealEstateDetail: {id: number};
+    Login: undefined;
 };
 
 const Stack = createStackNavigator<RootStackParamList>(); // tüm ekranlar parametreleri dogru tanır
@@ -39,7 +41,7 @@ export default function RootNavigator() {
       }}
       >
 
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'Anasayfa' }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'sahibinden.com' }} />
         <Stack.Screen name="CarType" component={CarTypeScreen} options={{title:'Kategori Seçimi'}} />
         <Stack.Screen name="CarMarkaType" component={CarMarkaTypeScreen} options={{ title: 'Kategori Seçimi'}} />
         <Stack.Screen name="CarModelType" component={CarModelTypeScreen} options={{ title: 'Kategori Seçimi'}} />
@@ -49,6 +51,7 @@ export default function RootNavigator() {
         <Stack.Screen name="RealEstateSale" component={RealEstateSaleScreen} options={{ title: 'Kategori Seçimi' }} />
         <Stack.Screen name="RealEstateList" component={RealEstateListScreen} options={{ title: 'Arama Sonucu' }} />
         <Stack.Screen name="RealEstateDetail" component={RealEstateDetailScreen} options={{ title: 'İlan Detayı' }} />
+        <Stack.Screen name="Login" component={LoginScreen}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
