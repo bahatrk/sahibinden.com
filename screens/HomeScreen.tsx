@@ -62,7 +62,15 @@ export default function HomeScreen({navigation}: Props){
                     </TouchableOpacity>
                 </View>
             </View>
-        
+
+            {/* İlan Ver Butonu */}
+            <TouchableOpacity
+                style={styles.handleIlanVerButton}
+                onPress={() => navigation.navigate('Login')}
+            >
+                <Text style={styles.handleIlanVerText}>+</Text>
+            </TouchableOpacity>
+
         </View>
     );
 }
@@ -93,7 +101,7 @@ const styles = StyleSheet.create({
     categoryButton: {
         paddingVertical: 20,
         width: '100%',
-        borderBottomWidth: 1,
+        borderBottomWidth: 0.5,
         borderBottomColor: '#ccc',
         alignItems: 'center',
         flexDirection: 'row',
@@ -119,4 +127,19 @@ const styles = StyleSheet.create({
         width: 120,
         alignItems: 'center',
     },
+    handleIlanVerButton: {
+        position: 'absolute',
+        bottom: 70,
+        right: 20,
+        width: 55,
+        height: 55,
+        borderRadius: 50,
+        backgroundColor: '#2E5894',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    handleIlanVerText: {
+        fontSize: 30,
+        color: "white",
+    }
 });
