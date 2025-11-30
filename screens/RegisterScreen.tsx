@@ -17,6 +17,8 @@ export default function RegisterScreen({ navigation }: Props) {
   const [email, setEmail] = useState("");
   const [sifre, setSifre] = useState("");
 
+  const [showPassword, setShowPassword] = useState(false);
+
   const registerUser = () => {
     if (!ad || !soyad || !email || !sifre) {
       Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
@@ -106,14 +108,20 @@ export default function RegisterScreen({ navigation }: Props) {
       </View>
 
       {/* Şifre input */}
-      <TextInput
-          style={styles.input}
-          placeholder="Şifre"
-          placeholderTextColor={"gray"}
-          secureTextEntry
-          value={sifre}
-          onChangeText={setSifre}
-      />
+      <View style={styles.sifreContainer}>
+        <TextInput
+            style={styles.sifreInput}
+            placeholder="Şifre"
+            placeholderTextColor={"gray"}
+            secureTextEntry = {!showPassword}
+            value={sifre}
+            onChangeText={setSifre}
+        />
+
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Feather name={showPassword ? "eye-off" : "eye"} size={22} />
+        </TouchableOpacity>        
+      </View>
 
       {/* Giriş Yap Butonu */}
       <TouchableOpacity 
@@ -210,5 +218,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 7.5,
     marginBottom: 15,
     fontSize: 16,
-},
+  },
+  sifreContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    height: 50,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ccc',
+    borderRadius: 10,
+    paddingHorizontal: 7.5,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  sifreInput: {
+    fontSize: 16,
+    color: "black",
+  }  
 });
