@@ -40,7 +40,12 @@ export default function CarListScreen({ navigation,route }: Props) {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      {cars.length === 0 ? (
+        <Text style={{ textAlign: "center", marginTop: 50, fontSize: 16 }}>
+          İlan bulunamadı
+        </Text>
+      ) : (
+        <FlatList
         data={cars}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
@@ -63,6 +68,7 @@ export default function CarListScreen({ navigation,route }: Props) {
           </TouchableOpacity>
         )}
       />
+      )}
     </View>
   );
 }

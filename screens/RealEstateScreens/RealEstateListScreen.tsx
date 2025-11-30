@@ -36,7 +36,12 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
 
   return (
     <View style={styles.container}>
-      <FlatList
+      {listings.length === 0 ? (
+        <Text style={{ textAlign: "center", marginTop: 50, fontSize: 16 }}>
+          İlan bulunamadı
+        </Text>
+      ) : (
+        <FlatList
         data={listings}
         keyExtractor={item => item.id.toString()}
         renderItem={({ item }) => (
@@ -60,6 +65,7 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
           </TouchableOpacity>
         )}
       />
+      )}
     </View>
   );
 }
