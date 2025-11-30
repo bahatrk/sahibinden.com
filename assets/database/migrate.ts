@@ -15,6 +15,7 @@ export function runMigrations() {
 
     db.execSync(addusersTableSQL);
     console.log('Migration 003_add_users_table başarıyla uygulandı');
+
     
   } catch (err) {
     console.log('Migration HATA:', err);
