@@ -1,8 +1,9 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
+import React , {useState} from "react";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
+import { openDatabaseSync } from "expo-sqlite";
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
@@ -10,71 +11,128 @@ type Props = {
     navigation: RegisterScreenNavigationProp;
 };
 
+export default function RegisterScreen({ navigation }: Props) {
+  const [ad, setAd] = useState("");
+  const [soyad, setSoyad] = useState("");
+  const [email, setEmail] = useState("");
+  const [sifre, setSifre] = useState("");
 
-export default function RegisterScreen ( {navigation}: Props){
-    return (
-        <View style={styles.container}>
+  const registerUser = () => {
+    if (!ad || !soyad || !email || !sifre) {
+      Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
+      return;
+    }
 
-            {/* HomeScreen Dönüş */}
-            <TouchableOpacity
-                style={styles.homePageReturnButton}
-                onPress={() => navigation.navigate('Home')}
-            >
-                <Feather name="x" style={styles.homePageReturnIcon}/>
-            </TouchableOpacity>
-        
-            {/* Başlık */}
-            <Text style={styles.title}>Hesap aç</Text>
+    try {
+      const db = openDatabaseSync('sahibinden.db');
 
-            {/* Email input */}
-            <TextInput
-                style={styles.input}
-                placeholder="E-posta adresi"
-                placeholderTextColor={"gray"}
-                keyboardType="email-address"
-                autoCapitalize="none"
-            />
-            
-            {/* Ad ve Soyad inputs */}
-            <View style={styles.adSoyadInput}>
-                <TextInput
-                    style={styles.halfInput}
-                    placeholder="Ad"
-                    placeholderTextColor={"gray"}
-                    autoCapitalize="none"
-                />
+      db.execSync(
+        `INSERT INTO users (ad, soyad, email, sifre) VALUES ('${ad}', '${soyad}', '${email}', '${sifre}');`
+      );
 
-                <TextInput
-                    style={styles.halfInput}
-                    placeholder="Soyad"
-                    placeholderTextColor={"gray"}
-                    autoCapitalize="none"
-                />
-            </View>
+      Alert.alert("Başarılı", "Kayıt oluşturuldu!");
 
-            {/* Şifre input */}
-            <TextInput
-                style={styles.input}
-                placeholder="Şifre"
-                placeholderTextColor={"gray"}
-                secureTextEntry
-            />
+      const result = db.getAllSync(`SELECT * FROM users`);
+      console.log("Kayıtlı kullanıcılar:", result);
 
-            {/* Giriş Yap Butonu */}
-            <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>Hesap aç</Text>
-            </TouchableOpacity>
+      // Kayıt sonrası login ekranına yönlendir
+      navigation.navigate('Login');
 
-            <View style={styles.hesapAc}>
-                <Text style={{fontSize: 16}}>Zaten hesabın var mı? </Text>
-                <TouchableOpacity
-                    onPress={() => navigation.navigate('Login')}
-                >
-                    <Text style={styles.hesapAcButton}>Giriş yap</Text>
-                </TouchableOpacity>
-            </View>
+      // Inputları temizle
+      setAd("");
+      setSoyad("");
+      setEmail("");
+      setSifre("");
 
-        </View>
+    } catch (err: any) {
+      if (err.message.includes("UNIQUE constraint failed")) {
+        Alert.alert("Hata", "Bu email zaten kayıtlı!");
+        // Inputları temizle
+        setAd("");
+        setSoyad("");
+        setEmail("");
+        setSifre("");
+      } else {
+        console.log("Kayıt hatası:", err);
+        Alert.alert("Hata", "Kayıt yapılamadı!");
+      }
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+
+      {/* HomeScreen Dönüş */}
+      <TouchableOpacity
+          style={styles.homePageReturnButton}
+          onPress={() => navigation.navigate('Home')}
+      >
+          <Feather name="x" style={styles.homePageReturnIcon}/>
+      </TouchableOpacity>
+  
+      {/* Başlık */}
+      <Text style={styles.title}>Hesap aç</Text>
+
+      {/* Email input */}
+      <TextInput
+          style={styles.input}
+          placeholder="E-posta adresi"
+          placeholderTextColor={"gray"}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          value={email} // text inputun içeriğini state ile baglar
+          onChangeText={setEmail} // text ınputa yazılan degerı state e aktarır
+      />
+      
+      {/* Ad ve Soyad inputs */}
+      <View style={styles.adSoyadInput}>
+          <TextInput
+              style={styles.halfInput}
+              placeholder="Ad"
+              placeholderTextColor={"gray"}
+              autoCapitalize="none"
+              value={ad}
+              onChangeText={setAd}
+          />
+
+          <TextInput
+              style={styles.halfInput}
+              placeholder="Soyad"
+              placeholderTextColor={"gray"}
+              autoCapitalize="none"
+              value={soyad}
+              onChangeText={setSoyad}
+          />
+      </View>
+
+      {/* Şifre input */}
+      <TextInput
+          style={styles.input}
+          placeholder="Şifre"
+          placeholderTextColor={"gray"}
+          secureTextEntry
+          value={sifre}
+          onChangeText={setSifre}
+      />
+
+      {/* Giriş Yap Butonu */}
+      <TouchableOpacity 
+        style={styles.button}
+        onPress={registerUser}
+      >
+          <Text style={styles.buttonText}>Hesap aç</Text>
+      </TouchableOpacity>
+
+      <View style={styles.hesapAc}>
+          <Text style={{fontSize: 16}}>Zaten hesabın var mı? </Text>
+          <TouchableOpacity
+              onPress={() => navigation.navigate('Login')}
+          >
+              <Text style={styles.hesapAcButton}>Giriş yap</Text>
+          </TouchableOpacity>
+      </View>
+
+    </View>
   );
 }
 
