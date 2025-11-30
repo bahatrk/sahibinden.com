@@ -1,16 +1,17 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput } from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
 type Props = {
-    navigation: LoginScreenNavigationProp;
+    navigation: RegisterScreenNavigationProp;
 };
 
-export default function LoginScreen( {navigation}: Props){
+
+export default function RegisterScreen ( {navigation}: Props){
     return (
         <View style={styles.container}>
 
@@ -23,7 +24,7 @@ export default function LoginScreen( {navigation}: Props){
             </TouchableOpacity>
         
             {/* Başlık */}
-            <Text style={styles.title}>İlan vermek için giriş yap</Text>
+            <Text style={styles.title}>Hesap aç</Text>
 
             {/* Email input */}
             <TextInput
@@ -33,6 +34,23 @@ export default function LoginScreen( {navigation}: Props){
                 keyboardType="email-address"
                 autoCapitalize="none"
             />
+            
+            {/* Ad ve Soyad inputs */}
+            <View style={styles.adSoyadInput}>
+                <TextInput
+                    style={styles.halfInput}
+                    placeholder="Ad"
+                    placeholderTextColor={"gray"}
+                    autoCapitalize="none"
+                />
+
+                <TextInput
+                    style={styles.halfInput}
+                    placeholder="Soyad"
+                    placeholderTextColor={"gray"}
+                    autoCapitalize="none"
+                />
+            </View>
 
             {/* Şifre input */}
             <TextInput
@@ -44,15 +62,15 @@ export default function LoginScreen( {navigation}: Props){
 
             {/* Giriş Yap Butonu */}
             <TouchableOpacity style={styles.button}>
-                <Text style={styles.buttonText}>E-posta ile giriş yap</Text>
+                <Text style={styles.buttonText}>Hesap aç</Text>
             </TouchableOpacity>
 
             <View style={styles.hesapAc}>
-                <Text style={{fontSize: 16}}>Henüz hesabın yok mu? </Text>
+                <Text style={{fontSize: 16}}>Zaten hesabın var mı? </Text>
                 <TouchableOpacity
-                  onPress={() => navigation.navigate('Register')}
+                    onPress={() => navigation.navigate('Login')}
                 >
-                    <Text style={styles.hesapAcButton}>Hesap aç</Text>
+                    <Text style={styles.hesapAcButton}>Giriş yap</Text>
                 </TouchableOpacity>
             </View>
 
@@ -119,5 +137,20 @@ const styles = StyleSheet.create({
   hesapAcButton: {
     color: '#007FFF',
     fontSize: 16,
-  }
+  },
+  adSoyadInput: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 15,
+  },
+  halfInput: {
+    width: "48%",
+    height: 50,
+    borderBottomWidth: 0.5,
+    borderBottomColor: '#ccc',
+    borderRadius: 10,
+    paddingHorizontal: 7.5,
+    marginBottom: 15,
+    fontSize: 16,
+},
 });
