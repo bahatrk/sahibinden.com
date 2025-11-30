@@ -1,8 +1,9 @@
-import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState } from "react";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
+import { openDatabaseSync } from "expo-sqlite";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -11,6 +12,40 @@ type Props = {
 };
 
 export default function LoginScreen( {navigation}: Props){
+    const [email, setEmail] = useState("");
+    const [sifre, setSifre] = useState("");
+
+    const loginUser = () => {
+      if (!email || !sifre) {
+        Alert.alert("Lütfen tüm alanları doldurun!");
+        return;
+      }
+
+      try {
+        const db = openDatabaseSync('sahibinden.db');
+
+        const login = db.getAllSync(
+          `SELECT * FROM users WHERE email='${email}' AND sifre='${sifre}'`
+        );
+
+        if (login.length > 0){
+          Alert.alert("Giriş yapıldı");
+          console.log("Giriş yapan kullanıcı:",login);
+
+          // Home screene yonlendırılsın
+          navigation.navigate('Home');
+        } else {
+          Alert.alert("Email veya şifre hatalı!")
+        }
+
+        setEmail("");
+        setSifre("");
+      } catch (err: any) {
+        console.log("Giriş hatası:", err);
+        Alert.alert("Giriş yapılırken hata oluştu!");
+      }
+    }
+
     return (
         <View style={styles.container}>
 
@@ -32,6 +67,8 @@ export default function LoginScreen( {navigation}: Props){
                 placeholderTextColor={"gray"}
                 keyboardType="email-address"
                 autoCapitalize="none"
+                value={email}
+                onChangeText={setEmail}
             />
 
             {/* Şifre input */}
@@ -40,10 +77,15 @@ export default function LoginScreen( {navigation}: Props){
                 placeholder="Şifre"
                 placeholderTextColor={"gray"}
                 secureTextEntry
+                value={sifre}
+                onChangeText={setSifre}
             />
 
             {/* Giriş Yap Butonu */}
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity 
+              style={styles.button}
+              onPress={loginUser}
+            >
                 <Text style={styles.buttonText}>E-posta ile giriş yap</Text>
             </TouchableOpacity>
 
