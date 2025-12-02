@@ -3,6 +3,7 @@ export interface RealEstateListing {
   id: number;
   kategori: string; 
   satisTuru: string;
+  emlakTipi: string;
   baslik: string;
   aciklama: string;
   fiyat: number;

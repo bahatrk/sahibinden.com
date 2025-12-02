@@ -1,18 +1,19 @@
 export const seedSQL = `
 -- Emlak verileri
 INSERT INTO emlak_ilanlari (
-  id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
+  id, kategori, satisTuru, emlakTipi, baslik, aciklama, fiyat, konum, image,
   metreKareBrut, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
-  1, 'Konut', 'Satılık', '3+1 Daire', 'Merkezi konumda, geniş daire', 
+  1, 'Konut', 'Satılık', 'Villa', '3+1 Daire', 'Merkezi konumda, geniş daire', 
   450000, 'İstanbul/Kadıköy', 'https://i.pinimg.com/1200x/72/e0/41/72e041cdc97711fd10e5352551fe7d7d.jpg',
   140, 120, '3+1', 10, 3, 5, 'Doğalgaz', 'Var', 'Sahibinden', 'Hayır'
 )
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
+  emlakTipi = excluded.emlakTipi,
   baslik = excluded.baslik,
   aciklama = excluded.aciklama,
   fiyat = excluded.fiyat,
@@ -31,18 +32,19 @@ ON CONFLICT(id) DO UPDATE SET
 
 
 INSERT INTO emlak_ilanlari (
-  id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
+  id, kategori, satisTuru, emlakTipi, baslik, aciklama, fiyat, konum, image,
   metreKareBrut, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
-  2, 'Konut', 'Kiralık', '2+1 Daire', 'Yeni tadilatlı',
+  2, 'Konut', 'Kiralık', 'Daire', '2+1 Daire', 'Yeni tadilatlı',
   2000, 'Ankara/Çankaya', 'https://i.pinimg.com/1200x/dd/1b/58/dd1b5839fd303de1033d17464e027317.jpg',
   110, 95, '2+1', 5, 2, 8, 'Kombi', 'Var', 'Emlakçı', 'Hayır'
 )
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
+  emlakTipi = excluded.emlakTipi,
   baslik = excluded.baslik,
   aciklama = excluded.aciklama,
   fiyat = excluded.fiyat,
@@ -61,18 +63,19 @@ ON CONFLICT(id) DO UPDATE SET
 
 
 INSERT INTO emlak_ilanlari (
-  id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
+  id, kategori, satisTuru, emlakTipi, baslik, aciklama, fiyat, konum, image,
   metreKareBrut, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
-  3, 'Bina', 'Satılık', 'Ofis Binası', 'Şehir merkezinde',
+  3, 'Bina', 'Satılık', NULL, 'Ofis Binası', 'Şehir merkezinde',
   750000, 'İzmir/Karşıyaka', 'https://i.pinimg.com/1200x/cd/43/59/cd4359eb5b895ce4cda433d55de3d608.jpg',
   800, 700, '8 Katlı', 15, 0, 8, 'Merkezi Sistem', 'Var', 'Sahibinden', 'Evet'
 )
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
+  emlakTipi = excluded.emlakTipi,
   baslik = excluded.baslik,
   aciklama = excluded.aciklama,
   fiyat = excluded.fiyat,
@@ -91,18 +94,19 @@ ON CONFLICT(id) DO UPDATE SET
 
 
 INSERT INTO emlak_ilanlari (
-  id, kategori, satisTuru, baslik, aciklama, fiyat, konum, image,
+  id, kategori, satisTuru, emlakTipi, baslik, aciklama, fiyat, konum, image,
   metreKareBrut, metreKareNet, odaSayisi, binaYasi,
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
-  4, 'Bina', 'Kiralık', 'İş Yeri', 'Şehir merkezinde',
+  4, 'Bina', 'Kiralık', 'NULL', 'İş Yeri', 'Şehir merkezinde',
   75000, 'Erzurum/Palandöken', 'https://i.pinimg.com/1200x/49/36/d5/4936d5fb85480d6f5e7082aadbffe051.jpg',
   300, 260, 'Tek Kat', 8, 0, 1, 'Soba', 'Yok', 'Emlakçı', 'Hayır'
 )
 ON CONFLICT(id) DO UPDATE SET
   kategori = excluded.kategori,
   satisTuru = excluded.satisTuru,
+  emlakTipi = excluded.emlakTipi,
   baslik = excluded.baslik,
   aciklama = excluded.aciklama,
   fiyat = excluded.fiyat,
