@@ -4,7 +4,6 @@ import { getArabaIlanlar } from '../../assets/database/db';
 import { CarListing } from '../../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootNavigator';
-import { runMigrations } from '../../assets/database/migrate';
 
 type Props = StackScreenProps<RootStackParamList, 'CarList'>;
 
@@ -16,8 +15,7 @@ export default function CarListScreen({ navigation,route }: Props) {
 
   useEffect(() => {
     const loadData = () => {
-      try {
-        runMigrations();               // Migration tamam
+      try {               // Migration tamam
         const data = getArabaIlanlar(); // Veriyi çek
 
         // Parametrele göre filtreleme

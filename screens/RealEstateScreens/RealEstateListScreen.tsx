@@ -4,7 +4,6 @@ import { getEmlakIlanlar } from '../../assets/database/db';
 import { RealEstateListing } from '../../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootNavigator';
-import { runMigrations } from '../../assets/database/migrate';
 
 type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
@@ -15,8 +14,7 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
 
   useEffect(() => {
     const loadData = () => {
-      try {
-        runMigrations();               // Migration tamam
+      try {             // Migration tamam
         const data = getEmlakIlanlar(); // Veriyi çek
         console.log(data.map(i => ({ kategori: i.kategori, emlakTipi: i.emlakTipi })));
 

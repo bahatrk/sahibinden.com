@@ -44,7 +44,6 @@ export default function RootNavigator() {
         headerTitleStyle: { fontWeight: 'bold' },
       }}
       >
-
         <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'sahibinden.com' }} />
         <Stack.Screen name="CarType" component={CarTypeScreen} options={{title:'Kategori Seçimi'}} />
         <Stack.Screen name="CarMarkaType" component={CarMarkaTypeScreen} options={{ title: 'Kategori Seçimi'}} />
