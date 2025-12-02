@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS emlak_ilanlari (
   id INTEGER PRIMARY KEY,
   kategori TEXT,
   satisTuru TEXT,
+  emlakTipi TEXT,
   baslik TEXT,
   aciklama TEXT,
   fiyat REAL,
@@ -17,7 +18,13 @@ CREATE TABLE IF NOT EXISTS emlak_ilanlari (
   isitma TEXT,
   asansor TEXT,
   kimden TEXT,
-  takas TEXT
+  takas TEXT,
+
+  CHECK (
+    (kategori = 'Konut' AND emlakTipi IS NOT NULL)
+    OR
+    (kategori = 'Bina' AND emlakTipi IS NULL)
+  )
 );
 
 CREATE TABLE IF NOT EXISTS araba_ilanlari (
