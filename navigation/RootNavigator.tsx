@@ -9,6 +9,7 @@ import RealEstateListScreen from '../screens/RealEstateScreens/RealEstateListScr
 import RealEstateDetailScreen from '../screens/RealEstateScreens/RealEstateDetailScreen';
 import RealEstateTypeScreen from '../screens/RealEstateScreens/RealEstateTypeScreen'
 import RealEstateSaleScreen from '../screens/RealEstateScreens/RealEstateSaleScreen'
+import RealEstateRealTypeScreen from '../screens/RealEstateScreens/RealEstateRealTypeScreen';
 import CarTypeScreen from '../screens/CarScreens/CarTypeScreen';
 import CarMarkaTypeScreen from '../screens/CarScreens/CarMarkaTypeScreen';
 import CarModelTypeScreen from '../screens/CarScreens/CarModelTypeScreen'
@@ -24,7 +25,8 @@ export type RootStackParamList = {
     CarDetail: {id: number};
     RealEstateType: undefined;
     RealEstateSale: {kategori: string};
-    RealEstateList: {kategori: string; satisTuru: string};
+    RealEstateRealType: {kategori: string;  satisTuru: string};
+    RealEstateList: {kategori: string; satisTuru: string; emlakTipi?: string} // burada emlak tipini opsiyonel yaptık
     RealEstateDetail: {id: number};
     Login: undefined;
     Register: undefined;
@@ -51,6 +53,7 @@ export default function RootNavigator() {
         <Stack.Screen name="CarDetail" component={CarDetailScreen} options={{ title: 'İlan Detayı' }} />
         <Stack.Screen name="RealEstateType" component={RealEstateTypeScreen} options={{ title: 'Kategori Seçimi' }} />
         <Stack.Screen name="RealEstateSale" component={RealEstateSaleScreen} options={{ title: 'Kategori Seçimi' }} />
+        <Stack.Screen name='RealEstateRealType' component={RealEstateRealTypeScreen} options={{title: 'Kategori Seçimi'}} />
         <Stack.Screen name="RealEstateList" component={RealEstateListScreen} options={{ title: 'Arama Sonucu' }} />
         <Stack.Screen name="RealEstateDetail" component={RealEstateDetailScreen} options={{ title: 'İlan Detayı' }} />
         <Stack.Screen name="Login" component={LoginScreen}/>

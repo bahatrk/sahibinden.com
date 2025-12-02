@@ -1,31 +1,45 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootNavigator';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
-type Props = StackScreenProps<RootStackParamList, 'RealEstateSale'>;
+type Props = StackScreenProps<RootStackParamList, 'RealEstateRealType'>;
 
-export default function RealEstateSaleScreen({ navigation, route }: Props) {
-  const { kategori } = route.params;
+export default function RealEstateRealTypeScreen({ navigation, route }: Props) {
+  const { kategori, satisTuru } = route.params;
+
+  useEffect(() => {
+    if (kategori !== 'Konut') {
+        navigation.replace('RealEstateList', { kategori, satisTuru});
+    }
+  }, []);
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('RealEstateRealType', { kategori, satisTuru: 'Satılık' })}
+        onPress={() => navigation.navigate('RealEstateList', { kategori, satisTuru, emlakTipi: 'Daire' })}
       >
-        <Text style={styles.text}>Satılık</Text>
+        <Text style={styles.text}>Daire</Text>
         <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('RealEstateRealType', { kategori, satisTuru: 'Kiralık' })}
+        onPress={() => navigation.navigate('RealEstateList', { kategori, satisTuru, emlakTipi: 'Rezidans' })}
       >
-        <Text style={styles.text}>Kiralık</Text>
+        <Text style={styles.text}>Rezidans</Text>
         <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
       </TouchableOpacity>
+
+    <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('RealEstateList', { kategori, satisTuru, emlakTipi: 'Villa' })}
+    >
+        <Text style={styles.text}>Villa</Text>
+        <MaterialCommunityIcons name="greater-than" size={22} color="black" style={styles.icon}/>
+    </TouchableOpacity>
     </View>
   );
 }

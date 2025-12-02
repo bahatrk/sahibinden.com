@@ -9,7 +9,7 @@ import { runMigrations } from '../../assets/database/migrate';
 type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
 export default function RealEstateListScreen({ navigation,route }: Props) {
-  const { kategori, satisTuru } = route.params;
+  const { kategori, satisTuru, emlakTipi } = route.params;
   const [listings, setListings] = useState<RealEstateListing[]>([]);
 
   useEffect(() => {
@@ -20,7 +20,8 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
 
         const filtered = data.filter(item => 
           item.kategori === kategori &&
-          item.satisTuru === satisTuru
+          item.satisTuru === satisTuru &&
+          item.emlakTipi === emlakTipi
         );
 
         console.log("Filtreli sonuç: ", filtered);
