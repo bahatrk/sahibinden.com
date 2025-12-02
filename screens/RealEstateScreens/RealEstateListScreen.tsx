@@ -21,7 +21,7 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
         const filtered = data.filter(item => 
           item.kategori === kategori &&
           item.satisTuru === satisTuru &&
-          item.emlakTipi === emlakTipi
+          (emlakTipi ? item.emlakTipi === emlakTipi : true)
         );
 
         console.log("Filtreli sonuç: ", filtered);
@@ -33,7 +33,7 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
     };
 
     loadData();
-  }, []);
+  }, [kategori, satisTuru, emlakTipi]); // parametre değişirse tekrar yükle
 
   return (
     <View style={styles.container}>

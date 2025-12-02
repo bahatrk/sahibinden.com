@@ -2,7 +2,6 @@ import { openDatabaseSync } from 'expo-sqlite';
 import { initSQL } from '../migrations/001_init';
 import { seedSQL } from '../migrations/002_seed_data';
 import { addusersTableSQL } from '../migrations/003_add_users_table';
-import { addEmlakTipiColumn } from '../migrations/004_add_column_to_real_estate';
 
 const db = openDatabaseSync('sahibinden.db');
 
@@ -16,9 +15,6 @@ export function runMigrations() {
 
     db.execSync(addusersTableSQL);
     console.log('Migration 003_add_users_table başarıyla uygulandı');
-
-    db.execSync(addEmlakTipiColumn);
-    console.log('Migration 004_add_column_to_real_estate başarıyla uygulandı');
 
   } catch (err) {
     console.log('Migration HATA:', err);

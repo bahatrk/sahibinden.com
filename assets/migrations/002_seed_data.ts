@@ -99,7 +99,7 @@ INSERT INTO emlak_ilanlari (
   bulunduguKat, katSayisi, isitma, asansor, kimden, takas
 )
 VALUES (
-  4, 'Bina', 'Kiralık', 'NULL', 'İş Yeri', 'Şehir merkezinde',
+  4, 'Bina', 'Kiralık', NULL, 'İş Yeri', 'Şehir merkezinde',
   75000, 'Erzurum/Palandöken', 'https://i.pinimg.com/1200x/49/36/d5/4936d5fb85480d6f5e7082aadbffe051.jpg',
   300, 260, 'Tek Kat', 8, 0, 1, 'Soba', 'Yok', 'Emlakçı', 'Hayır'
 )
