@@ -36,7 +36,7 @@ export default function CarListScreen({ navigation,route }: Props) {
     };
 
     loadData();
-  }, []);
+  }, [altKategori, brand, model]);
 
   return (
     <View style={styles.container}>

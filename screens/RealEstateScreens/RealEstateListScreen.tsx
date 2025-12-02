@@ -10,6 +10,7 @@ type Props = StackScreenProps<RootStackParamList, 'RealEstateList'>;
 
 export default function RealEstateListScreen({ navigation,route }: Props) {
   const { kategori, satisTuru, emlakTipi } = route.params;
+  console.log(`Parametreler: kategori=${kategori}, satış türü=${satisTuru}, emlak tipi=${emlakTipi}`);
   const [listings, setListings] = useState<RealEstateListing[]>([]);
 
   useEffect(() => {
@@ -17,12 +18,20 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
       try {
         runMigrations();               // Migration tamam
         const data = getEmlakIlanlar(); // Veriyi çek
+        console.log(data.map(i => ({ kategori: i.kategori, emlakTipi: i.emlakTipi })));
 
-        const filtered = data.filter(item => 
-          item.kategori === kategori &&
-          item.satisTuru === satisTuru &&
-          (emlakTipi ? item.emlakTipi === emlakTipi : true)
-        );
+        const filtered = data.filter(item => {
+          if (item.kategori?.toLowerCase() !== kategori?.toLowerCase()) return false;
+          if (item.satisTuru?.toLowerCase() !== satisTuru?.toLowerCase()) return false;
+
+          // Konut için emlakTipi parametre doluysa kontrol et
+          if (kategori?.toLowerCase() === 'konut' && emlakTipi) {
+            if (!item.emlakTipi || item.emlakTipi.toLowerCase() !== emlakTipi.toLowerCase()) return false;
+          }
+
+          return true;
+        });
+
 
         console.log("Filtreli sonuç: ", filtered);
 
@@ -33,7 +42,7 @@ export default function RealEstateListScreen({ navigation,route }: Props) {
     };
 
     loadData();
-  }, [kategori, satisTuru, emlakTipi]); // parametre değişirse tekrar yükle
+  }, [kategori, satisTuru, emlakTipi]);
 
   return (
     <View style={styles.container}>
