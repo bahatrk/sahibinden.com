@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function CategoryScreen({ navigation, route }: Props) {
-  const {parentId} = route.params;
+  const category = route.params;
 
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
@@ -25,16 +25,13 @@ export default function CategoryScreen({ navigation, route }: Props) {
   }, []);
 
   async function load() {
-    const data = await getChildCategories(parentId);
+    const data = await getChildCategories(category.id);
     setCategories(data);
     setLoading(false);
   }
 
   function handlePress(cat: CategoryEntity) {
-    navigation.push("Category", {
-      parentId: cat.id,
-      title: cat.name,
-    });
+    navigation.push("Category", cat);
   }
 
   if (loading) {
@@ -60,10 +57,10 @@ export default function CategoryScreen({ navigation, route }: Props) {
       {categories.length === 0 && (
         <View style={styles.noChildContainer}>
           <Text style={styles.noChildText}>
-            No more child categories. You reached the end.
+            No more child categories. You reached the end. {category.desc}
           </Text>
           <Text style={styles.noChildTextSecondary}>
-            🟡 TODO → load ilanlar for {parentId}
+            🟡 TODO → load ilanlar for {category.id}
           </Text>
         </View>
       )}

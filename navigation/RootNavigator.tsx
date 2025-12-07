@@ -7,6 +7,7 @@ import CategoryScreen from "../screens/CategoryScreen";
 //import ListingScreen from "../screens/ListingScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
+import { CategoryEntity } from "../lib/database/category";
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +18,7 @@ export type RootStackParamList = {
   Home: undefined;
 
   // Recursive category screen
-  Category: {
-    parentId: number | null;
-    title: string;
-  }
+  Category: CategoryEntity
 
   // Final screen listing ilanlar
   // Listings: {
@@ -61,7 +59,7 @@ export default function RootNavigator() {
           name="Category"
           component={CategoryScreen}
           options={({ route }) => ({
-            title: route.params.title,
+            title: route.params.name,
           })}
         />
 
