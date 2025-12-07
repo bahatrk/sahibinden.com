@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { getEmlakIlanlar } from '../../assets/database/db';
+import { getEmlakIlanlar } from '../../lib/database/db';
 import { RealEstateListing } from '../../types/Listing';
 import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../../navigation/RootNavigator';

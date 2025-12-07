@@ -1,145 +1,79 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, TextInput,TouchableOpacity} from "react-native";
-import Entypo from '@expo/vector-icons/Entypo';
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import Ionicons from '@expo/vector-icons/Ionicons';
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
+import SearchBar from "../components/SearchBar";
+import CategoryItem from "../components/CategoryItem";
+import { getChildCategories, CategoryEntity } from "../lib/database/category";
 
-// uygulamada belırledıgımız stack navigator tipi ve RootStackParamList tüm stack ekranlarını ve onlara gönderilecek parametreleri tanımlar
-type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Home'>; 
+type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
 type Props = {
-    navigation: HomeScreenNavigationProp;
+  navigation: HomeScreenNavigationProp;
 };
 
-export default function HomeScreen({navigation}: Props){
-    return (
-        <View style={styles.container}>
-            <View style={styles.searchContainer}>
+export default function HomeScreen({ navigation }: Props) {
+  const [search, setSearch] = useState("");
+  const [categories, setCategories] = useState<CategoryEntity[]>([]);
 
-                <Ionicons name="search" size={24} color="gray" style={styles.icon} />
-                {/* Arama Barı */}
-                <TextInput
-                    style={styles.searchBar}
-                    placeholder="Araba, ev ara..."
-                    placeholderTextColor={'gray'}
-                />
-            </View>
+  useEffect(() => {
+    loadRootCategories();
+  }, []);
 
-            <View style={styles.categoriesContainer}>
-                 <View style={styles.categoryWrapper}>
-                    {/* Emlak Butonu */}
-                    <TouchableOpacity
-                    style={styles.categoryButton}
-                    onPress={() => navigation.navigate('RealEstateType')}
-                    >
-                        <View style={{backgroundColor: 'orange', borderRadius: '50%', padding: 10}}>
-                            <Entypo name="home" size={24} color="white" />
-                        </View>
+  async function loadRootCategories() {
+    const data = await getChildCategories(null);
+    setCategories(data);
+  }
 
-                        <View style={styles.textContainer}>
-                            <Text style={styles.buttonTitleText}>Emlak</Text>
-                            <Text style={styles.buttonSubtitleText}>Konut, İş Yeri, Arsa, Konut Projeleri, Bina,...</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
+  function handleCategoryPress(cat: CategoryEntity) {
+    navigation.navigate("Category", { parentId: cat.id, title: cat.name });
+  }
 
-                <View style={styles.categoryWrapper}>
-                    {/* Araba Butonu */}
-                    <TouchableOpacity
-                    style={styles.categoryButton}
-                    onPress={() => navigation.navigate('CarType')}
-                    >
-                        <View style={{backgroundColor: 'red', borderRadius: '50%', padding: 10}}>
-                            <MaterialCommunityIcons name="steering" size={24} color="white" />
-                        </View>
+  return (
+    <View style={styles.container}>
+      <SearchBar
+        value={search}
+        onChangeText={setSearch}
+        placeholder="Araba, ev ara..."
+      />
 
-                        <View style={styles.textContainer}>
-                            <Text style={styles.buttonTitleText}>Vasıta</Text>
-                            <Text style={styles.buttonSubtitleText}>Otomobil, Arazi, SUV & Pickup, Elektrikli...</Text>
-                        </View>
-                    </TouchableOpacity>
-                </View>
-            </View>
+      <FlatList
+        data={categories}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={({ item }) => (
+          <CategoryItem category={item} onPress={handleCategoryPress} />
+        )}
+      />
 
-            {/* İlan Ver Butonu */}
-            <TouchableOpacity
-                style={styles.handleIlanVerButton}
-                onPress={() => navigation.navigate('Login')}
-            >
-                <Text style={styles.handleIlanVerText}>+</Text>
-            </TouchableOpacity>
-
-        </View>
-    );
+      {/* İlan Ver Button */}
+      <TouchableOpacity
+        style={styles.handleIlanVerButton}
+        onPress={() => navigation.navigate("Login")}
+      >
+        <Text style={styles.handleIlanVerText}>+</Text>
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
-    container:{ flex: 1, padding: 20, backgroundColor: '#fff'},
-    searchContainer: {
-        width: "100%",
-        height: 45,
-        justifyContent: "center",
-        marginVertical: 10,
-        borderWidth: 0.5,
-    },
-    icon: {
-        position: "absolute",
-        left: 10,
-        zIndex: 1,
-    },
-    searchBar: {
-        height: "100%",
-        paddingLeft: 40, 
-        fontSize: 16,
-    },
-    categoriesContainer: { flexDirection: 'column', marginTop: 10},
-    categoryWrapper: {
-        marginBottom: 5, // her buton arasına boşluk
-    },
-    categoryButton: {
-        paddingVertical: 20,
-        width: '100%',
-        borderBottomWidth: 0.5,
-        borderBottomColor: '#ccc',
-        alignItems: 'center',
-        flexDirection: 'row',
-    },
-    textContainer: {
-        flexDirection: "column",
-        marginLeft: 12,
-    },
-    buttonTitleText: { 
-        fontSize: 18, 
-        fontWeight: '400', 
-    },
-    buttonSubtitleText: {
-        fontSize: 12,
-        color: "gray",
-        marginTop: 2,
-    },
-    subButton: {
-        padding: 10,
-        backgroundColor: '#eee',
-        marginTop: 5,
-        borderRadius: 8,
-        width: 120,
-        alignItems: 'center',
-    },
-    handleIlanVerButton: {
-        position: 'absolute',
-        bottom: 70,
-        right: 20,
-        width: 55,
-        height: 55,
-        borderRadius: 50,
-        backgroundColor: '#2E5894',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    handleIlanVerText: {
-        fontSize: 30,
-        color: "white",
-    }
+  container: { flex: 1, padding: 20, backgroundColor: "#fff" },
+
+  handleIlanVerButton: {
+    position: "absolute",
+    bottom: 70,
+    right: 20,
+    width: 55,
+    height: 55,
+    borderRadius: 50,
+    backgroundColor: "#2E5894",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  handleIlanVerText: {
+    fontSize: 30,
+    color: "white",
+  },
 });
+ 
