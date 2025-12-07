@@ -1,0 +1,136 @@
+@startuml
+ 
+' ========================
+'  Listing Types
+' ========================
+entity "category_type" as category_type {
+  *id : INTEGER <<PK>> ' Primary key
+  name : TEXT ' Emlak / Vasita
+}
+
+' ========================
+'  Categories (Hierarchical)
+' ========================
+entity "category" as category {
+  *id : INTEGER <<PK>> ' Primary key
+  parent_id : INTEGER <<FK, nullable>> ' Parent category, NULL if main
+  category_type_id : INTEGER <<FK>> ' Listing Type d
+  name : TEXT ' Category name
+  level : INTEGER ' Optional depth level
+}
+
+ 
+' ========================
+'  Listings
+' ========================
+entity "listing" as listing {
+  *id : INTEGER <<PK>> ' Listing ID
+  category_id : INTEGER <<FK>> ' Category reference
+  title : TEXT ' Listing title
+  desc : TEXT ' Description
+  price : REAL ' Price
+  location_id : INTEGER <<FK>> ' Location reference
+  creation_date : DATE ' Listing date
+}
+ 
+' ========================
+'  Location Table
+' ========================
+entity "location" as location {
+  *id : INTEGER <<PK>> ' Primary key
+  province : TEXT ' City
+  district : TEXT ' District
+  lat : FLOAT ' Latitude
+  lng : FLOAT ' Longitude
+}
+ 
+' ========================
+'  Images Table
+' ========================
+entity "images" as images {
+  *id : INTEGER <<PK>> ' Primary key
+  lising_id : INTEGER <<FK>> ' Listing reference
+  url : TEXT ' Image URL or path
+  alt : TEXT ' Alt text / description
+  order : INTEGER ' Display order
+}
+ 
+' ========================
+'  Emlak Tables
+' ========================
+entity "real_estate_type" as real_estate_type {
+  *id : INTEGER <<PK>> ' Property type (Daire, Villa, ...)
+  name : TEXT
+}
+ 
+entity "real_estate_detail" as real_estate_detail {
+  *ilan_id : INTEGER <<PK, FK>> ' Listing reference
+  real_estate_type_id : INTEGER <<FK>> ' Property type
+  room_number : INTEGER ' Room count
+  bathroom_number : INTEGER ' Bathroom count
+  area_sqm : INTEGER ' Size in sqm
+  floor : INTEGER ' Floor
+  age : INTEGER ' Building age
+  with_fugniture : BOOLEAN ' Furnished
+}
+ 
+' ========================
+'  Vasita Tables
+' ========================
+entity "vehicle_type" as vehicle_type {
+  *id : INTEGER <<PK>> ' Vehicle type
+  name : TEXT
+}
+ 
+entity "brand" as brand {
+  *id : INTEGER <<PK>> ' Brand
+  name : TEXT
+}
+ 
+entity "model" as model {
+  *id : INTEGER <<PK>> ' Model
+  brand_id : INTEGER <<FK>> ' Brand reference
+  name : TEXT
+}
+ 
+entity "serie" as serie {
+  *id : INTEGER <<PK>> ' Series
+  model_id : INTEGER <<FK>> ' Model reference
+  name : TEXT
+}
+ 
+entity "vehicle_detail" as vehicle_detail {
+  *ilan_id : INTEGER <<PK, FK>> ' Listing reference
+  vehicle_type_id : INTEGER <<FK>> ' Vehicle type
+  brand_id : INTEGER <<FK>> ' Brand
+  model_id : INTEGER <<FK>> ' Model
+  serie_id : INTEGER <<FK>> ' Series
+  year : INTEGER ' Year
+  fuel : TEXT ' Fuel
+  transmission : TEXT ' Transmission
+  km : INTEGER ' Mileage
+  boddy_type : TEXT ' Body type
+  engine_cap : TEXT ' Engine capacity
+}
+ 
+' ========================
+'  Relationships
+' ========================
+category_type ||--o{ category
+category ||--o{ category : parent-child
+category ||--o{ listing
+ 
+listing ||--|| real_estate_detail
+real_estate_type ||--o{ real_estate_detail
+ 
+listing ||--|| vehicle_detail
+vehicle_type ||--o{ vehicle_detail
+brand ||--o{ model
+model ||--o{ serie
+brand ||--o{ vehicle_detail
+model ||--o{ vehicle_detail
+serie ||--o{ vehicle_detail
+ 
+listing ||--o{ images
+listing ||--|| location
+@enduml

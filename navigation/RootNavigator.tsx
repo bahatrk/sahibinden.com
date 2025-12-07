@@ -1,63 +1,84 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import React from "react";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 
-import HomeScreen from '../screens/HomeScreen';
-import CarListScreen from '../screens/CarScreens/CarListScreen';
-import CarDetailScreen from '../screens/CarScreens/CarDetailScreen';
-import RealEstateListScreen from '../screens/RealEstateScreens/RealEstateListScreen';
-import RealEstateDetailScreen from '../screens/RealEstateScreens/RealEstateDetailScreen';
-import RealEstateTypeScreen from '../screens/RealEstateScreens/RealEstateTypeScreen'
-import RealEstateSaleScreen from '../screens/RealEstateScreens/RealEstateSaleScreen'
-import RealEstateRealTypeScreen from '../screens/RealEstateScreens/RealEstateRealTypeScreen';
-import CarTypeScreen from '../screens/CarScreens/CarTypeScreen';
-import CarMarkaTypeScreen from '../screens/CarScreens/CarMarkaTypeScreen';
-import CarModelTypeScreen from '../screens/CarScreens/CarModelTypeScreen'
-import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
+import HomeScreen from "../screens/HomeScreen";
+import CategoryScreen from "../screens/CategoryScreen";
+//import ListingScreen from "../screens/ListingScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 
+/*
+|--------------------------------------------------------------------------
+| RootStack Param List
+|--------------------------------------------------------------------------
+*/
 export type RootStackParamList = {
-    Home: undefined;
-    CarModelType: {brand: string; altKategori: string};
-    CarType: undefined;
-    CarMarkaType: {altKategori: string};
-    CarList: {altKategori: string; brand: string; model: string};
-    CarDetail: {id: number};
-    RealEstateType: undefined;
-    RealEstateSale: {kategori: string};
-    RealEstateRealType: {kategori: string;  satisTuru: string};
-    RealEstateList: {kategori: string; satisTuru: string; emlakTipi?: string} // burada emlak tipini opsiyonel yaptık
-    RealEstateDetail: {id: number};
-    Login: undefined;
-    Register: undefined;
+  Home: undefined;
+
+  // Recursive category screen
+  Category: {
+    parentId: number | null;
+    title: string;
+  }
+
+  // Final screen listing ilanlar
+  // Listings: {
+  //   categoryId: number;
+  //   title: string;
+  // };
+
+  Login: undefined;
+  Register: undefined;
 };
 
-const Stack = createStackNavigator<RootStackParamList>(); // tüm ekranlar parametreleri dogru tanır
+const Stack = createStackNavigator<RootStackParamList>();
 
+/*
+|--------------------------------------------------------------------------
+| Root Navigator
+|--------------------------------------------------------------------------
+*/
 export default function RootNavigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-        headerStyle: { backgroundColor: '#104E8B' }, // header arka planı mavi
-        headerTintColor: '#fff', // yazı rengi beyaz
-        headerTitleStyle: { fontWeight: 'bold' },
-      }}
+          headerStyle: { backgroundColor: "#104E8B" },
+          headerTintColor: "#fff",
+          headerTitleStyle: { fontWeight: "bold" },
+        }}
       >
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: 'sahibinden.com' }} />
-        <Stack.Screen name="CarType" component={CarTypeScreen} options={{title:'Kategori Seçimi'}} />
-        <Stack.Screen name="CarMarkaType" component={CarMarkaTypeScreen} options={{ title: 'Kategori Seçimi'}} />
-        <Stack.Screen name="CarModelType" component={CarModelTypeScreen} options={{ title: 'Kategori Seçimi'}} />
-        <Stack.Screen name="CarList" component={CarListScreen} options={{ title: 'Araba İlanları' }} />
-        <Stack.Screen name="CarDetail" component={CarDetailScreen} options={{ title: 'İlan Detayı' }} />
-        <Stack.Screen name="RealEstateType" component={RealEstateTypeScreen} options={{ title: 'Kategori Seçimi' }} />
-        <Stack.Screen name="RealEstateSale" component={RealEstateSaleScreen} options={{ title: 'Kategori Seçimi' }} />
-        <Stack.Screen name='RealEstateRealType' component={RealEstateRealTypeScreen} options={{title: 'Kategori Seçimi'}} />
-        <Stack.Screen name="RealEstateList" component={RealEstateListScreen} options={{ title: 'Arama Sonucu' }} />
-        <Stack.Screen name="RealEstateDetail" component={RealEstateDetailScreen} options={{ title: 'İlan Detayı' }} />
-        <Stack.Screen name="Login" component={LoginScreen}/>
+        {/* Home */}
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{ title: "sahibinden.com" }}
+        />
+
+        {/* Dynamic Recursive Category Selector */}
+        <Stack.Screen
+          name="Category"
+          component={CategoryScreen}
+          options={({ route }) => ({
+            title: route.params.title,
+          })}
+        />
+
+        {/* Final Listings Page */}
+        {/* <Stack.Screen
+          name="Listings"
+          component={ListingScreen}
+          options={({ route }) => ({
+            title: route.params.title,
+          })}
+        /> */}
+
+        {/* Auth */}
+        <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Register" component={RegisterScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
+ 

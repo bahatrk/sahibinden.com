@@ -1,7 +1,7 @@
 import { openDatabaseSync } from 'expo-sqlite';
-import { initSQL } from '../migrations/001_init';
-import { seedSQL } from '../migrations/002_seed_data';
-import { addusersTableSQL } from '../migrations/003_add_users_table';
+import { initSQL } from '../../assets/migrations/001_init';
+import { seedSQL } from '../../assets/migrations/002_seed_data';
+import { addusersTableSQL } from '../../assets/migrations/003_add_users_table';
 
 const db = openDatabaseSync('sahibinden.db');
 

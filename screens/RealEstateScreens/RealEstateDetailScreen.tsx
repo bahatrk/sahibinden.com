@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, ActivityIndicator, ScrollView } from 'react-native';
-import { db } from '../../assets/database/db';
+import { db } from '../../lib/database/db';
 
 export default function RealEstateDetailScreen({ route }: any) {
 
