@@ -9,12 +9,21 @@ entity "category_type" as category_type {
 }
 
 ' ========================
+'  Logos
+' ========================
+entity "logo_image" as logo_image {
+  *id : INTEGER <<PK>> ' Primary key
+  url : TEXT '
+}
+
+' ========================
 '  Categories (Hierarchical)
 ' ========================
 entity "category" as category {
   *id : INTEGER <<PK>> ' Primary key
   parent_id : INTEGER <<FK, nullable>> ' Parent category, NULL if main
   category_type_id : INTEGER <<FK>> ' Listing Type d
+  logo_id : INTEGER <<FK>> ' logo Image Id
   name : TEXT ' Category name
   level : INTEGER ' Optional depth level
 }
@@ -116,7 +125,8 @@ entity "vehicle_detail" as vehicle_detail {
 ' ========================
 '  Relationships
 ' ========================
-category_type ||--o{ category
+category_type ||--|| category
+logo_image ||--|| category
 category ||--o{ category : parent-child
 category ||--o{ listing
  
@@ -130,7 +140,10 @@ model ||--o{ serie
 brand ||--o{ vehicle_detail
 model ||--o{ vehicle_detail
 serie ||--o{ vehicle_detail
+logo_image ||--|| brand
  
 listing ||--o{ images
 listing ||--|| location
+
+
 @enduml

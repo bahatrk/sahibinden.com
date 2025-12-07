@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+  FlatList,
+} from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
+
 import { RootStackParamList } from "../navigation/RootNavigator";
 
-import { getChildCategories, CategoryEntity } from "../lib/database/category";
+
+import {
+  getChildCategories,
+  CategoryEntity,
+} from "../lib/database/category";
+import {
+  getListingsWithData,
+  ListingWithData,
+} from "../lib/database/listing";
+import ListingItem from "../components/ListingItem";
 
 type NavProp = StackNavigationProp<RootStackParamList, "Category">;
 type RouteProps = RouteProp<RootStackParamList, "Category">;
@@ -15,26 +32,32 @@ type Props = {
 };
 
 export default function CategoryScreen({ navigation, route }: Props) {
-  const {parentId} = route.params;
+  const category = route.params; // because we passed {cat}
 
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
+  const [listings, setListings] = useState<ListingWithData[]>([]);
 
   useEffect(() => {
     load();
   }, []);
 
   async function load() {
-    const data = await getChildCategories(parentId);
-    setCategories(data);
+    const childCats = await getChildCategories(category.id);
+
+    if (childCats.length > 0) {
+      setCategories(childCats);
+      setListings([]);
+    } else {
+      const items = await getListingsWithData(category.id);
+      setListings(items);
+    }
+
     setLoading(false);
   }
 
   function handlePress(cat: CategoryEntity) {
-    navigation.push("Category", {
-      parentId: cat.id,
-      title: cat.name,
-    });
+    navigation.push("Category", cat );
   }
 
   if (loading) {
@@ -47,24 +70,31 @@ export default function CategoryScreen({ navigation, route }: Props) {
 
   return (
     <View style={styles.container}>
-      {categories.map(cat => (
-        <TouchableOpacity
-          key={cat.id}
-          style={styles.categoryButton}
-          onPress={() => handlePress(cat)}
-        >
-          <Text style={styles.categoryText}>{cat.name}</Text>
-        </TouchableOpacity>
-      ))}
+      {/* 📌 CASE 1 → Show child categories */}
+      {categories.length > 0 && (
+        <FlatList
+          data={categories}
+          keyExtractor={(item) => item.id.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.categoryButton}
+              onPress={() => handlePress(item)}
+            >
+              <Text style={styles.categoryText}>{item.name}</Text>
+            </TouchableOpacity>
+          )}
+        />
+      )}
 
+      {/* 📌 CASE 2 → No children → Show listings */}
       {categories.length === 0 && (
-        <View style={styles.noChildContainer}>
-          <Text style={styles.noChildText}>
-            No more child categories. You reached the end.
-          </Text>
-          <Text style={styles.noChildTextSecondary}>
-            🟡 TODO → load ilanlar for {parentId}
-          </Text>
+        <View style={{ marginTop: 10 }}>
+          {listings.map((ls) => (
+            <ListingItem
+              key={ls.id}
+              listing={ls}
+            />
+          ))}
         </View>
       )}
     </View>
@@ -72,7 +102,7 @@ export default function CategoryScreen({ navigation, route }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff", padding: 12 },
+  container: { flex: 1, backgroundColor: "#fff", paddingHorizontal: 12 },
   categoryButton: {
     paddingVertical: 18,
     borderBottomWidth: 0.4,
@@ -86,17 +116,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  noChildContainer: {
-    marginTop: 30,
-    alignItems: "center",
-  },
-  noChildText: {
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  noChildTextSecondary: {
-    marginTop: 4,
-    fontSize: 14,
-    color: "gray",
+  listingHeader: {
+    marginTop: 10,
+    marginBottom: 15,
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#333",
   },
 });

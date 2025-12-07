@@ -1,4 +1,3 @@
-import * as SQLite from 'expo-sqlite';
 import { openDb } from '../database/db';
 
 export type CategoryEntity = {

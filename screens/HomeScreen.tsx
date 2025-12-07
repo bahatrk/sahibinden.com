@@ -26,7 +26,7 @@ export default function HomeScreen({ navigation }: Props) {
   }
 
   function handleCategoryPress(cat: CategoryEntity) {
-    navigation.navigate("Category", { parentId: cat.id, title: cat.name });
+    navigation.navigate("Category", cat);
   }
 
   return (
