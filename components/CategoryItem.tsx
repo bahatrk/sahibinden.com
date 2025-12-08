@@ -1,6 +1,5 @@
 import React from "react";
-import { TouchableOpacity, View, Text, StyleSheet,Image } from "react-native";
-import Entypo from "@expo/vector-icons/Entypo";
+import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import { CategoryEntity } from "../lib/database/category";
 
 type Props = {
@@ -38,4 +37,3 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
 });
- 
