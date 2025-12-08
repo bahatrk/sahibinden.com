@@ -22,6 +22,7 @@ import {
   ListingWithData,
 } from "../lib/database/listing";
 import ListingItem from "../components/ListingItem";
+import CategoryItem from "../components/CategoryItem";
 
 type NavProp = StackNavigationProp<RootStackParamList, "Category">;
 type RouteProps = RouteProp<RootStackParamList, "Category">;
@@ -76,12 +77,7 @@ export default function CategoryScreen({ navigation, route }: Props) {
           data={categories}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.categoryButton}
-              onPress={() => handlePress(item)}
-            >
-              <Text style={styles.categoryText}>{item.name}</Text>
-            </TouchableOpacity>
+            <CategoryItem category={item} onPress={handlePress} />  
           )}
         />
       )}
