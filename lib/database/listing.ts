@@ -33,11 +33,11 @@ export async function getListingsWithData(categoryId: number): Promise<ListingWi
     SELECT 
       l.*,
       img.url AS image_url,
-      loc.sehir AS location_province,
-      loc.ilce AS location_district
+      loc.province AS location_province,
+      loc.district AS location_district
     FROM listing l
-    LEFT JOIN images img 
-      ON img.ilan_id = l.id AND img.ui_order = 1
+    LEFT JOIN image img 
+      ON img.listing_id = l.id AND img.ui_order = 1
     LEFT JOIN location loc 
       ON loc.id = l.location_id
     WHERE l.category_id = ?
