@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from "reac
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
-import { openDatabaseSync } from "expo-sqlite";
+import { registerUserService } from "../lib/database/userService";
+import AsyncStorage from "expo-sqlite/kv-store";
 
 type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
 
@@ -12,52 +13,36 @@ type Props = {
 };
 
 export default function RegisterScreen({ navigation }: Props) {
-  const [ad, setAd] = useState("");
-  const [soyad, setSoyad] = useState("");
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
-  const [sifre, setSifre] = useState("");
-
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-  const registerUser = () => {
-    if (!ad || !soyad || !email || !sifre) {
+  const registerUser = async () => {
+    if (!name || !surname || !email || !password) {
       Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
       return;
     }
 
-    try {
-      const db = openDatabaseSync('sahibinden.db');
+    const result = await registerUserService(name, surname, email, password);
 
-      db.execSync(
-        `INSERT INTO users (ad, soyad, email, sifre) VALUES ('${ad}', '${soyad}', '${email}', '${sifre}');`
-      );
+    if (result.success) {
+      await AsyncStorage.setItem("user", JSON.stringify({
+        name,
+        surname,
+        email
+      }));
 
-      Alert.alert("Başarılı", "Kayıt oluşturuldu!");
-
-      const result = db.getAllSync(`SELECT * FROM users`);
-      console.log("Kayıtlı kullanıcılar:", result);
-
-      // Kayıt sonrası login ekranına yönlendir
-      navigation.navigate('Login');
-
-      // Inputları temizle
-      setAd("");
-      setSoyad("");
+      // inputları temizle
+      setName("");
+      setSurname("");
       setEmail("");
-      setSifre("");
+      setPassword("");
 
-    } catch (err: any) {
-      if (err.message.includes("UNIQUE constraint failed")) {
-        Alert.alert("Hata", "Bu email zaten kayıtlı!");
-        // Inputları temizle
-        setAd("");
-        setSoyad("");
-        setEmail("");
-        setSifre("");
-      } else {
-        console.log("Kayıt hatası:", err);
-        Alert.alert("Hata", "Kayıt yapılamadı!");
-      }
+      navigation.replace("Profile");
+    } else {
+      Alert.alert("Hata", result.message);
     }
   };
 
@@ -93,8 +78,8 @@ export default function RegisterScreen({ navigation }: Props) {
               placeholder="Ad"
               placeholderTextColor={"gray"}
               autoCapitalize="none"
-              value={ad}
-              onChangeText={setAd}
+              value={name}
+              onChangeText={setName}
           />
 
           <TextInput
@@ -102,8 +87,8 @@ export default function RegisterScreen({ navigation }: Props) {
               placeholder="Soyad"
               placeholderTextColor={"gray"}
               autoCapitalize="none"
-              value={soyad}
-              onChangeText={setSoyad}
+              value={surname}
+              onChangeText={setSurname}
           />
       </View>
 
@@ -114,8 +99,8 @@ export default function RegisterScreen({ navigation }: Props) {
             placeholder="Şifre"
             placeholderTextColor={"gray"}
             secureTextEntry = {!showPassword}
-            value={sifre}
-            onChangeText={setSifre}
+            value={password}
+            onChangeText={setPassword}
         />
 
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>

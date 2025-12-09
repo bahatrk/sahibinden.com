@@ -3,7 +3,8 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/RootNavigator";
-import { openDatabaseSync } from "expo-sqlite";
+import { loginUserService } from "../lib/database/userService";
+import AsyncStorage from "expo-sqlite/kv-store";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -13,40 +14,28 @@ type Props = {
 
 export default function LoginScreen( {navigation}: Props){
     const [email, setEmail] = useState("");
-    const [sifre, setSifre] = useState("");
+    const [password, setPassword] = useState("");
 
     const [showPassword, setShowPassword] = useState(false);
 
-    const loginUser = () => {
-      if (!email || !sifre) {
+    const loginUser = async () => {
+      if (!email || !password) {
         Alert.alert("Lütfen tüm alanları doldurun!");
         return;
       }
 
-      try {
-        const db = openDatabaseSync('sahibinden.db');
+        const result = await loginUserService(email,password);
 
-        const login = db.getAllSync(
-          `SELECT * FROM users WHERE email='${email}' AND sifre='${sifre}'`
-        );
-
-        if (login.length > 0){
-          Alert.alert("Giriş yapıldı");
-          console.log("Giriş yapan kullanıcı:",login);
-
-          // Home screene yonlendırılsın
-          navigation.navigate('Home');
+        if (result.success) {
+          await AsyncStorage.setItem("user", JSON.stringify(result.user));
+          navigation.replace("Profile");
         } else {
-          Alert.alert("Email veya şifre hatalı!")
+          Alert.alert("Hata", result.message || "Giriş yapılamadı!");
         }
 
         setEmail("");
-        setSifre("");
-      } catch (err: any) {
-        console.log("Giriş hatası:", err);
-        Alert.alert("Giriş yapılırken hata oluştu!");
-      }
-    }
+        setPassword("");
+    };
 
     return (
         <View style={styles.container}>
@@ -54,7 +43,7 @@ export default function LoginScreen( {navigation}: Props){
             {/* HomeScreen Dönüş */}
             <TouchableOpacity
                 style={styles.homePageReturnButton}
-                onPress={() => navigation.navigate('Home')}
+                onPress={() => navigation.replace("Home")}
             >
                 <Feather name="x" style={styles.homePageReturnIcon}/>
             </TouchableOpacity>
@@ -80,8 +69,8 @@ export default function LoginScreen( {navigation}: Props){
                   placeholder="Şifre"
                   placeholderTextColor={"gray"}
                   secureTextEntry = {!showPassword}
-                  value={sifre}
-                  onChangeText={setSifre}
+                  value={password}
+                  onChangeText={setPassword}
               />
 
               <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
