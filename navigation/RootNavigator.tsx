@@ -8,6 +8,8 @@ import CategoryScreen from "../screens/CategoryScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import { CategoryEntity } from "../lib/database/category";
+import { ListingWithData } from "../lib/database/listing";
+import ListingDetailScreen from "../screens/ListingDetailScreen";
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +27,9 @@ export type RootStackParamList = {
   //   categoryId: number;
   //   title: string;
   // };
+  ListingDetail: {
+    listing: ListingWithData;
+  };
 
   Login: undefined;
   Register: undefined;
@@ -60,6 +65,14 @@ export default function RootNavigator() {
           component={CategoryScreen}
           options={({ route }) => ({
             title: route.params.name,
+          })}
+        />
+
+        <Stack.Screen
+          name="ListingDetail"
+          component={ListingDetailScreen}
+          options={({ route }) => ({
+            title: route.params.listing.title,
           })}
         />
 

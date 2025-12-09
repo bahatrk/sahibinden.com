@@ -3,13 +3,14 @@ import { ListingWithData } from "../lib/database/listing";
 
 type Props = {
   listing: ListingWithData;
+  onPress?: () => void;
 };
 
 const DEFAULT_IMAGE = "https://placehold.co/300x300/png";
 
-export default function ListingItem({ listing }: Props) {
+export default function ListingItem({ listing, onPress }: Props) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image
         source={{ uri: listing.image_url ?? DEFAULT_IMAGE }}
         style={styles.thumbnail}
