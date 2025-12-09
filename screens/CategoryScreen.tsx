@@ -89,6 +89,7 @@ export default function CategoryScreen({ navigation, route }: Props) {
             <ListingItem
               key={ls.id}
               listing={ls}
+              onPress={() => navigation.push("ListingDetail", { listing: ls })}
             />
           ))}
         </View>
