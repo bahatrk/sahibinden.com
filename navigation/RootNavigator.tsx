@@ -11,6 +11,7 @@ import RegisterScreen from "../screens/RegisterScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "./authContext";
+import HeaderProfileButton from "../components/HeaderProfileButton";
 
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -44,7 +45,10 @@ export default function RootNavigator() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={{ title: "sahibinden.com" }}
+            options={({ navigation}) => ({
+              title: "sahibinden.com",
+              headerRight: () => <HeaderProfileButton navigation={navigation}/>
+            })}
           />
           <Stack.Screen
             name="Category"

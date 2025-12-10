@@ -10,7 +10,7 @@ import {
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RouteProp } from "@react-navigation/native";
 
-import { RootStackParamList } from "../navigation/RootNavigator";
+import { RootStackParamList } from "../navigation/types";
 
 
 import {
