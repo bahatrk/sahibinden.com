@@ -56,7 +56,7 @@ export default function HomeScreen({ navigation }: Props) {
           if (!user) {
             navigation.navigate("Login");
           } else {
-            navigation.navigate("Profile"); // sonra ilan ekleme ekranı gelecek
+            navigation.navigate("CreateListing"); // sonra ilan ekleme ekranı gelecek
           }
         }}
       >

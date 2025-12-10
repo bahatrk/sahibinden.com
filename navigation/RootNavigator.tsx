@@ -12,6 +12,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "./authContext";
 import HeaderProfileButton from "../components/HeaderProfileButton";
+import CreateListingScreen from "../screens/CreateListingScreen";
 
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -45,9 +46,11 @@ export default function RootNavigator() {
           <Stack.Screen
             name="Home"
             component={HomeScreen}
-            options={({ navigation}) => ({
+            options={({ navigation }) => ({
               title: "sahibinden.com",
-              headerRight: () => <HeaderProfileButton navigation={navigation}/>
+              headerRight: () => (
+                <HeaderProfileButton navigation={navigation} />
+              ),
             })}
           />
           <Stack.Screen
@@ -68,6 +71,12 @@ export default function RootNavigator() {
             name="Profile"
             component={ProfileScreen}
             options={{ title: "Profil" }}
+          />
+
+          <Stack.Screen
+            name="CreateListing"
+            component={CreateListingScreen}
+            options={{ title: "Yeni İlan Oluştur" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
