@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react-native";
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/RootNavigator";
+import { RootStackParamList } from "../navigation/types";
 import { loginUserService } from "../lib/database/userService";
 import AsyncStorage from "expo-sqlite/kv-store";
+import { AuthContext } from "../navigation/authContext";
 
 type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
 
@@ -15,8 +16,8 @@ type Props = {
 export default function LoginScreen( {navigation}: Props){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const [showPassword, setShowPassword] = useState(false);
+    const { setUser } = useContext(AuthContext);
 
     const loginUser = async () => {
       if (!email || !password) {
@@ -28,6 +29,7 @@ export default function LoginScreen( {navigation}: Props){
 
         if (result.success) {
           await AsyncStorage.setItem("user", JSON.stringify(result.user));
+          setUser(result.user); // Global state güncellendi
           navigation.replace("Profile");
         } else {
           Alert.alert("Hata", result.message || "Giriş yapılamadı!");

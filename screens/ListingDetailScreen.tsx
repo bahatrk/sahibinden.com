@@ -7,7 +7,7 @@ import VehicleDetailComponent from "../components/VehicleDetailComponent";
 import { RealEstateDetailEntity, getRealEstateDetail } from "../lib/database/realEstateDetail";
 import { VehicleDetailEntity, getVehicleDetail } from "../lib/database/vehicleDetail";
 import { ListingWithData } from "../lib/database/listing";
-import { RootStackParamList } from "../navigation/RootNavigator";
+import { RootStackParamList } from "../navigation/types";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 

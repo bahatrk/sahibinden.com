@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import AsyncStorage from "expo-sqlite/kv-store";
@@ -9,17 +9,11 @@ import ListingDetailScreen from "../screens/ListingDetailScreen";
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import ProfileScreen from "../screens/ProfileScreen";
-import { CategoryEntity } from "../lib/database/category";
-import { ListingWithData } from "../lib/database/listing";
+import { RootStackParamList } from "../navigation/types";
+import { AuthContext } from "./authContext";
+import HeaderProfileButton from "../components/HeaderProfileButton";
+import CreateListingScreen from "../screens/CreateListingScreen";
 
-export type RootStackParamList = {
-  Home:undefined;
-  Category: CategoryEntity;
-  ListingDetail: { listing: ListingWithData };
-  Login: undefined;
-  Register: undefined;
-  Profile: undefined;
-};
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -39,40 +33,53 @@ export default function RootNavigator() {
   if (loading) return null; // Splash ekranı ekleyebilirsin
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="Home"
-        screenOptions={{
-          headerStyle: { backgroundColor: "#104E8B" },
-          headerTintColor: "#fff",
-          headerTitleStyle: { fontWeight: "bold" },
-        }}
-      >
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{ title: "sahibinden.com" }}
-        />
-        <Stack.Screen
-          name="Category"
-          component={CategoryScreen}
-          options={({ route }) => ({ title: route.params.name })}
-        />
-        <Stack.Screen
-          name="ListingDetail"
-          component={ListingDetailScreen}
-          options={({ route }) => ({ title: route.params.listing.title })}
-        />
+    <AuthContext.Provider value={{ user, setUser }}>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Home"
+          screenOptions={{
+            headerStyle: { backgroundColor: "#104E8B" },
+            headerTintColor: "#fff",
+            headerTitleStyle: { fontWeight: "bold" },
+          }}
+        >
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={({ navigation }) => ({
+              title: "sahibinden.com",
+              headerRight: () => (
+                <HeaderProfileButton navigation={navigation} />
+              ),
+            })}
+          />
+          <Stack.Screen
+            name="Category"
+            component={CategoryScreen}
+            options={({ route }) => ({ title: route.params.name })}
+          />
+          <Stack.Screen
+            name="ListingDetail"
+            component={ListingDetailScreen}
+            options={({ route }) => ({ title: route.params.listing.title })}
+          />
 
-        <Stack.Screen name="Login" component={LoginScreen} />
-        <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
 
-        <Stack.Screen
-          name="Profile"
-          component={ProfileScreen}
-          options={{ title: "Profil" }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+          <Stack.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{ title: "Profil" }}
+          />
+
+          <Stack.Screen
+            name="CreateListing"
+            component={CreateListingScreen}
+            options={{ title: "Yeni İlan Oluştur" }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 }
