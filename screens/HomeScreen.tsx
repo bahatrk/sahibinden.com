@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { RootStackParamList } from "../navigation/RootNavigator";
+import { RootStackParamList } from "../navigation/types";
 import SearchBar from "../components/SearchBar";
 import CategoryItem from "../components/CategoryItem";
 import { getChildCategories, CategoryEntity } from "../lib/database/category";
+
+import { AuthContext } from "../navigation/authContext";
+import { useContext } from "react";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
@@ -15,6 +18,7 @@ type Props = {
 export default function HomeScreen({ navigation }: Props) {
   const [search, setSearch] = useState("");
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     loadRootCategories();
@@ -48,7 +52,13 @@ export default function HomeScreen({ navigation }: Props) {
       {/* İlan Ver Button */}
       <TouchableOpacity
         style={styles.handleIlanVerButton}
-        onPress={() => navigation.navigate("Login")}
+        onPress={() => {
+          if (!user) {
+            navigation.navigate("Login");
+          } else {
+            navigation.navigate("Profile"); // sonra ilan ekleme ekranı gelecek
+          }
+        }}
       >
         <Text style={styles.handleIlanVerText}>+</Text>
       </TouchableOpacity>
