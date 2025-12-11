@@ -6,14 +6,17 @@ type Props = {
   detail: VehicleDetailEntity;
 };
 
-export default function RealEstateDetailComponent({ detail }: Props) {
+export default function VehicleDetailComponent({ detail }: Props) {
   const rows = [
+    { label: "Marka", value: detail.brand_name },
+    { label: "Model", value: detail.model_name },
+    { label: "Seri", value: detail.serial_name },
     { label: "Yıl", value: detail.year },
     { label: "Yakıt", value: detail.fuel },
-    { label: "Vites", value: detail.transmission},
+    { label: "Vites", value: detail.transmission },
     { label: "KM", value: detail.kilometer },
-    { label: "Kasa Tipi", value: detail.body_type},
-    { label: "Motor Hacmi", value: detail.engine_cc},
+    { label: "Kasa Tipi", value: detail.body_type },
+    { label: "Motor Hacmi", value: detail.engine_cc },
   ];
 
   return (
