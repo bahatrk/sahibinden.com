@@ -18,39 +18,32 @@ export default function ListingItem({ listing, onPress }: Props) {
       />
 
       <View style={styles.infoContainer}>
-        <Text style={styles.title} numberOfLines={1}>
+        {/* Title */}
+        <Text style={styles.title}>
           {listing.title}
         </Text>
 
-        {listing.title && (
-          <Text style={styles.subtitle} numberOfLines={2}>
-            {listing.title}
-          </Text>
-        )}
+        {/* Location + Price Row */}
+        <View style={styles.row}>
+          <View style={styles.locationContainer}>
+            {listing.location_province && (
+              <Text style={styles.subtitle}>
+                {listing.location_province},
+              </Text>
+            )}
+            {listing.location_district && (
+              <Text style={styles.subtitle}>
+                {listing.location_district}
+              </Text>
+            )}
+          </View>
 
-        {listing.price && (
-          <Text style={styles.price}>
-            {listing.price.toLocaleString("tr-TR")} ₺
-          </Text>
-        )}
-
-        {listing.creation_date && (
-          <Text style={styles.subtitle} numberOfLines={3}>
-            {listing.creation_date}
-          </Text>
-        )}
-
-        {listing.location_province && (
-          <Text style={styles.subtitle} numberOfLines={4}>
-            {listing.location_province}
-          </Text>
-        )}
-
-        {listing.location_district && (
-          <Text style={styles.subtitle} numberOfLines={5}>
-            {listing.location_district}
-          </Text>
-        )}
+          {listing.price && (
+            <Text style={styles.price}>
+              {listing.price.toLocaleString("tr-TR")} TL
+            </Text>
+          )}
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -64,7 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     marginVertical: 6,
     marginHorizontal: 12,
-    alignItems: "center",
+    alignItems: "flex-start",
     gap: 12,
     shadowColor: "#000",
     shadowOpacity: 0.05,
@@ -88,13 +81,25 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#222",
-    marginBottom: 2,
+    marginBottom: 8,
+    flexShrink: 1,      // title uzunsa alt satıra geçer
+    flexWrap: "wrap",   // satır taşarsa wrap
+  },
+
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+
+  locationContainer: {
+    flexDirection: "row",
+    flexShrink: 1, // location uzun olursa price taşmaz
   },
 
   subtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: "#666",
-    marginBottom: 4,
   },
 
   price: {

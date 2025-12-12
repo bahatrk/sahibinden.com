@@ -15,27 +15,40 @@ export default function ListingDetailScreen() {
   const route = useRoute<ListingDetailRouteProp>();
   const listing: ListingWithData = route.params.listing;
 
-  const [realEstateDetail, setRealEstateDetail] = useState<RealEstateDetailEntity | null>(null);
-  const [vehicleDetail, setVehicleDetail] = useState<VehicleDetailEntity | null>(null);
+  const [realEstateDetail, setRealEstateDetail] =
+    useState<RealEstateDetailEntity | null>(null);
+  const [vehicleDetail, setVehicleDetail] =
+    useState<VehicleDetailEntity | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadDetail();
   }, []);
 
+  // screens/ListingDetailScreen.tsx (sadece loadDetail fonksiyonunu değiştir)
   async function loadDetail() {
-    if (listing.category_type_id === 1) {
-      // Emlak
-      const data = await getRealEstateDetail(listing.id);
-      console.log("RealEstateDetail:", data);
-      setRealEstateDetail(data);
-    } else if (listing.category_type_id === 2) {
-      // Araç
-      const data = await getVehicleDetail(listing.id);
-      console.log("vehicleDetail:", data);
-      setVehicleDetail(data);
+    try {
+      console.log("loadDetail - listing:", listing);
+      if (listing.category_type_id === 1) {
+        const data = await getRealEstateDetail(listing.id);
+        console.log("loadDetail - RealEstateDetail result:", data);
+        setRealEstateDetail(data);
+      } else if (listing.category_type_id === 2) {
+        const data = await getVehicleDetail(listing.id);
+        console.log("loadDetail - VehicleDetail result:", data);
+        setVehicleDetail(data);
+      } else {
+        console.warn(
+          "loadDetail - unknown category_type_id:",
+          listing.category_type_id
+        );
+      }
+    } catch (err) {
+      console.error("loadDetail - error:", err);
+    } finally {
+      // loading her durumda kapat
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
@@ -44,9 +57,13 @@ export default function ListingDetailScreen() {
 
   return (
     <ScrollView style={{ flex: 1, padding: 12 }}>
-      <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: 12 }}>{listing.title}</Text>
+      <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: 12 }}>
+        {listing.title}
+      </Text>
 
-      {realEstateDetail && <RealEstateDetailComponent detail={realEstateDetail} />}
+      {realEstateDetail && (
+        <RealEstateDetailComponent detail={realEstateDetail} />
+      )}
 
       {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
     </ScrollView>
