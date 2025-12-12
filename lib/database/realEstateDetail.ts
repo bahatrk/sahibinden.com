@@ -14,17 +14,20 @@ export type RealEstateDetailEntity = {
   lift: number;
   car_park: number;
 
-  // JOIN ile gelebilecek alan
+  // Listing'den gelen alanlar
+  price?: number;
+  creation_date?: string;
   desc?: string | null;
 };
 
 export async function getRealEstateDetail(listingId: number): Promise<RealEstateDetailEntity | null> {
   const db = await openDb();
 
-  // 1) Önce JOIN'li dene (listing.description ile)
-  const sqlJoin = `
-    SELECT 
+  const sql = `
+    SELECT
       red.*,
+      l.price,
+      l.creation_date,
       l.desc
     FROM real_estate_detail red
     JOIN listing l ON l.id = red.listing_id
@@ -32,28 +35,19 @@ export async function getRealEstateDetail(listingId: number): Promise<RealEstate
   `;
 
   try {
-    const rows = await db.getAllAsync<RealEstateDetailEntity>(sqlJoin, [listingId]);
+    const rows = await db.getAllAsync<RealEstateDetailEntity>(sql, [listingId]);
     console.log("getRealEstateDetail - JOIN rows:", rows);
     if (rows && rows.length > 0) {
       const r = rows[0];
-      // normalize: description alanı varsa atıyoruz
       return {
         ...r,
-        desc: (r as any).desc ?? null,
+        price: r.price,
+        creation_date: r.creation_date,
+        desc: r.desc ?? null,
       };
     }
   } catch (err) {
-    console.error("getRealEstateDetail - JOIN error:", err);
-  }
-
-  // 2) JOIN başarısızsa fallback: sadece real_estate_detail al
-  try {
-    const sqlRaw = `SELECT * FROM real_estate_detail WHERE listing_id = ?`;
-    const rawRows = await db.getAllAsync<RealEstateDetailEntity>(sqlRaw, [listingId]);
-    console.log("getRealEstateDetail - RAW rows:", rawRows);
-    if (rawRows && rawRows.length > 0) return rawRows[0];
-  } catch (err) {
-    console.error("getRealEstateDetail - RAW error:", err);
+    console.error("getRealEstateDetail - error:", err);
   }
 
   return null;

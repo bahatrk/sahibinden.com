@@ -21,6 +21,8 @@ export default function RealEstateDetailComponent({ detail }: Props) {
   }
 
   const rows = [
+    {label: "Fiyat", value: `${detail.price} TL`},
+    {label: "İlan Tarihi", value: detail.creation_date},
     { label: "Metrekare", value: `${detail.square_meter} m²` },
     { label: "Oda Sayısı", value: detail.room_number },
     { label: "Bina Yaşı", value: `${detail.building_age} yıl` },
@@ -49,7 +51,6 @@ export default function RealEstateDetailComponent({ detail }: Props) {
             style={{
               width: windowWidth * 0.8,
               height: 220,
-              borderRadius: 10,
               marginRight: 12,
             }}
             resizeMode="cover"
