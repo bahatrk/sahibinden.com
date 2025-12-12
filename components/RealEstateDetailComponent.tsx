@@ -1,12 +1,24 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, ScrollView, Dimensions, Image } from "react-native";
 import { RealEstateDetailEntity } from "../lib/database/realEstateDetail";
+import { getListingImages, ImageEntity } from "../lib/database/image";
 
 type Props = {
   detail: RealEstateDetailEntity;
 };
 
 export default function RealEstateDetailComponent({ detail }: Props) {
+  const [images, setImages] = useState<ImageEntity[]>([]);
+
+  useEffect(() => {
+    loadImages();
+  }, []);
+
+  async function loadImages() {
+    const imgs = await getListingImages(detail.listing_id);
+    setImages(imgs);
+  }
+
   const rows = [
     { label: "Oda Sayısı", value: detail.room_number },
     { label: "Banyo Sayısı", value: detail.bathroom_number },
@@ -16,8 +28,31 @@ export default function RealEstateDetailComponent({ detail }: Props) {
     { label: "Eşyalı", value: detail.furnished ? "Evet" : "Hayır" },
   ];
 
+  const windowWidth = Dimensions.get("window").width;
+
   return (
     <View style={styles.container}>
+      {/* Resimler */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.imageScroll}
+      >
+        {images.map((img) => (
+          <Image
+            key={img.id}
+            source={{ uri: img.url }}
+            style={{
+              width: windowWidth * 0.8,
+              height: 220,
+              borderRadius: 10,
+              marginRight: 12,
+            }}
+            resizeMode="cover"
+          />
+        ))}
+      </ScrollView>
+      
       {rows.map((row, index) => (
         <View key={index}>
           <View style={styles.row}>
@@ -34,6 +69,9 @@ export default function RealEstateDetailComponent({ detail }: Props) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 8,
+  },
+  imageScroll: {
+    marginBottom: 12,
   },
   row: {
     flexDirection: "row",

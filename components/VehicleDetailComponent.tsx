@@ -1,12 +1,24 @@
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, Dimensions, ScrollView,Image } from "react-native";
 import { VehicleDetailEntity } from "../lib/database/vehicleDetail";
+import { getListingImages, ImageEntity } from "../lib/database/image";
 
 type Props = {
   detail: VehicleDetailEntity;
 };
 
 export default function VehicleDetailComponent({ detail }: Props) {
+    const [images, setImages] = useState<ImageEntity[]>([]);
+
+    useEffect(() => {
+      loadImages();
+    }, []);
+
+    async function loadImages() {
+      const imgs = await getListingImages(detail.listing_id);
+      setImages(imgs);
+    }
+
   const rows = [
     { label: "Marka", value: detail.brand_name },
     { label: "Model", value: detail.model_name },
@@ -19,8 +31,31 @@ export default function VehicleDetailComponent({ detail }: Props) {
     { label: "Motor Hacmi", value: detail.engine_cc },
   ];
 
+  const windowWidth = Dimensions.get("window").width;
+
   return (
     <View style={styles.container}>
+      {/* Resimler */}
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={styles.imageScroll}
+      >
+        {images.map((img) => (
+          <Image
+            key={img.id}
+            source={{ uri: img.url }}
+            style={{
+              width: windowWidth * 0.8,
+              height: 220,
+              borderRadius: 10,
+              marginRight: 12,
+            }}
+            resizeMode="cover"
+          />
+        ))}
+      </ScrollView>
+
       {rows.map((row, index) => (
         <View key={index}>
           <View style={styles.row}>
@@ -37,6 +72,9 @@ export default function VehicleDetailComponent({ detail }: Props) {
 const styles = StyleSheet.create({
   container: {
     marginVertical: 8,
+  },
+  imageScroll: { 
+    marginBottom: 12 
   },
   row: {
     flexDirection: "row",
