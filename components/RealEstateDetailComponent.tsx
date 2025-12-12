@@ -21,11 +21,14 @@ export default function RealEstateDetailComponent({ detail }: Props) {
   }
 
   const rows = [
-    { label: "Oda Sayısı", value: detail.room_number },
-    { label: "Banyo Sayısı", value: detail.bathroom_number },
     { label: "Metrekare", value: `${detail.square_meter} m²` },
-    { label: "Kat", value: detail.floor },
+    { label: "Oda Sayısı", value: detail.room_number },
     { label: "Bina Yaşı", value: `${detail.building_age} yıl` },
+    { label: "Bulunduğu Kat", value: detail.floor },
+    { label: "Banyo Sayısı", value: detail.bathroom_number },
+    { label: "Mutfak", value: detail.kitchen },
+    { label: "Asansör", value: detail.lift ? "Var" : "Yok" },
+    { label: "Otopark", value: detail.car_park ? "Açık & Kapalı Otopark" : "Yok" },
     { label: "Eşyalı", value: detail.furnished ? "Evet" : "Hayır" },
   ];
 

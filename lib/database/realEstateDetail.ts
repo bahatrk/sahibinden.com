@@ -9,6 +9,10 @@ export type RealEstateDetailEntity = {
   floor: number;
   building_age: number;
   furnished: boolean;
+  heat: string;
+  kitchen: string;
+  lift: number;
+  car_park: number;
 
   // JOIN ile gelebilecek alan
   desc?: string | null;
