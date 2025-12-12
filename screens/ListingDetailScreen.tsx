@@ -27,10 +27,12 @@ export default function ListingDetailScreen() {
     if (listing.category_type_id === 1) {
       // Emlak
       const data = await getRealEstateDetail(listing.id);
+      console.log("RealEstateDetail:", data);
       setRealEstateDetail(data);
     } else if (listing.category_type_id === 2) {
       // Araç
       const data = await getVehicleDetail(listing.id);
+      console.log("vehicleDetail:", data);
       setVehicleDetail(data);
     }
     setLoading(false);
