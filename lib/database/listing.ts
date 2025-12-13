@@ -7,6 +7,7 @@ export type ListingEntity = {
   category_id: number;
   desc: string;
   creation_date: number;
+  user_id: number;
 };
 
 export type ListingWithData = ListingEntity & {
@@ -80,4 +81,32 @@ export async function createListing(data: {
   return result.insertId;
 }
 
+export async function getUserListings(userId: number): Promise<ListingWithData[]> {
+  const db = await openDb();
+
+  const sql = `
+    SELECT 
+      l.*,
+      img.url AS image_url,
+      p.name AS location_province,
+      d.name AS location_district,
+      c.category_type_id
+    FROM listing l
+    LEFT JOIN image img 
+      ON img.listing_id = l.id AND img.ui_order = 1
+    LEFT JOIN location loc 
+      ON loc.id = l.location_id
+    LEFT JOIN province p
+      ON p.id = loc.province_id
+    LEFT JOIN district d
+      ON d.id = loc.district_id
+    LEFT JOIN category c
+      ON c.id = l.category_id
+    WHERE l.user_id = ?
+    ORDER BY l.creation_date DESC;
+  `;
+
+  const rows = await db.getAllAsync<ListingWithData>(sql, [userId]);
+  return rows ?? [];
+}
 

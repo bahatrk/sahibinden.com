@@ -13,7 +13,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
-import DropDownPicker from "react-native-dropdown-picker";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
 import { getChildCategories, CategoryEntity } from "../lib/database/category";
@@ -33,11 +32,19 @@ type Props = {
 export default function CreateListingScreen({ navigation }: Props) {
   const { user } = useContext(AuthContext);
 
+  // Kullanıcı yoksa formu gösterme
+  if (!user) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Text>Lütfen giriş yapın veya kayıt olun.</Text>
+        <Button title="Ana Sayfaya Dön" onPress={() => navigation.navigate("Home")} />
+      </View>
+    );
+  }
+
   // Category
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<
-    CategoryEntity[]
-  >([]);
+  const [selectedCategories, setSelectedCategories] = useState<CategoryEntity[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
   // Form fields
@@ -61,14 +68,12 @@ export default function CreateListingScreen({ navigation }: Props) {
     setLoadingCategories(false);
   }
 
-
   function handleCategoryPress(cat: CategoryEntity) {
     setSelectedCategories([...selectedCategories, cat]);
     loadCategories(cat.id);
   }
 
-  const selectedCategory =
-    selectedCategories[selectedCategories.length - 1] || null;
+  const selectedCategory = selectedCategories[selectedCategories.length - 1] || null;
   const showForm = categories.length === 0 && selectedCategory;
 
   const pickImages = async () => {
@@ -86,6 +91,7 @@ export default function CreateListingScreen({ navigation }: Props) {
     if (!selectedCategory) return;
     if (!title || !price) return Alert.alert("Başlık ve fiyat gerekli!");
     if (!location) return Alert.alert("Lütfen il ve ilçe seçin!");
+    if (!user?.id) return Alert.alert("Kullanıcı bilgisi alınamadı, lütfen tekrar giriş yapın.");
 
     try {
       const db = await openDb();
@@ -176,9 +182,7 @@ export default function CreateListingScreen({ navigation }: Props) {
           data={categories}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderCategoryItem}
-          ListHeaderComponent={
-            <Text style={styles.header}>Kategori Seçin</Text>
-          }
+          ListHeaderComponent={<Text style={styles.header}>Kategori Seçin</Text>}
           contentContainerStyle={{ padding: 12 }}
         />
       ) : (
@@ -209,7 +213,7 @@ export default function CreateListingScreen({ navigation }: Props) {
               />
 
               <TextInput
-                style={[styles.input, { minHeight: 80 , textAlignVertical: "top"}]}
+                style={[styles.input, { minHeight: 80, textAlignVertical: "top" }]}
                 placeholder="Açıklama"
                 placeholderTextColor="gray"
                 value={desc}
@@ -226,12 +230,7 @@ export default function CreateListingScreen({ navigation }: Props) {
                 renderItem={({ item }) => (
                   <Image
                     source={{ uri: item }}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      marginRight: 6,
-                      borderRadius: 8,
-                    }}
+                    style={{ width: 100, height: 100, marginRight: 6, borderRadius: 8 }}
                   />
                 )}
                 style={{ marginVertical: 10 }}

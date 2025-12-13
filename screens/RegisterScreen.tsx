@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from "reac
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthContext } from "../navigation/authContext";
-import { registerUserService } from "../lib/database/userService";
+import { getUserByEmail, registerUserService, UserEntity } from "../lib/database/userService";
 import AsyncStorage from "expo-sqlite/kv-store";
 import { RootStackParamList } from "../navigation/types";
 
@@ -30,15 +30,18 @@ export default function RegisterScreen({ navigation }: Props) {
     const result = await registerUserService(name, surname, email, password);
 
     if (result.success) {
-      await AsyncStorage.setItem("user", JSON.stringify({name,surname,email}));
-      setUser({ name, surname, email });
-      navigation.replace("Profile");
+      // DB’den yeni kullanıcıyı alıyoruz
+      const userFromDb: UserEntity | null = await getUserByEmail(email);
+      if (!userFromDb) {
+        Alert.alert("Hata", "Kullanıcı oluşturuldu ama alınamadı!");
+        return;
+      }
 
-      // inputları temizle
-      setName("");
-      setSurname("");
-      setEmail("");
-      setPassword("");
+      // AsyncStorage ve context’e set et
+      await AsyncStorage.setItem("user", JSON.stringify(userFromDb));
+      setUser(userFromDb);
+
+      navigation.replace("Profile");
     } else {
       Alert.alert("Hata", result.message);
     }
