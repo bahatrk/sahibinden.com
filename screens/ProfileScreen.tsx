@@ -7,6 +7,7 @@ import {
   Image,
   StyleSheet,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
@@ -18,8 +19,8 @@ import {
   getUserListings,
   ListingWithData,
 } from "../lib/database/listing";
-import { Swipeable } from "react-native-gesture-handler";
-import { MaterialIcons } from "@expo/vector-icons";
+import { getUserFavorites } from "../lib/database/favorite";
+import FavoriteButton from "../components/FavoriteButton";
 import UserInfoCard from "../components/UserInfoCard";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
@@ -31,11 +32,12 @@ type Props = {
   navigation: ProfileScreenNavigationProp;
 };
 
-type Section = "menu" | "info" | "listings";
+type Section = "menu" | "info" | "listings" | "favorites";
 
 export default function ProfileScreen({ navigation }: Props) {
   const { user, setUser } = useContext(AuthContext);
   const [myListings, setMyListings] = useState<ListingWithData[]>([]);
+  const [myFavorites, setMyFavorites] = useState<ListingWithData[]>([]);
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState<Section>("menu");
 
@@ -55,51 +57,107 @@ export default function ProfileScreen({ navigation }: Props) {
     fetchListings();
   }, [user]);
 
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (section === "favorites" && user?.id) {
+        try {
+          const favs = await getUserFavorites(user.id);
+          setMyFavorites(favs);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    fetchFavorites();
+  }, [section, user]);
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem("user");
     setUser(null);
     navigation.replace("Home");
   };
 
-  const renderRightActions = (itemId: number) => {
-    return (
-      <TouchableOpacity
-        style={styles.deleteButton}
-        onPress={() => {
-          Alert.alert("Sil", "Bu ilanı silmek istediğine emin misin?", [
-            { text: "İptal", style: "cancel" },
-            {
-              text: "Sil",
-              style: "destructive",
-              onPress: async () => {
-                await deleteListing(itemId);
-                setMyListings((prev) => prev.filter((l) => l.id !== itemId));
-              },
-            },
-          ]);
-        }}
-      >
-        <MaterialIcons name="delete" size={28} color="#fff" />
-      </TouchableOpacity>
-    );
+  const handleDeleteListing = async (listingId: number) => {
+    Alert.alert("Sil", "Bu ilanı silmek istediğine emin misin?", [
+      { text: "İptal", style: "cancel" },
+      {
+        text: "Sil",
+        style: "destructive",
+        onPress: async () => {
+          await deleteListing(listingId);
+          setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+        },
+      },
+    ]);
   };
 
-  const renderItem = ({ item }: { item: ListingWithData }) => (
-    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
-      <View style={styles.listingItem}>
-        {item.image_url && (
-          <Image source={{ uri: item.image_url }} style={styles.listingImage} />
-        )}
-        <View style={{ flex: 1, marginLeft: 10 }}>
-          <Text style={styles.listingTitle}>{item.title}</Text>
-          <Text>{item.price} TL</Text>
-          <Text>
-            {item.location_province} - {item.location_district}
-          </Text>
-        </View>
+  const renderListingItem = ({
+    item,
+    showFavorite = false,
+  }: {
+    item: ListingWithData;
+    showFavorite?: boolean;
+  }) => (
+    <View style={styles.listingItem}>
+      {item.image_url && (
+        <Image source={{ uri: item.image_url }} style={styles.listingImage} />
+      )}
+      <View style={{ flex: 1, marginLeft: 10 }}>
+        <Text style={styles.listingTitle}>{item.title}</Text>
+        <Text>{item.price} TL</Text>
+        <Text>
+          {item.location_province} - {item.location_district}
+        </Text>
       </View>
-    </Swipeable>
+
+      {section === "listings" && (
+        <TouchableOpacity
+          style={styles.deleteButton}
+          onPress={() => handleDeleteListing(item.id)}
+        >
+          <Text style={{ color: "#fff" }}>Sil</Text>
+        </TouchableOpacity>
+      )}
+
+      {showFavorite && (
+        <FavoriteButton listingId={item.id} userId={user!.id} size={22} />
+      )}
+    </View>
   );
+
+  const renderList = (data: ListingWithData[], showFavorite: boolean) => {
+    if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
+
+    if (data.length === 0)
+      return (
+        <View>
+          <Text>Henüz ilan yok.</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => setSection("menu")}
+          >
+            <Text style={{ color: "#fff" }}>Geri</Text>
+          </TouchableOpacity>
+        </View>
+      );
+
+    return (
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={(props) => renderListingItem({ ...props, showFavorite })}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        ListFooterComponent={
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => setSection("menu")}
+          >
+            <Text style={{ color: "#fff" }}>Geri</Text>
+          </TouchableOpacity>
+        }
+      />
+    );
+  };
 
   return (
     <ProtectedRoute navigation={navigation}>
@@ -120,6 +178,13 @@ export default function ProfileScreen({ navigation }: Props) {
               onPress={() => setSection("listings")}
             >
               <Text style={styles.menuText}>İlanlarım</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => setSection("favorites")}
+            >
+              <Text style={styles.menuText}>Favorilerim</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.menuButton} onPress={handleLogout}>
@@ -145,40 +210,8 @@ export default function ProfileScreen({ navigation }: Props) {
           </View>
         )}
 
-        {section === "listings" && (
-          <View style={{ marginTop: 12, flex: 1 }}>
-            <Text style={styles.subHeader}>İlanlarım</Text>
-
-            {loading ? (
-              <Text>Yükleniyor...</Text>
-            ) : myListings.length === 0 ? (
-              <View>
-                <Text>Henüz ilan yok.</Text>
-                <TouchableOpacity
-                  style={styles.backButton}
-                  onPress={() => setSection("menu")}
-                >
-                  <Text style={{ color: "#fff" }}>Geri</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <FlatList
-                data={myListings}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={renderItem}
-                ListFooterComponent={
-                  <TouchableOpacity
-                    style={styles.backButton}
-                    onPress={() => setSection("menu")}
-                  >
-                    <Text style={{ color: "#fff" }}>Geri</Text>
-                  </TouchableOpacity>
-                }
-                contentContainerStyle={{ paddingBottom: 40 }}
-              />
-            )}
-          </View>
-        )}
+        {section === "listings" && renderList(myListings, false)}
+        {section === "favorites" && renderList(myFavorites, true)}
       </View>
     </ProtectedRoute>
   );
@@ -195,6 +228,7 @@ const styles = StyleSheet.create({
     borderColor: "#ddd",
     borderRadius: 8,
     backgroundColor: "#fff",
+    alignItems: "center",
   },
   listingImage: { width: 80, height: 80, borderRadius: 8 },
   listingTitle: { fontSize: 16, fontWeight: "500" },
@@ -202,11 +236,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#2E5894",
     justifyContent: "center",
     alignItems: "center",
-    width: 70,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
     borderRadius: 8,
-    marginVertical: 0,
-    alignSelf: "stretch",
-    marginBottom: 12,
+    marginLeft: 8,
   },
   menuButton: {
     padding: 12,
@@ -223,5 +256,4 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: "center",
   },
-  
 });

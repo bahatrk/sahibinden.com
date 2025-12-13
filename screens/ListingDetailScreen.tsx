@@ -1,19 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, ScrollView, ActivityIndicator } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 
 import RealEstateDetailComponent from "../components/RealEstateDetailComponent";
 import VehicleDetailComponent from "../components/VehicleDetailComponent";
-import { RealEstateDetailEntity, getRealEstateDetail } from "../lib/database/realEstateDetail";
-import { VehicleDetailEntity, getVehicleDetail } from "../lib/database/vehicleDetail";
+import {
+  RealEstateDetailEntity,
+  getRealEstateDetail,
+} from "../lib/database/realEstateDetail";
+import {
+  VehicleDetailEntity,
+  getVehicleDetail,
+} from "../lib/database/vehicleDetail";
 import { ListingWithData } from "../lib/database/listing";
 import { RootStackParamList } from "../navigation/types";
+import FavoriteButton from "../components/FavoriteButton";
+import { AuthContext } from "../navigation/authContext";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 
 export default function ListingDetailScreen() {
   const route = useRoute<ListingDetailRouteProp>();
   const listing: ListingWithData = route.params.listing;
+  const { user } = useContext(AuthContext); // login kullanıcı
+
 
   const [realEstateDetail, setRealEstateDetail] =
     useState<RealEstateDetailEntity | null>(null);
@@ -57,9 +67,21 @@ export default function ListingDetailScreen() {
 
   return (
     <ScrollView style={{ flex: 1, padding: 12 }}>
-      <Text style={{ fontSize: 20, fontWeight: "700", marginBottom: 12 }}>
-        {listing.title}
-      </Text>
+      {/* ===== Title + Favorite ===== */}
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 12,
+        }}
+      >
+        <Text style={{ fontSize: 20, fontWeight: "700", flex: 1 }}>
+          {listing.title}
+        </Text>
+
+        {user && <FavoriteButton listingId={listing.id} userId={user.id} />}
+      </View>
 
       {realEstateDetail && (
         <RealEstateDetailComponent detail={realEstateDetail} />
