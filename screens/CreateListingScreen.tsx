@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+import DropDownPicker from "react-native-dropdown-picker";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
 import { getChildCategories, CategoryEntity } from "../lib/database/category";
@@ -21,7 +22,7 @@ import CreateRealEstateListing from "../components/CreateRealEstateListing";
 import CreateVehicleListing from "../components/CreateVehicleListing";
 import { AuthContext } from "../navigation/authContext";
 import * as ImagePicker from "expo-image-picker";
-import * as Location from "expo-location";
+import LocationPicker from "../components/LocationPicker";
 
 type NavProp = StackNavigationProp<RootStackParamList, "CreateListing">;
 
@@ -32,15 +33,23 @@ type Props = {
 export default function CreateListingScreen({ navigation }: Props) {
   const { user } = useContext(AuthContext);
 
+  // Category
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
-  const [selectedCategories, setSelectedCategories] = useState<CategoryEntity[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<
+    CategoryEntity[]
+  >([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
+  // Form fields
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [location, setLocation] = useState<{ id: number; province: string; district: string } | null>(null);
+  const [location, setLocation] = useState<{
+    id: number;
+    province: string;
+    district: string;
+  } | null>(null);
 
   useEffect(() => {
     loadCategories(null);
@@ -52,49 +61,31 @@ export default function CreateListingScreen({ navigation }: Props) {
     setLoadingCategories(false);
   }
 
+
   function handleCategoryPress(cat: CategoryEntity) {
     setSelectedCategories([...selectedCategories, cat]);
     loadCategories(cat.id);
   }
 
-  const selectedCategory = selectedCategories[selectedCategories.length - 1] || null;
+  const selectedCategory =
+    selectedCategories[selectedCategories.length - 1] || null;
   const showForm = categories.length === 0 && selectedCategory;
 
   const pickImages = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ['images'],
+      mediaTypes: ["images"],
       allowsMultipleSelection: true,
       quality: 0.7,
     });
-
     if (!result.canceled) {
       setImages(result.assets.map((a) => a.uri));
     }
   };
 
-  const pickLocation = async () => {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Konum izni gerekli!");
-      return;
-    }
-
-    const loc = await Location.getCurrentPositionAsync({});
-    const province = "Bölge"; 
-    const district = "İlçe";
-
-    const db = await openDb();
-    const result: any = await db.runAsync(
-      `INSERT INTO location (province, district, latitude, longitude) VALUES (?, ?, ?, ?)`,
-      [province, district, loc.coords.latitude, loc.coords.longitude]
-    );
-
-    setLocation({ id: result.insertId, province, district });
-  };
-
   const handleSubmit = async (detailData: any) => {
     if (!selectedCategory) return;
     if (!title || !price) return Alert.alert("Başlık ve fiyat gerekli!");
+    if (!location) return Alert.alert("Lütfen il ve ilçe seçin!");
 
     try {
       const db = await openDb();
@@ -109,16 +100,13 @@ export default function CreateListingScreen({ navigation }: Props) {
           selectedCategory.id,
           desc,
           creationDate,
-          location?.id,
+          location.id,
           user.id,
         ]
       );
 
       const listingId = listingResult.insertId ?? listingResult.lastInsertRowId;
-
-      if (!listingId) {
-        throw new Error("Listing ID alınamadı");
-      }
+      if (!listingId) throw new Error("Listing ID alınamadı");
 
       for (let i = 0; i < images.length; i++) {
         await db.runAsync(
@@ -130,8 +118,8 @@ export default function CreateListingScreen({ navigation }: Props) {
       if (selectedCategory.category_type_id === 1) {
         await db.runAsync(
           `INSERT INTO real_estate_detail
-          (listing_id, room_number, bathroom_number, square_meter, floor, building_age, furnished, heat, kitchen, lift, car_park)
-          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          (listing_id, room_number, bathroom_number, square_meter, floor, building_age, furnished)
+          VALUES (?, ?, ?, ?, ?, ?, ?)`,
           [
             listingId,
             parseInt(detailData.roomNumber),
@@ -143,7 +131,7 @@ export default function CreateListingScreen({ navigation }: Props) {
           ]
         );
       } else if (selectedCategory.category_type_id === 2) {
-        const insertResult = await db.runAsync(
+        await db.runAsync(
           `INSERT INTO vehicle_detail
           (listing_id, year, fuel, transmission, kilometer, body_type, engine_cc, instrumental, color)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
@@ -155,11 +143,10 @@ export default function CreateListingScreen({ navigation }: Props) {
             parseInt(detailData.kilometer),
             detailData.bodyType,
             detailData.engineCC,
-            detailData.instrumental || "", // boş string default
+            detailData.instrumental || "",
             detailData.color || "",
           ]
         );
-        console.log("Vehicle insertResult:", insertResult);
       }
 
       Alert.alert("Başarılı!", "İlan oluşturuldu.");
@@ -171,7 +158,10 @@ export default function CreateListingScreen({ navigation }: Props) {
   };
 
   const renderCategoryItem = ({ item }: { item: CategoryEntity }) => (
-    <TouchableOpacity onPress={() => handleCategoryPress(item)} style={styles.categoryItem}>
+    <TouchableOpacity
+      onPress={() => handleCategoryPress(item)}
+      style={styles.categoryItem}
+    >
       <Text style={styles.categoryText}>{item.name}</Text>
     </TouchableOpacity>
   );
@@ -186,59 +176,85 @@ export default function CreateListingScreen({ navigation }: Props) {
           data={categories}
           keyExtractor={(item) => item.id.toString()}
           renderItem={renderCategoryItem}
-          ListHeaderComponent={<Text style={styles.header}>Kategori Seçin</Text>}
+          ListHeaderComponent={
+            <Text style={styles.header}>Kategori Seçin</Text>
+          }
           contentContainerStyle={{ padding: 12 }}
         />
       ) : (
-        <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 100 }}>
-          <Text style={styles.header}>İlan Detayları</Text>
+        <FlatList
+          data={[]}
+          keyExtractor={() => "form"}
+          renderItem={null}
+          contentContainerStyle={{ padding: 12, paddingBottom: 120 }}
+          ListHeaderComponent={
+            <View>
+              <Text style={styles.header}>İlan Detayları</Text>
 
-          <TextInput
-            style={[styles.input, { minHeight: 40, textAlignVertical: "top" }]}
-            placeholder="Başlık"
-            placeholderTextColor={"gray"}
-            value={title}
-            onChangeText={setTitle}
-            multiline
-          />
-          <TextInput
-            style={[styles.input, { minHeight: 40, textAlignVertical: "top" }]}
-            placeholder="Fiyat"
-            placeholderTextColor={"gray"}
-            value={price}
-            onChangeText={setPrice}
-            keyboardType="numeric"
-          />
-          <TextInput
-            style={[styles.input, { minHeight: 80, textAlignVertical: "top" }]}
-            placeholder="Açıklama"
-            placeholderTextColor={"gray"}
-            value={desc}
-            onChangeText={setDesc}
-            multiline
-          />
-
-          <Button title="Resim Seç" onPress={pickImages} />
-          <ScrollView horizontal style={{ marginVertical: 10 }}>
-            {images.map((uri, idx) => (
-              <Image
-                key={idx}
-                source={{ uri }}
-                style={{ width: 100, height: 100, marginRight: 6, borderRadius: 8 }}
+              <TextInput
+                style={styles.input}
+                placeholder="Başlık"
+                placeholderTextColor="gray"
+                value={title}
+                onChangeText={setTitle}
               />
-            ))}
-          </ScrollView>
 
-          <Button title="Konum Seç" onPress={pickLocation} />
-          {location && (
-            <Text style={{ marginVertical: 6}}>
-              {location.province} - {location.district}
-            </Text>
-          )}
+              <TextInput
+                style={styles.input}
+                placeholder="Fiyat"
+                placeholderTextColor="gray"
+                value={price}
+                onChangeText={setPrice}
+                keyboardType="numeric"
+              />
 
-          {selectedCategory.category_type_id === 1 && <CreateRealEstateListing onSubmit={handleSubmit} />}
-          {selectedCategory.category_type_id === 2 && <CreateVehicleListing onSubmit={handleSubmit} />}
-        </ScrollView>
+              <TextInput
+                style={[styles.input, { minHeight: 80 , textAlignVertical: "top"}]}
+                placeholder="Açıklama"
+                placeholderTextColor="gray"
+                value={desc}
+                onChangeText={setDesc}
+                multiline
+              />
+
+              <Button title="Resim Seç" onPress={pickImages} />
+
+              <FlatList
+                horizontal
+                data={images}
+                keyExtractor={(_, i) => i.toString()}
+                renderItem={({ item }) => (
+                  <Image
+                    source={{ uri: item }}
+                    style={{
+                      width: 100,
+                      height: 100,
+                      marginRight: 6,
+                      borderRadius: 8,
+                    }}
+                  />
+                )}
+                style={{ marginVertical: 10 }}
+              />
+
+              <LocationPicker onSelect={setLocation} />
+
+              {location && (
+                <Text style={{ marginVertical: 6 }}>
+                  {location.province} - {location.district}
+                </Text>
+              )}
+
+              {selectedCategory.category_type_id === 1 && (
+                <CreateRealEstateListing onSubmit={handleSubmit} />
+              )}
+
+              {selectedCategory.category_type_id === 2 && (
+                <CreateVehicleListing onSubmit={handleSubmit} />
+              )}
+            </View>
+          }
+        />
       )}
     </KeyboardAvoidingView>
   );
@@ -255,6 +271,12 @@ const styles = StyleSheet.create({
     borderRadius: 6,
     backgroundColor: "#fff",
   },
-  categoryItem: { padding: 12, borderWidth: 1, borderColor: "#ddd", marginBottom: 6, borderRadius: 6 },
+  categoryItem: {
+    padding: 12,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    marginBottom: 6,
+    borderRadius: 6,
+  },
   categoryText: { fontSize: 16, fontWeight: "500" },
 });

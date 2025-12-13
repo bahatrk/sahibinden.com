@@ -27,23 +27,29 @@ export async function getListingsByCategory(
   );
 }
 
-export async function getListingsWithData(categoryId: number): Promise<ListingWithData[]> {
+export async function getListingsWithData(
+  categoryId: number
+): Promise<ListingWithData[]> {
   const db = await openDb();
 
   const sql = `
     SELECT 
       l.*,
       img.url AS image_url,
-      loc.province AS location_province,
-      loc.district AS location_district,
-      c.category_type_id          -- <-- category tablosundan alıyoruz
+      p.name AS location_province,
+      d.name AS location_district,
+      c.category_type_id
     FROM listing l
     LEFT JOIN image img 
       ON img.listing_id = l.id AND img.ui_order = 1
     LEFT JOIN location loc 
       ON loc.id = l.location_id
+    LEFT JOIN province p
+      ON p.id = loc.province_id
+    LEFT JOIN district d
+      ON d.id = loc.district_id
     LEFT JOIN category c
-      ON c.id = l.category_id       -- <-- join
+      ON c.id = l.category_id
     WHERE l.category_id = ?
     ORDER BY l.id DESC;
   `;
@@ -51,6 +57,7 @@ export async function getListingsWithData(categoryId: number): Promise<ListingWi
   const rows = await db.getAllAsync<ListingWithData>(sql, [categoryId]);
   return rows ?? [];
 }
+
 
 
 export async function createListing(data: {
