@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from "reac
 import Feather from '@expo/vector-icons/Feather';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthContext } from "../navigation/authContext";
-import { registerUserService } from "../lib/database/userService";
+import { getUserByEmail, registerUserService, UserEntity } from "../lib/database/userService";
 import AsyncStorage from "expo-sqlite/kv-store";
 import { RootStackParamList } from "../navigation/types";
 
@@ -18,27 +18,31 @@ export default function RegisterScreen({ navigation }: Props) {
   const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const { setUser } = useContext(AuthContext);
 
   const registerUser = async () => {
-    if (!name || !surname || !email || !password) {
+    if (!name || !surname || !email || !password ||!phone) {
       Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
       return;
     }
 
-    const result = await registerUserService(name, surname, email, password);
+    const result = await registerUserService(name, surname, email, password, phone);
 
     if (result.success) {
-      await AsyncStorage.setItem("user", JSON.stringify({name,surname,email}));
-      setUser({ name, surname, email });
-      navigation.replace("Profile");
+      // DB’den yeni kullanıcıyı alıyoruz
+      const userFromDb: UserEntity | null = await getUserByEmail(email);
+      if (!userFromDb) {
+        Alert.alert("Hata", "Kullanıcı oluşturuldu ama alınamadı!");
+        return;
+      }
 
-      // inputları temizle
-      setName("");
-      setSurname("");
-      setEmail("");
-      setPassword("");
+      // AsyncStorage ve context’e set et
+      await AsyncStorage.setItem("user", JSON.stringify(userFromDb));
+      setUser(userFromDb);
+
+      navigation.replace("Profile");
     } else {
       Alert.alert("Hata", result.message);
     }
@@ -46,83 +50,86 @@ export default function RegisterScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
-
       {/* HomeScreen Dönüş */}
       <TouchableOpacity
-          style={styles.homePageReturnButton}
-          onPress={() => navigation.navigate('Home')}
+        style={styles.homePageReturnButton}
+        onPress={() => navigation.navigate("Home")}
       >
-          <Feather name="x" style={styles.homePageReturnIcon}/>
+        <Feather name="x" style={styles.homePageReturnIcon} />
       </TouchableOpacity>
-  
+
       {/* Başlık */}
       <Text style={styles.title}>Hesap aç</Text>
 
       {/* Email input */}
       <TextInput
-          style={styles.input}
-          placeholder="E-posta adresi"
-          placeholderTextColor={"gray"}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          value={email} // text inputun içeriğini state ile baglar
-          onChangeText={setEmail} // text ınputa yazılan degerı state e aktarır
+        style={styles.input}
+        placeholder="E-posta adresi"
+        placeholderTextColor={"gray"}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email} // text inputun içeriğini state ile baglar
+        onChangeText={setEmail} // text ınputa yazılan degerı state e aktarır
       />
-      
+
       {/* Ad ve Soyad inputs */}
       <View style={styles.adSoyadInput}>
-          <TextInput
-              style={styles.halfInput}
-              placeholder="Ad"
-              placeholderTextColor={"gray"}
-              autoCapitalize="none"
-              value={name}
-              onChangeText={setName}
-          />
+        <TextInput
+          style={styles.halfInput}
+          placeholder="Ad"
+          placeholderTextColor={"gray"}
+          autoCapitalize="none"
+          value={name}
+          onChangeText={setName}
+        />
 
-          <TextInput
-              style={styles.halfInput}
-              placeholder="Soyad"
-              placeholderTextColor={"gray"}
-              autoCapitalize="none"
-              value={surname}
-              onChangeText={setSurname}
-          />
+        <TextInput
+          style={styles.halfInput}
+          placeholder="Soyad"
+          placeholderTextColor={"gray"}
+          autoCapitalize="none"
+          value={surname}
+          onChangeText={setSurname}
+        />
       </View>
+
+      {/* Telefon input */}
+      <TextInput
+        style={styles.input}
+        placeholder="Telefon"
+        placeholderTextColor={"gray"}
+        keyboardType="phone-pad" // numara klavyesi açılır
+        value={phone}
+        onChangeText={setPhone}
+      />
 
       {/* Şifre input */}
       <View style={styles.sifreContainer}>
         <TextInput
-            style={styles.sifreInput}
-            placeholder="Şifre"
-            placeholderTextColor={"gray"}
-            secureTextEntry = {!showPassword}
-            value={password}
-            onChangeText={setPassword}
+          style={styles.sifreInput}
+          placeholder="Şifre"
+          placeholderTextColor={"gray"}
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
         />
 
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
           <Feather name={showPassword ? "eye-off" : "eye"} size={22} />
-        </TouchableOpacity>        
+        </TouchableOpacity>
       </View>
 
       {/* Giriş Yap Butonu */}
-      <TouchableOpacity 
-        style={styles.button}
-        onPress={registerUser}
-      >
-          <Text style={styles.buttonText}>Hesap aç</Text>
+      <TouchableOpacity style={styles.button} onPress={registerUser}>
+        <Text style={styles.buttonText}>Hesap aç</Text>
       </TouchableOpacity>
 
       <View style={styles.hesapAc}>
-          <Text style={{fontSize: 16}}>Zaten hesabın var mı? </Text>
-          <TouchableOpacity
-              onPress={() => navigation.navigate('Login')}
-          >
-              <Text style={styles.hesapAcButton}>Giriş yap</Text>
-          </TouchableOpacity>
+        <Text style={{ fontSize: 16 }}>Zaten hesabın var mı? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+          <Text style={styles.hesapAcButton}>Giriş yap</Text>
+        </TouchableOpacity>
       </View>
-
     </View>
   );
 }

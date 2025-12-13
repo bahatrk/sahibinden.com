@@ -6,16 +6,17 @@ export type UserEntity = {
   surname: string;
   email: string;
   password_hash: string;
+  phone: string;
 };
 
 // Kullanıcı kaydı
-export async function registerUserService(name: string, surname: string, email: string, password: string): Promise<{ success: boolean; message?: string }> {
+export async function registerUserService(name: string, surname: string, email: string, password: string, phone: string): Promise<{ success: boolean; message?: string }> {
   const database = await openDb();
 
   try {
     await database.execAsync(
-        `INSERT INTO user (name, surname, email, password_hash)
-        VALUES ('${name}', '${surname}', '${email}', '${password}')`
+        `INSERT INTO user (name, surname, email, password_hash, phone)
+        VALUES ('${name}', '${surname}', '${email}', '${password}' , '${phone}')`
     );
 
     return { success: true };

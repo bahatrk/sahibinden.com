@@ -37,7 +37,7 @@ export async function getVehicleDetail(listingId: number): Promise<VehicleDetail
       l.creation_date,
       l.desc
     FROM vehicle_detail vd
-    JOIN listing l ON l.id = vd.listing_id
+    LEFT JOIN listing l ON l.id = vd.listing_id
     WHERE vd.listing_id = ?
   `;
 
@@ -58,4 +58,34 @@ export async function getVehicleDetail(listingId: number): Promise<VehicleDetail
   }
 
   return null;
+}
+
+export async function createVehicleDetail(listingId: number, detail: {
+  year: number;
+  fuel: string;
+  transmission: string;
+  kilometer: number;
+  body_type: string;
+  engine_cc: string;
+  instrumental: string;
+  color: string;
+}) {
+  const db = await openDb();
+
+  await db.runAsync(
+    `INSERT INTO vehicle_detail
+     (listing_id, year, fuel, transmission, kilometer, body_type, engine_cc, instrumental, color)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      listingId,
+      detail.year,
+      detail.fuel,
+      detail.transmission,
+      detail.kilometer,
+      detail.body_type,
+      detail.engine_cc,
+      detail.instrumental,
+      detail.color
+    ]
+  );
 }

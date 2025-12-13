@@ -7,6 +7,7 @@ export type ListingEntity = {
   category_id: number;
   desc: string;
   creation_date: number;
+  user_id: number;
 };
 
 export type ListingWithData = ListingEntity & {
@@ -27,27 +28,98 @@ export async function getListingsByCategory(
   );
 }
 
-export async function getListingsWithData(categoryId: number): Promise<ListingWithData[]> {
+export async function getListingsWithData(
+  categoryId: number
+): Promise<ListingWithData[]> {
   const db = await openDb();
 
   const sql = `
     SELECT 
       l.*,
       img.url AS image_url,
-      loc.province AS location_province,
-      loc.district AS location_district,
-      c.category_type_id          -- <-- category tablosundan alıyoruz
+      p.name AS location_province,
+      d.name AS location_district,
+      c.category_type_id
     FROM listing l
     LEFT JOIN image img 
       ON img.listing_id = l.id AND img.ui_order = 1
     LEFT JOIN location loc 
       ON loc.id = l.location_id
+    LEFT JOIN province p
+      ON p.id = loc.province_id
+    LEFT JOIN district d
+      ON d.id = loc.district_id
     LEFT JOIN category c
-      ON c.id = l.category_id       -- <-- join
+      ON c.id = l.category_id
     WHERE l.category_id = ?
     ORDER BY l.id DESC;
   `;
 
   const rows = await db.getAllAsync<ListingWithData>(sql, [categoryId]);
   return rows ?? [];
+}
+
+
+
+export async function createListing(data: {
+  title: string;
+  price: number;
+  desc: string;
+  category_id: number;
+  location_id: number;
+  user_id: number;
+}) {
+  const db = await openDb();
+  const creation_date = Date.now();
+
+  const result: any = await db.runAsync(
+    `INSERT INTO listing (title, price, desc, category_id, location_id, creation_date, user_id)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [data.title, data.price, data.desc, data.category_id, data.location_id, creation_date, data.user_id]
+  );
+
+  return result.insertId;
+}
+
+export async function getUserListings(userId: number): Promise<ListingWithData[]> {
+  const db = await openDb();
+
+  const sql = `
+    SELECT 
+      l.*,
+      img.url AS image_url,
+      p.name AS location_province,
+      d.name AS location_district,
+      c.category_type_id
+    FROM listing l
+    LEFT JOIN image img 
+      ON img.listing_id = l.id AND img.ui_order = 1
+    LEFT JOIN location loc 
+      ON loc.id = l.location_id
+    LEFT JOIN province p
+      ON p.id = loc.province_id
+    LEFT JOIN district d
+      ON d.id = loc.district_id
+    LEFT JOIN category c
+      ON c.id = l.category_id
+    WHERE l.user_id = ?
+    ORDER BY l.creation_date DESC;
+  `;
+
+  const rows = await db.getAllAsync<ListingWithData>(sql, [userId]);
+  return rows ?? [];
+}
+
+export async function deleteListing(listingId: number) {
+  const db = await openDb();
+
+  // Önce detaylar silinsin (araç veya emlak farketmez)
+  await db.runAsync(`DELETE FROM real_estate_detail WHERE listing_id = ?`, [listingId]);
+  await db.runAsync(`DELETE FROM vehicle_detail WHERE listing_id = ?`, [listingId]);
+
+  // Resimler varsa onları da silebilirsin
+  await db.runAsync(`DELETE FROM image WHERE listing_id = ?`, [listingId]);
+
+  // Son olarak listing sil
+  await db.runAsync(`DELETE FROM listing WHERE id = ?`, [listingId]);
 }
