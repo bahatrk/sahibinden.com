@@ -110,3 +110,16 @@ export async function getUserListings(userId: number): Promise<ListingWithData[]
   return rows ?? [];
 }
 
+export async function deleteListing(listingId: number) {
+  const db = await openDb();
+
+  // Önce detaylar silinsin (araç veya emlak farketmez)
+  await db.runAsync(`DELETE FROM real_estate_detail WHERE listing_id = ?`, [listingId]);
+  await db.runAsync(`DELETE FROM vehicle_detail WHERE listing_id = ?`, [listingId]);
+
+  // Resimler varsa onları da silebilirsin
+  await db.runAsync(`DELETE FROM image WHERE listing_id = ?`, [listingId]);
+
+  // Son olarak listing sil
+  await db.runAsync(`DELETE FROM listing WHERE id = ?`, [listingId]);
+}
