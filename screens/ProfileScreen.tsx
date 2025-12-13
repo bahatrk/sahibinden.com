@@ -13,9 +13,14 @@ import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "../navigation/authContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AsyncStorage from "expo-sqlite/kv-store";
-import { deleteListing, getUserListings, ListingWithData } from "../lib/database/listing";
+import {
+  deleteListing,
+  getUserListings,
+  ListingWithData,
+} from "../lib/database/listing";
 import { Swipeable } from "react-native-gesture-handler";
 import { MaterialIcons } from "@expo/vector-icons";
+import UserInfoCard from "../components/UserInfoCard";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -26,10 +31,13 @@ type Props = {
   navigation: ProfileScreenNavigationProp;
 };
 
+type Section = "menu" | "info" | "listings";
+
 export default function ProfileScreen({ navigation }: Props) {
   const { user, setUser } = useContext(AuthContext);
   const [myListings, setMyListings] = useState<ListingWithData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [section, setSection] = useState<Section>("menu");
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -58,21 +66,17 @@ export default function ProfileScreen({ navigation }: Props) {
       <TouchableOpacity
         style={styles.deleteButton}
         onPress={() => {
-          Alert.alert(
-            "Sil",
-            "Bu ilanı silmek istediğine emin misin?",
-            [
-              { text: "İptal", style: "cancel" },
-              {
-                text: "Sil",
-                style: "destructive",
-                onPress: async () => {
-                  await deleteListing(itemId);
-                  setMyListings(prev => prev.filter(l => l.id !== itemId));
-                },
+          Alert.alert("Sil", "Bu ilanı silmek istediğine emin misin?", [
+            { text: "İptal", style: "cancel" },
+            {
+              text: "Sil",
+              style: "destructive",
+              onPress: async () => {
+                await deleteListing(itemId);
+                setMyListings((prev) => prev.filter((l) => l.id !== itemId));
               },
-            ]
-          );
+            },
+          ]);
         }}
       >
         <MaterialIcons name="delete" size={28} color="#fff" />
@@ -101,25 +105,80 @@ export default function ProfileScreen({ navigation }: Props) {
     <ProtectedRoute navigation={navigation}>
       <View style={{ flex: 1, padding: 12 }}>
         <Text style={styles.header}>Hoşgeldin, {user?.name}!</Text>
-        <Text>Email: {user?.email}</Text>
 
-        <Text style={styles.subHeader}>İlanlarım</Text>
+        {section === "menu" && (
+          <View style={{ marginTop: 20 }}>
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => setSection("info")}
+            >
+              <Text style={styles.menuText}>Kullanıcı Bilgilerim</Text>
+            </TouchableOpacity>
 
-        {loading ? (
-          <Text>Yükleniyor...</Text>
-        ) : myListings.length === 0 ? (
-          <Text>Henüz ilan yok.</Text>
-        ) : (
-          <FlatList
-            data={myListings}
-            keyExtractor={item => item.id.toString()}
-            renderItem={renderItem}
-          />
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => setSection("listings")}
+            >
+              <Text style={styles.menuText}>İlanlarım</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.menuButton} onPress={handleLogout}>
+              <Text style={styles.menuText}>Çıkış Yap</Text>
+            </TouchableOpacity>
+          </View>
         )}
 
-        <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
-          <Text style={styles.logoutText}>Çıkış Yap</Text>
-        </TouchableOpacity>
+        {section === "info" && user && (
+          <View style={{ marginTop: 12 }}>
+            <UserInfoCard
+              name={user.name}
+              surname={user.surname}
+              email={user.email}
+              phone={user.phone}
+            />
+            <TouchableOpacity
+              style={styles.backButton}
+              onPress={() => setSection("menu")}
+            >
+              <Text style={{ color: "#fff" }}>Geri</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+        {section === "listings" && (
+          <View style={{ marginTop: 12, flex: 1 }}>
+            <Text style={styles.subHeader}>İlanlarım</Text>
+
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : myListings.length === 0 ? (
+              <View>
+                <Text>Henüz ilan yok.</Text>
+                <TouchableOpacity
+                  style={styles.backButton}
+                  onPress={() => setSection("menu")}
+                >
+                  <Text style={{ color: "#fff" }}>Geri</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <FlatList
+                data={myListings}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={renderItem}
+                ListFooterComponent={
+                  <TouchableOpacity
+                    style={styles.backButton}
+                    onPress={() => setSection("menu")}
+                  >
+                    <Text style={{ color: "#fff" }}>Geri</Text>
+                  </TouchableOpacity>
+                }
+                contentContainerStyle={{ paddingBottom: 40 }}
+              />
+            )}
+          </View>
+        )}
       </View>
     </ProtectedRoute>
   );
@@ -128,15 +187,6 @@ export default function ProfileScreen({ navigation }: Props) {
 const styles = StyleSheet.create({
   header: { fontSize: 20, fontWeight: "bold", marginBottom: 6 },
   subHeader: { fontSize: 18, fontWeight: "600", marginBottom: 8 },
-  logoutButton: {
-    marginTop: 20,
-    padding: 12,
-    backgroundColor: "#2E5894",
-    borderRadius: 8,
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  logoutText: { color: "#fff", fontWeight: "bold" },
   listingItem: {
     flexDirection: "row",
     marginBottom: 12,
@@ -158,4 +208,20 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
     marginBottom: 12,
   },
+  menuButton: {
+    padding: 12,
+    backgroundColor: "#2E5894",
+    borderRadius: 8,
+    marginVertical: 8,
+    alignItems: "center",
+  },
+  menuText: { color: "#fff", fontWeight: "bold" },
+  backButton: {
+    marginTop: 12,
+    padding: 10,
+    backgroundColor: "#2E5894",
+    borderRadius: 8,
+    alignItems: "center",
+  },
+  
 });
