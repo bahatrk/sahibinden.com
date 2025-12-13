@@ -52,3 +52,39 @@ export async function getRealEstateDetail(listingId: number): Promise<RealEstate
 
   return null;
 }
+
+
+export async function createRealEstateDetail(listingId: number, detail: {
+  room_number: number;
+  bathroom_number: number;
+  square_meter: number;
+  floor: number;
+  building_age: number;
+  furnished: boolean;
+  heat: string;
+  kitchen: string;
+  lift: number;
+  car_park: number;
+}) {
+  const db = await openDb();
+
+  await db.runAsync(
+    `INSERT INTO real_estate_detail
+     (listing_id, room_number, bathroom_number, square_meter, floor, building_age, furnished, heat, kitchen, lift, car_park)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      listingId,
+      detail.room_number,
+      detail.bathroom_number,
+      detail.square_meter,
+      detail.floor,
+      detail.building_age,
+      detail.furnished ? 1 : 0,
+      detail.heat,
+      detail.kitchen,
+      detail.lift,
+      detail.car_park
+    ]
+  );
+}
+

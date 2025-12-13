@@ -51,3 +51,26 @@ export async function getListingsWithData(categoryId: number): Promise<ListingWi
   const rows = await db.getAllAsync<ListingWithData>(sql, [categoryId]);
   return rows ?? [];
 }
+
+
+export async function createListing(data: {
+  title: string;
+  price: number;
+  desc: string;
+  category_id: number;
+  location_id: number;
+  user_id: number;
+}) {
+  const db = await openDb();
+  const creation_date = Date.now();
+
+  const result: any = await db.runAsync(
+    `INSERT INTO listing (title, price, desc, category_id, location_id, creation_date, user_id)
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+    [data.title, data.price, data.desc, data.category_id, data.location_id, creation_date, data.user_id]
+  );
+
+  return result.insertId;
+}
+
+
