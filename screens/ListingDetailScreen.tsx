@@ -16,6 +16,7 @@ import { ListingWithData } from "../lib/database/listing";
 import { RootStackParamList } from "../navigation/types";
 import FavoriteButton from "../components/FavoriteButton";
 import { AuthContext } from "../navigation/authContext";
+import MessageActionBar from "../components/MessageActionBar";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 
@@ -23,7 +24,6 @@ export default function ListingDetailScreen() {
   const route = useRoute<ListingDetailRouteProp>();
   const listing: ListingWithData = route.params.listing;
   const { user } = useContext(AuthContext); // login kullanıcı
-
 
   const [realEstateDetail, setRealEstateDetail] =
     useState<RealEstateDetailEntity | null>(null);
@@ -66,28 +66,38 @@ export default function ListingDetailScreen() {
   if (!realEstateDetail && !vehicleDetail) return <Text>Detay bulunamadı</Text>;
 
   return (
-    <ScrollView style={{ flex: 1, padding: 12 }}>
-      {/* ===== Title + Favorite ===== */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 12,
-        }}
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 12, paddingBottom: 90 }}
       >
-        <Text style={{ fontSize: 20, fontWeight: "700", flex: 1 }}>
-          {listing.title}
-        </Text>
+        {/* ===== Title + Favorite ===== */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 12,
+          }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "700", flex: 1 }}>
+            {listing.title}
+          </Text>
 
-        {user && <FavoriteButton listingId={listing.id} userId={user.id} />}
-      </View>
+          {user && <FavoriteButton listingId={listing.id} userId={user.id} />}
+        </View>
 
-      {realEstateDetail && (
-        <RealEstateDetailComponent detail={realEstateDetail} />
+        {realEstateDetail && (
+          <RealEstateDetailComponent detail={realEstateDetail} />
+        )}
+
+        {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
+      </ScrollView>
+
+      {/* Sabit bir mesaj gönder kısmı ve kendi ilanında gözükmeyecek */}
+      {user?.id !== listing.user_id && ( 
+        <MessageActionBar listing={listing} />
       )}
-
-      {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
-    </ScrollView>
+    </View>
   );
 }

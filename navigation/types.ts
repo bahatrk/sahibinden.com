@@ -3,11 +3,15 @@ import { ListingWithData } from "../lib/database/listing";
 
 
 export type RootStackParamList = {
-  Home:undefined;
+  Home: undefined;
   Category: CategoryEntity;
   ListingDetail: { listing: ListingWithData };
   Login: undefined;
   Register: undefined;
   Profile: undefined;
   CreateListing: undefined;
+  Chat: {
+    conversationId: number;
+    listing: ListingWithData;
+  };
 };
