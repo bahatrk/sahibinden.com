@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 
 import RealEstateDetailComponent from "../components/RealEstateDetailComponent";
@@ -17,6 +23,8 @@ import { RootStackParamList } from "../navigation/types";
 import FavoriteButton from "../components/FavoriteButton";
 import { AuthContext } from "../navigation/authContext";
 import MessageActionBar from "../components/MessageActionBar";
+import CallButton from "../components/CallButton";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 
@@ -24,6 +32,8 @@ export default function ListingDetailScreen() {
   const route = useRoute<ListingDetailRouteProp>();
   const listing: ListingWithData = route.params.listing;
   const { user } = useContext(AuthContext); // login kullanıcı
+
+  const insets = useSafeAreaInsets(); //tab ı aşmasın dıye 
 
   const [realEstateDetail, setRealEstateDetail] =
     useState<RealEstateDetailEntity | null>(null);
@@ -94,10 +104,29 @@ export default function ListingDetailScreen() {
         {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
       </ScrollView>
 
-      {/* Sabit bir mesaj gönder kısmı ve kendi ilanında gözükmeyecek */}
-      {user?.id !== listing.user_id && ( 
-        <MessageActionBar listing={listing} />
+      {/* Mesaj ve Ara butonları, ilan sahibi göremez buunları */}
+      {user?.id !== listing.user_id && (
+        <View
+          style={[
+            styles.actionBar,
+            { bottom: insets.bottom + 10 }, // 20px kadar yukarı taşıdık
+          ]}
+        >
+          <CallButton phone={listing.user_phone} />
+          <MessageActionBar listing={listing} />
+        </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  actionBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    position: "absolute",
+    left: 0,
+    right: 0,
+  },
+});

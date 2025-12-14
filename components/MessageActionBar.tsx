@@ -50,36 +50,24 @@ export default function MessageActionBar({ listing }: Props) {
   }
 
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingBottom: insets.bottom + 8 },
-      ]}
-    >
       <TouchableOpacity style={styles.button} onPress={handlePress}>
         <Text style={styles.buttonText}>💬 Satıcıya Mesaj Gönder</Text>
       </TouchableOpacity>
-    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    borderTopWidth: 1,
-    borderColor: "#ddd",
-    backgroundColor: "#fff",
-    paddingHorizontal: 12,
-    paddingTop: 12,
-  },
   button: {
-    backgroundColor: "#104E8B",
-    paddingVertical: 14,
+    flex: 1,
+    paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",
+    marginHorizontal: 4, 
+    backgroundColor: "#104E8B"
   },
   buttonText: {
     color: "#fff",
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: "600",
   },
 });
