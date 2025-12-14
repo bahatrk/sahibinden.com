@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  StyleSheet,
+} from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
 
 import RealEstateDetailComponent from "../components/RealEstateDetailComponent";
@@ -16,6 +22,9 @@ import { ListingWithData } from "../lib/database/listing";
 import { RootStackParamList } from "../navigation/types";
 import FavoriteButton from "../components/FavoriteButton";
 import { AuthContext } from "../navigation/authContext";
+import MessageActionBar from "../components/MessageActionBar";
+import CallButton from "../components/CallButton";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 
@@ -24,6 +33,7 @@ export default function ListingDetailScreen() {
   const listing: ListingWithData = route.params.listing;
   const { user } = useContext(AuthContext); // login kullanıcı
 
+  const insets = useSafeAreaInsets(); //tab ı aşmasın dıye 
 
   const [realEstateDetail, setRealEstateDetail] =
     useState<RealEstateDetailEntity | null>(null);
@@ -66,28 +76,57 @@ export default function ListingDetailScreen() {
   if (!realEstateDetail && !vehicleDetail) return <Text>Detay bulunamadı</Text>;
 
   return (
-    <ScrollView style={{ flex: 1, padding: 12 }}>
-      {/* ===== Title + Favorite ===== */}
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: 12,
-        }}
+    <View style={{ flex: 1 }}>
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ padding: 12, paddingBottom: 90 }}
       >
-        <Text style={{ fontSize: 20, fontWeight: "700", flex: 1 }}>
-          {listing.title}
-        </Text>
+        {/* ===== Title + Favorite ===== */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 12,
+          }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: "700", flex: 1 }}>
+            {listing.title}
+          </Text>
 
-        {user && <FavoriteButton listingId={listing.id} userId={user.id} />}
-      </View>
+          {user && <FavoriteButton listingId={listing.id} userId={user.id} />}
+        </View>
 
-      {realEstateDetail && (
-        <RealEstateDetailComponent detail={realEstateDetail} />
+        {realEstateDetail && (
+          <RealEstateDetailComponent detail={realEstateDetail} />
+        )}
+
+        {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
+      </ScrollView>
+
+      {/* Mesaj ve Ara butonları, ilan sahibi göremez buunları */}
+      {user?.id !== listing.user_id && (
+        <View
+          style={[
+            styles.actionBar,
+            { bottom: insets.bottom + 10 }, // 20px kadar yukarı taşıdık
+          ]}
+        >
+          <CallButton phone={listing.user_phone} />
+          <MessageActionBar listing={listing} />
+        </View>
       )}
-
-      {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
-    </ScrollView>
+    </View>
   );
 }
+
+const styles = StyleSheet.create({
+  actionBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    position: "absolute",
+    left: 0,
+    right: 0,
+  },
+});

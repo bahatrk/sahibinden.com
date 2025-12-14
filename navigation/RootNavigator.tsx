@@ -13,7 +13,7 @@ import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "./authContext";
 import HeaderProfileButton from "../components/HeaderProfileButton";
 import CreateListingScreen from "../screens/CreateListingScreen";
-
+import ChatScreen from "../screens/ChatScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -77,6 +77,15 @@ export default function RootNavigator() {
             name="CreateListing"
             component={CreateListingScreen}
             options={{ title: "Yeni İlan Oluştur" }}
+          />
+
+          <Stack.Screen
+            name="Chat"
+            component={ChatScreen}
+            options={({ route }) => ({
+              title: "Mesajlaşma",
+              headerBackTitleVisible: false,
+            })}
           />
         </Stack.Navigator>
       </NavigationContainer>

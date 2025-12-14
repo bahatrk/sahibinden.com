@@ -6,8 +6,8 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  Alert,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
@@ -22,6 +22,7 @@ import {
 import { getUserFavorites } from "../lib/database/favorite";
 import FavoriteButton from "../components/FavoriteButton";
 import UserInfoCard from "../components/UserInfoCard";
+import { getUserConversations, ConversationEntity } from "../lib/database/conversation";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -32,12 +33,13 @@ type Props = {
   navigation: ProfileScreenNavigationProp;
 };
 
-type Section = "menu" | "info" | "listings" | "favorites";
+type Section = "menu" | "info" | "listings" | "favorites" | "messages";
 
 export default function ProfileScreen({ navigation }: Props) {
   const { user, setUser } = useContext(AuthContext);
   const [myListings, setMyListings] = useState<ListingWithData[]>([]);
   const [myFavorites, setMyFavorites] = useState<ListingWithData[]>([]);
+  const [conversations, setConversations] = useState<ConversationEntity[]>([]);
   const [loading, setLoading] = useState(true);
   const [section, setSection] = useState<Section>("menu");
 
@@ -69,6 +71,20 @@ export default function ProfileScreen({ navigation }: Props) {
       }
     };
     fetchFavorites();
+  }, [section, user]);
+
+  useEffect(() => {
+    const fetchConversations = async () => {
+      if (section === "messages" && user?.id) {
+        try {
+          const convs = await getUserConversations(user.id);
+          setConversations(convs);
+        } catch (err) {
+          console.error(err);
+        }
+      }
+    };
+    fetchConversations();
   }, [section, user]);
 
   const handleLogout = async () => {
@@ -119,10 +135,36 @@ export default function ProfileScreen({ navigation }: Props) {
         </TouchableOpacity>
       )}
 
-      {showFavorite && (
-        <FavoriteButton listingId={item.id} userId={user!.id} size={22} />
+      {showFavorite && user && (
+        <FavoriteButton listingId={item.id} userId={user.id} size={22} />
       )}
     </View>
+  );
+
+  const renderConversationItem = ({ item }: { item: ConversationEntity }) => (
+    <TouchableOpacity
+      style={styles.listingItem}
+      onPress={() =>
+        navigation.navigate("Chat", {
+          conversationId: item.id,
+          listing: {
+            id: item.listing_id,
+            title: item.listing_title || "İlan",
+            user_id: item.seller_id,
+          } as ListingWithData,
+        })
+      }
+    >
+      <View style={{ flex: 1 }}>
+        <Text style={styles.listingTitle}>{item.listing_title}</Text>
+        <Text numberOfLines={1}>{item.last_message || "Mesaj yok"}</Text>
+      </View>
+      <Text style={{ color: "gray", fontSize: 12 }}>
+        {item.last_message_time
+          ? new Date(item.last_message_time).toLocaleTimeString()
+          : ""}
+      </Text>
+    </TouchableOpacity>
   );
 
   const renderList = (data: ListingWithData[], showFavorite: boolean) => {
@@ -146,6 +188,40 @@ export default function ProfileScreen({ navigation }: Props) {
         data={data}
         keyExtractor={(item) => item.id.toString()}
         renderItem={(props) => renderListingItem({ ...props, showFavorite })}
+        contentContainerStyle={{ paddingBottom: 40 }}
+        ListFooterComponent={
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => setSection("menu")}
+          >
+            <Text style={{ color: "#fff" }}>Geri</Text>
+          </TouchableOpacity>
+        }
+      />
+    );
+  };
+
+  const renderConversations = () => {
+    if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
+
+    if (conversations.length === 0)
+      return (
+        <View>
+          <Text>Henüz mesaj yok.</Text>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => setSection("menu")}
+          >
+            <Text style={{ color: "#fff" }}>Geri</Text>
+          </TouchableOpacity>
+        </View>
+      );
+
+    return (
+      <FlatList
+        data={conversations}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderConversationItem}
         contentContainerStyle={{ paddingBottom: 40 }}
         ListFooterComponent={
           <TouchableOpacity
@@ -187,6 +263,13 @@ export default function ProfileScreen({ navigation }: Props) {
               <Text style={styles.menuText}>Favorilerim</Text>
             </TouchableOpacity>
 
+            <TouchableOpacity
+              style={styles.menuButton}
+              onPress={() => setSection("messages")}
+            >
+              <Text style={styles.menuText}>Mesajlarım</Text>
+            </TouchableOpacity>
+
             <TouchableOpacity style={styles.menuButton} onPress={handleLogout}>
               <Text style={styles.menuText}>Çıkış Yap</Text>
             </TouchableOpacity>
@@ -212,6 +295,7 @@ export default function ProfileScreen({ navigation }: Props) {
 
         {section === "listings" && renderList(myListings, false)}
         {section === "favorites" && renderList(myFavorites, true)}
+        {section === "messages" && renderConversations()}
       </View>
     </ProtectedRoute>
   );
@@ -219,7 +303,6 @@ export default function ProfileScreen({ navigation }: Props) {
 
 const styles = StyleSheet.create({
   header: { fontSize: 20, fontWeight: "bold", marginBottom: 6 },
-  subHeader: { fontSize: 18, fontWeight: "600", marginBottom: 8 },
   listingItem: {
     flexDirection: "row",
     marginBottom: 12,

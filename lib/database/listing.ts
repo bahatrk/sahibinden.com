@@ -15,7 +15,9 @@ export type ListingWithData = ListingEntity & {
   location_province?: string | null;
   location_district?: string | null;
   category_type_id?: number;
+  user_phone: string | null;
 };
+
 
 export async function getListingsByCategory(
   categoryId: number
@@ -39,7 +41,8 @@ export async function getListingsWithData(
       img.url AS image_url,
       p.name AS location_province,
       d.name AS location_district,
-      c.category_type_id
+      c.category_type_id,
+      u.phone AS user_phone
     FROM listing l
     LEFT JOIN image img 
       ON img.listing_id = l.id AND img.ui_order = 1
@@ -51,6 +54,8 @@ export async function getListingsWithData(
       ON d.id = loc.district_id
     LEFT JOIN category c
       ON c.id = l.category_id
+    LEFT JOIN user u
+      ON u.id = l.user_id
     WHERE l.category_id = ?
     ORDER BY l.id DESC;
   `;
