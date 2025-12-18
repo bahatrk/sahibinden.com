@@ -6,6 +6,7 @@ const db = SQLite.openDatabaseSync("sahibinden.db");
 
 export default function App() {
   useDrizzleStudio(db);
+  //exportDatabase();
 
   return <RootNavigator />;
 }
