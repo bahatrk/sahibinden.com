@@ -14,7 +14,6 @@ import { RootStackParamList } from "../navigation/types";
 
 
 import {
-  getChildCategories,
   CategoryEntity,
 } from "../lib/database/category";
 import {
@@ -23,6 +22,7 @@ import {
 } from "../lib/database/listing";
 import ListingItem from "../components/ListingItem";
 import CategoryItem from "../components/CategoryItem";
+import { fetchCategoriesByParent } from "../lib/api/category";
 
 type NavProp = StackNavigationProp<RootStackParamList, "Category">;
 type RouteProps = RouteProp<RootStackParamList, "Category">;
@@ -44,7 +44,7 @@ export default function CategoryScreen({ navigation, route }: Props) {
   }, []);
 
   async function load() {
-    const childCats = await getChildCategories(category.id);
+    const childCats = await fetchCategoriesByParent(category.id);
 
     if (childCats.length > 0) {
       setCategories(childCats);
