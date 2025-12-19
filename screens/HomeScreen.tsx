@@ -4,10 +4,11 @@ import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
 import SearchBar from "../components/SearchBar";
 import CategoryItem from "../components/CategoryItem";
-import { getChildCategories, CategoryEntity } from "../lib/database/category";
+import { CategoryEntity } from "../lib/database/category";
 
 import { AuthContext } from "../navigation/authContext";
 import { useContext } from "react";
+import { fetchRootCategories } from "../lib/api/category";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
 
@@ -25,7 +26,7 @@ export default function HomeScreen({ navigation }: Props) {
   }, []);
 
   async function loadRootCategories() {
-    const data = await getChildCategories(null);
+    const data = await fetchRootCategories();
     setCategories(data);
   }
 
