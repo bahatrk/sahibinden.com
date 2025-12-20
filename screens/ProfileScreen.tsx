@@ -89,7 +89,7 @@ export default function ProfileScreen({ navigation }: Props) {
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("user");
-    setUser(null);
+    //setUser()
     navigation.replace("Home");
   };
 

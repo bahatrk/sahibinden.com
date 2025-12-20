@@ -1,103 +1,108 @@
 import React, { useContext, useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from "react-native";
-import Feather from '@expo/vector-icons/Feather';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  Alert,
+} from "react-native";
+import Feather from "@expo/vector-icons/Feather";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
-import { loginUserService } from "../lib/database/userService";
 import AsyncStorage from "expo-sqlite/kv-store";
 import { AuthContext } from "../navigation/authContext";
+import { loginUser } from "../lib/api/login";
 
-type LoginScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Login'>;
+type LoginScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Login"
+>;
 
 type Props = {
-    navigation: LoginScreenNavigationProp;
+  navigation: LoginScreenNavigationProp;
 };
 
-export default function LoginScreen( {navigation}: Props){
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const { setUser } = useContext(AuthContext);
+export default function LoginScreen({ navigation }: Props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const { setUser } = useContext(AuthContext);
 
-    const loginUser = async () => {
-      if (!email || !password) {
-        Alert.alert("Lütfen tüm alanları doldurun!");
-        return;
+  const loginUserUI = async () => {
+    if (!email || !password) {
+      Alert.alert("Lütfen tüm alanları doldurun!");
+      return;
+    }
+
+    const result = await loginUser(email, password);
+
+    if (result.success) {
+      await AsyncStorage.setItem("user", JSON.stringify(result.user));
+      if (result.user){
+        setUser(result.user); 
+        navigation.replace("Profile");
       }
+    } else {
+      Alert.alert("Hata", result.message || "Giriş yapılamadı!");
+    }
 
-        const result = await loginUserService(email,password);
+    setEmail("");
+    setPassword("");
+  };
 
-        if (result.success) {
-          await AsyncStorage.setItem("user", JSON.stringify(result.user));
-          setUser(result.user); // Global state güncellendi
-          navigation.replace("Profile");
-        } else {
-          Alert.alert("Hata", result.message || "Giriş yapılamadı!");
-        }
+  return (
+    <View style={styles.container}>
+      {/* HomeScreen Dönüş */}
+      <TouchableOpacity
+        style={styles.homePageReturnButton}
+        onPress={() => navigation.replace("Home")}
+      >
+        <Feather name="x" style={styles.homePageReturnIcon} />
+      </TouchableOpacity>
 
-        setEmail("");
-        setPassword("");
-    };
+      {/* Başlık */}
+      <Text style={styles.title}>İlan vermek için giriş yap</Text>
 
-    return (
-        <View style={styles.container}>
+      {/* Email input */}
+      <TextInput
+        style={styles.input}
+        placeholder="E-posta adresi"
+        placeholderTextColor={"gray"}
+        keyboardType="email-address"
+        autoCapitalize="none"
+        value={email}
+        onChangeText={setEmail}
+      />
 
-            {/* HomeScreen Dönüş */}
-            <TouchableOpacity
-                style={styles.homePageReturnButton}
-                onPress={() => navigation.replace("Home")}
-            >
-                <Feather name="x" style={styles.homePageReturnIcon}/>
-            </TouchableOpacity>
-        
-            {/* Başlık */}
-            <Text style={styles.title}>İlan vermek için giriş yap</Text>
+      {/* Şifre input */}
+      <View style={styles.sifreContainer}>
+        <TextInput
+          style={styles.sifreInput}
+          placeholder="Şifre"
+          placeholderTextColor={"gray"}
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
 
-            {/* Email input */}
-            <TextInput
-                style={styles.input}
-                placeholder="E-posta adresi"
-                placeholderTextColor={"gray"}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                value={email}
-                onChangeText={setEmail}
-            />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+          <Feather name={showPassword ? "eye-off" : "eye"} size={22} />
+        </TouchableOpacity>
+      </View>
 
-            {/* Şifre input */}
-            <View style={styles.sifreContainer}>
-              <TextInput
-                  style={styles.sifreInput}
-                  placeholder="Şifre"
-                  placeholderTextColor={"gray"}
-                  secureTextEntry = {!showPassword}
-                  value={password}
-                  onChangeText={setPassword}
-              />
+      {/* Giriş Yap Butonu */}
+      <TouchableOpacity style={styles.button} onPress={loginUserUI}>
+        <Text style={styles.buttonText}>E-posta ile giriş yap</Text>
+      </TouchableOpacity>
 
-              <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
-                <Feather name={showPassword ? "eye-off" : "eye"} size={22} />
-              </TouchableOpacity>
-            </View>
-
-            {/* Giriş Yap Butonu */}
-            <TouchableOpacity 
-              style={styles.button}
-              onPress={loginUser}
-            >
-                <Text style={styles.buttonText}>E-posta ile giriş yap</Text>
-            </TouchableOpacity>
-
-            <View style={styles.hesapAc}>
-                <Text style={{fontSize: 16}}>Henüz hesabın yok mu? </Text>
-                <TouchableOpacity
-                  onPress={() => navigation.navigate('Register')}
-                >
-                    <Text style={styles.hesapAcButton}>Hesap aç</Text>
-                </TouchableOpacity>
-            </View>
-
-        </View>
+      <View style={styles.hesapAc}>
+        <Text style={{ fontSize: 16 }}>Henüz hesabın yok mu? </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+          <Text style={styles.hesapAcButton}>Hesap aç</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 }
 
@@ -105,18 +110,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   homePageReturnButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
     width: 55,
     height: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  homePageReturnIcon:{
+  homePageReturnIcon: {
     fontSize: 28,
     fontWeight: "bold",
     marginLeft: 10,
@@ -124,15 +129,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 30,
     marginTop: 45,
-    paddingHorizontal: 7.5
+    paddingHorizontal: 7.5,
   },
   input: {
     height: 50,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 7.5,
     marginBottom: 15,
@@ -140,25 +145,25 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 45,
-    backgroundColor: '#2E5894',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30
+    backgroundColor: "#2E5894",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   hesapAc: {
     height: 45,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center",
     flexDirection: "row",
-    alignItems: 'center',
-    marginTop: 60
+    alignItems: "center",
+    marginTop: 60,
   },
   hesapAcButton: {
-    color: '#007FFF',
+    color: "#007FFF",
     fontSize: 16,
   },
   sifreContainer: {
@@ -167,7 +172,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 50,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 7.5,
     marginBottom: 15,
@@ -176,5 +181,5 @@ const styles = StyleSheet.create({
   sifreInput: {
     fontSize: 16,
     color: "black",
-  }
+  },
 });
