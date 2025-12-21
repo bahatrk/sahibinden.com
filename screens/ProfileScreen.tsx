@@ -14,15 +14,13 @@ import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "../navigation/authContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AsyncStorage from "expo-sqlite/kv-store";
-import {
-  deleteListing,
-  getUserListings,
-  ListingWithData,
-} from "../lib/database/listing";
-import { getUserFavorites } from "../lib/database/favorite";
+import { ListingWithData } from "../lib/database/listing";
 import FavoriteButton from "../components/FavoriteButton";
 import UserInfoCard from "../components/UserInfoCard";
-import { getUserConversations, ConversationEntity } from "../lib/database/conversation";
+import {
+  getUserConversations,
+  ConversationEntity,
+} from "../lib/database/conversation";
 import { deleteListingApi, fetchListingsByUser } from "../lib/api/listing";
 import { fetchUserFavorites } from "../lib/api/favorite";
 
@@ -90,9 +88,14 @@ export default function ProfileScreen({ navigation }: Props) {
   }, [section, user]);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("user");
-    //setUser()
-    navigation.replace("Home");
+    try {
+      //AsyncStorage'dan kullanıcıyı sil
+      await AsyncStorage.removeItem("user");
+      setUser(undefined);
+      navigation.replace("Home");
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
   };
 
   const handleDeleteListing = async (listingId: number) => {
@@ -146,13 +149,13 @@ export default function ProfileScreen({ navigation }: Props) {
       )}
 
       {showFavorite && user && (
-        <FavoriteButton 
-          listingId={item.id} 
-          userId={user.id} 
+        <FavoriteButton
+          listingId={item.id}
+          userId={user.id}
           size={22}
           onToggle={async (removed) => {
             if (removed) {
-              setMyFavorites(prev => prev.filter(l => l.id !== item.id));
+              setMyFavorites((prev) => prev.filter((l) => l.id !== item.id));
             } else {
               const updatedFavorites = await fetchUserFavorites(user.id);
               setMyFavorites(updatedFavorites);

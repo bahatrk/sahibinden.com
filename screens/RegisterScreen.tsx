@@ -1,16 +1,31 @@
-import React , {useContext, useState} from "react";
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from "react-native";
-import Feather from '@expo/vector-icons/Feather';
+import React, { useContext, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+  Alert,
+} from "react-native";
+import Feather from "@expo/vector-icons/Feather";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { AuthContext } from "../navigation/authContext";
-import { getUserByEmail, registerUserService, UserEntity } from "../lib/database/userService";
+import {
+  getUserByEmail,
+  registerUserService,
+  UserEntity,
+} from "../lib/database/userService";
 import AsyncStorage from "expo-sqlite/kv-store";
 import { RootStackParamList } from "../navigation/types";
+import { registerUserServiceApi } from "../lib/api/register";
 
-type RegisterScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Register'>;
+type RegisterScreenNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  "Register"
+>;
 
 type Props = {
-    navigation: RegisterScreenNavigationProp;
+  navigation: RegisterScreenNavigationProp;
 };
 
 export default function RegisterScreen({ navigation }: Props) {
@@ -23,28 +38,26 @@ export default function RegisterScreen({ navigation }: Props) {
   const { setUser } = useContext(AuthContext);
 
   const registerUser = async () => {
-    if (!name || !surname || !email || !password ||!phone) {
+    if (!name || !surname || !email || !password || !phone) {
       Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
       return;
     }
 
-    const result = await registerUserService(name, surname, email, password, phone);
+    const result = await registerUserServiceApi(
+      name,
+      surname,
+      email,
+      password,
+      phone
+    );
 
-    if (result.success) {
-      // DB’den yeni kullanıcıyı alıyoruz
-      const userFromDb: UserEntity | null = await getUserByEmail(email);
-      if (!userFromDb) {
-        Alert.alert("Hata", "Kullanıcı oluşturuldu ama alınamadı!");
-        return;
-      }
-
-      // AsyncStorage ve context’e set et
-      await AsyncStorage.setItem("user", JSON.stringify(userFromDb));
-      setUser(userFromDb);
+    if (result.success && result.user) {
+      await AsyncStorage.setItem("user", JSON.stringify(result.user));
+      setUser(result.user);
 
       navigation.replace("Profile");
     } else {
-      Alert.alert("Hata", result.message);
+      Alert.alert("Hata", result.message || "Kayıt yapılamadı");
     }
   };
 
@@ -138,18 +151,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   homePageReturnButton: {
-    position: 'absolute',
+    position: "absolute",
     top: 10,
     right: 10,
     width: 55,
     height: 55,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
-  homePageReturnIcon:{
+  homePageReturnIcon: {
     fontSize: 28,
     fontWeight: "bold",
     marginLeft: 10,
@@ -157,15 +170,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 30,
     marginTop: 45,
-    paddingHorizontal: 7.5
+    paddingHorizontal: 7.5,
   },
   input: {
     height: 50,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 7.5,
     marginBottom: 15,
@@ -173,25 +186,25 @@ const styles = StyleSheet.create({
   },
   button: {
     height: 45,
-    backgroundColor: '#2E5894',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 30
+    backgroundColor: "#2E5894",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 30,
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
   },
   hesapAc: {
     height: 45,
-    backgroundColor: '#fff',
-    justifyContent: 'center',
+    backgroundColor: "#fff",
+    justifyContent: "center",
     flexDirection: "row",
-    alignItems: 'center',
-    marginTop: 60
+    alignItems: "center",
+    marginTop: 60,
   },
   hesapAcButton: {
-    color: '#007FFF',
+    color: "#007FFF",
     fontSize: 16,
   },
   adSoyadInput: {
@@ -203,7 +216,7 @@ const styles = StyleSheet.create({
     width: "48%",
     height: 50,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 7.5,
     marginBottom: 15,
@@ -215,7 +228,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     height: 50,
     borderBottomWidth: 0.5,
-    borderBottomColor: '#ccc',
+    borderBottomColor: "#ccc",
     borderRadius: 10,
     paddingHorizontal: 7.5,
     marginBottom: 15,
@@ -224,5 +237,5 @@ const styles = StyleSheet.create({
   sifreInput: {
     fontSize: 16,
     color: "black",
-  }  
+  },
 });
