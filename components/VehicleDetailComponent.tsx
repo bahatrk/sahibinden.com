@@ -3,25 +3,26 @@ import { View, Text, StyleSheet, Dimensions, ScrollView, Image, TouchableOpacity
 import { VehicleDetailEntity } from "../lib/database/vehicleDetail";
 import { getListingImages, ImageEntity } from "../lib/database/image";
 import { getListingFeatures, FeatureGroupEntity, FeatureEntity } from "../lib/database/listingFeature";
+import { VehicleWithImagesOut } from "../lib/database/vehicleDetail";
 
 type Props = {
-  detail: VehicleDetailEntity;
+  detail: VehicleWithImagesOut;
 };
 
 export default function VehicleDetailComponent({ detail }: Props) {
-  const [images, setImages] = useState<ImageEntity[]>([]);
+  const images = detail.images ?? [];
   const [activeTab, setActiveTab] = useState<"info" | "description">("info");
   const [listingFeatures, setListingFeatures] = useState<{ group: FeatureGroupEntity; features: FeatureEntity[] }[]>([]);
 
   useEffect(() => {
-    loadImages();
+    //loadImages();
     loadFeatures();
   }, []);
 
-  async function loadImages() {
-    const imgs = await getListingImages(detail.listing_id);
-    setImages(imgs);
-  }
+  // async function loadImages() {
+  //   const imgs = await getListingImages(detail.listing_id);
+  //   setImages(imgs);
+  // }
 
   async function loadFeatures() {
     const feats = await getListingFeatures(detail.listing_id);
@@ -92,7 +93,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
         </View>
       ) : (
         <View style={{ marginTop: 8 }}>
-          <Text style={{ fontSize: 14, lineHeight: 20 }}>{detail.desc ?? "Açıklama bulunamadı."}</Text>
+          <Text style={{ fontSize: 14, lineHeight: 20 }}>{detail.listing_desc ?? "Açıklama bulunamadı."}</Text>
         </View>
       )}
     </View>

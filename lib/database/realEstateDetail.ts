@@ -20,6 +20,30 @@ export type RealEstateDetailEntity = {
   desc?: string | null;
 };
 
+export type RealEstateWithImagesOut = {
+  listing_id: number;
+  room_number: number;
+  bathroom_number: number;
+  square_meter: number;
+  floor: number;
+  building_age: number;
+  furnished: boolean;
+  heat: string;
+  kitchen: string;
+  lift: number;
+  car_park: number;
+  title: string;
+  price: number;
+  creation_date: string;
+  listing_desc?: string | null;
+  images: { id: number; url: string; alt?: string | null; ui_order: number }[];
+};
+
+
+
+
+
+
 export async function getRealEstateDetail(listingId: number): Promise<RealEstateDetailEntity | null> {
   const db = await openDb();
 

@@ -17,12 +17,12 @@ import {
   CategoryEntity,
 } from "../lib/database/category";
 import {
-  getListingsWithData,
   ListingWithData,
 } from "../lib/database/listing";
 import ListingItem from "../components/ListingItem";
 import CategoryItem from "../components/CategoryItem";
 import { fetchCategoriesByParent } from "../lib/api/category";
+import { fetchListingByCategory } from "../lib/api/listing";
 
 type NavProp = StackNavigationProp<RootStackParamList, "Category">;
 type RouteProps = RouteProp<RootStackParamList, "Category">;
@@ -50,7 +50,7 @@ export default function CategoryScreen({ navigation, route }: Props) {
       setCategories(childCats);
       setListings([]);
     } else {
-      const items = await getListingsWithData(category.id);
+      const items = await fetchListingByCategory(category.id);
       setListings(items);
     }
 

@@ -6,7 +6,7 @@ export const fetchRootCategories = async (): Promise<CategoryEntity[]> => {
     const res = await api.get<CategoryEntity[]>(`/categories`);
     return res.data;
   } catch (err: any) {
-    console.error(err.message +' API');
+    console.error(err +' API');
     return [];
   }
 };

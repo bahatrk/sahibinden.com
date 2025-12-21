@@ -12,10 +12,12 @@ import RealEstateDetailComponent from "../components/RealEstateDetailComponent";
 import VehicleDetailComponent from "../components/VehicleDetailComponent";
 import {
   RealEstateDetailEntity,
+  RealEstateWithImagesOut,
   getRealEstateDetail,
 } from "../lib/database/realEstateDetail";
 import {
   VehicleDetailEntity,
+  VehicleWithImagesOut,
   getVehicleDetail,
 } from "../lib/database/vehicleDetail";
 import { ListingWithData } from "../lib/database/listing";
@@ -25,6 +27,8 @@ import { AuthContext } from "../navigation/authContext";
 import MessageActionBar from "../components/MessageActionBar";
 import CallButton from "../components/CallButton";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { fetchRealEstate } from "../lib/api/realEstate";
+import { fetchVehicle } from "../lib/api/vehicle";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 
@@ -36,9 +40,9 @@ export default function ListingDetailScreen() {
   const insets = useSafeAreaInsets(); //tab ı aşmasın dıye 
 
   const [realEstateDetail, setRealEstateDetail] =
-    useState<RealEstateDetailEntity | null>(null);
+    useState<RealEstateWithImagesOut | null>(null);
   const [vehicleDetail, setVehicleDetail] =
-    useState<VehicleDetailEntity | null>(null);
+    useState<VehicleWithImagesOut  | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -50,12 +54,12 @@ export default function ListingDetailScreen() {
     try {
       console.log("loadDetail - listing:", listing);
       if (listing.category_type_id === 1) {
-        const data = await getRealEstateDetail(listing.id);
-        console.log("loadDetail - RealEstateDetail result:", data);
+        const data = await fetchRealEstate(listing.id);
+        console.log("loadDetail - RealEstateDetail API result:", data);
         setRealEstateDetail(data);
       } else if (listing.category_type_id === 2) {
-        const data = await getVehicleDetail(listing.id);
-        console.log("loadDetail - VehicleDetail result:", data);
+        const data = await fetchVehicle(listing.id);
+        console.log("loadDetail - VehicleDetail API result:", data);
         setVehicleDetail(data);
       } else {
         console.warn(

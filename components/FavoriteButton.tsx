@@ -1,30 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { TouchableOpacity, Text } from "react-native";
 import {
-  addFavorite,
-  removeFavorite,
-  isFavorite,
-} from "../lib/database/favorite";
+  addFavoriteApi,
+  isFavoriteApi,
+  removeFavoriteApi,
+} from "../lib/api/favorite";
 
 type Props = {
   listingId: number;
   userId: number;
   size?: number;
+  onToggle?: (removed: boolean) => void; // removed = true -> favoriden çıkarıldı
 };
 
 export default function FavoriteButton({
   listingId,
   userId,
   size = 26,
+  onToggle,
 }: Props) {
   const [favorite, setFavorite] = useState(false);
   const [loading, setLoading] = useState(true);
 
   // useEffect içinde async IIFE kullanıyoruz
   useEffect(() => {
+    if (!userId || !listingId) return; // cökmeyi önlemke icin
+
     (async () => {
       try {
-        const fav = await isFavorite(userId, listingId);
+        const fav = await isFavoriteApi(userId, listingId);
         setFavorite(fav);
       } catch (err) {
         console.error("FavoriteButton check error:", err);
@@ -38,9 +42,13 @@ export default function FavoriteButton({
   const toggleFavorite = async () => {
     try {
       if (favorite) {
-        await removeFavorite(userId, listingId);
+        await removeFavoriteApi(userId, listingId);
+        onToggle?.(true);
+        setFavorite(false);
       } else {
-        await addFavorite(userId, listingId);
+        await addFavoriteApi(userId, listingId);
+        onToggle?.(false);
+        setFavorite(true);
       }
       setFavorite(!favorite);
     } catch (err) {
@@ -52,9 +60,7 @@ export default function FavoriteButton({
 
   return (
     <TouchableOpacity onPress={toggleFavorite}>
-      <Text style={{ fontSize: size }}>
-        {favorite ? "❤️" : "🤍"}
-      </Text>
+      <Text style={{ fontSize: size }}>{favorite ? "❤️" : "🤍"}</Text>
     </TouchableOpacity>
   );
 }

@@ -1,27 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Dimensions, Image, TouchableOpacity } from "react-native";
-import { RealEstateDetailEntity } from "../lib/database/realEstateDetail";
-import { getListingImages, ImageEntity } from "../lib/database/image";
 import { getListingFeatures, FeatureGroupEntity, FeatureEntity } from "../lib/database/listingFeature";
+import { RealEstateWithImagesOut } from "../lib/database/realEstateDetail";
 
 type Props = {
-  detail: RealEstateDetailEntity;
+  detail: RealEstateWithImagesOut;
 };
 
 export default function RealEstateDetailComponent({ detail }: Props) {
-  const [images, setImages] = useState<ImageEntity[]>([]);
+  const images = detail.images ?? [];
   const [activeTab, setActiveTab] = useState<"info" | "description">("info");
   const [listingFeatures, setListingFeatures] = useState<{ group: FeatureGroupEntity; features: FeatureEntity[] }[]>([]);
 
   useEffect(() => {
-    loadImages();
+    //loadImages();
     loadFeatures();
   }, []);
 
-  async function loadImages() {
-    const imgs = await getListingImages(detail.listing_id);
-    setImages(imgs);
-  }
+  // async function loadImages() {
+  //   const imgs = await getListingImages(detail.listing_id);
+  //   setImages(imgs);
+  // }
 
   async function loadFeatures() {
     const feats = await getListingFeatures(detail.listing_id);
@@ -99,7 +98,7 @@ export default function RealEstateDetailComponent({ detail }: Props) {
         </View>
       ) : (
         <View style={{ marginTop: 8 }}>
-          <Text style={{ fontSize: 14, lineHeight: 20 }}>{detail.desc ?? "Açıklama bulunamadı."}</Text>
+          <Text style={{ fontSize: 14, lineHeight: 20 }}>{detail.listing_desc ?? "Açıklama bulunamadı."}</Text>
         </View>
       )}
     </View>

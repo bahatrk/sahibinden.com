@@ -14,15 +14,15 @@ import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "../navigation/authContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import AsyncStorage from "expo-sqlite/kv-store";
-import {
-  deleteListing,
-  getUserListings,
-  ListingWithData,
-} from "../lib/database/listing";
-import { getUserFavorites } from "../lib/database/favorite";
+import { ListingWithData } from "../lib/database/listing";
 import FavoriteButton from "../components/FavoriteButton";
 import UserInfoCard from "../components/UserInfoCard";
-import { getUserConversations, ConversationEntity } from "../lib/database/conversation";
+import {
+  getUserConversations,
+  ConversationEntity,
+} from "../lib/database/conversation";
+import { deleteListingApi, fetchListingsByUser } from "../lib/api/listing";
+import { fetchUserFavorites } from "../lib/api/favorite";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -47,7 +47,7 @@ export default function ProfileScreen({ navigation }: Props) {
     const fetchListings = async () => {
       try {
         if (user?.id) {
-          const listings = await getUserListings(user.id);
+          const listings = await fetchListingsByUser(user.id);
           setMyListings(listings);
         }
       } catch (err) {
@@ -63,7 +63,7 @@ export default function ProfileScreen({ navigation }: Props) {
     const fetchFavorites = async () => {
       if (section === "favorites" && user?.id) {
         try {
-          const favs = await getUserFavorites(user.id);
+          const favs = await fetchUserFavorites(user.id);
           setMyFavorites(favs);
         } catch (err) {
           console.error(err);
@@ -88,9 +88,14 @@ export default function ProfileScreen({ navigation }: Props) {
   }, [section, user]);
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("user");
-    setUser(null);
-    navigation.replace("Home");
+    try {
+      //AsyncStorage'dan kullanıcıyı sil
+      await AsyncStorage.removeItem("user");
+      setUser(undefined);
+      navigation.replace("Home");
+    } catch (err) {
+      console.error("Logout error:", err);
+    }
   };
 
   const handleDeleteListing = async (listingId: number) => {
@@ -100,8 +105,16 @@ export default function ProfileScreen({ navigation }: Props) {
         text: "Sil",
         style: "destructive",
         onPress: async () => {
-          await deleteListing(listingId);
-          setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+          try {
+            const response = await deleteListingApi(listingId);
+            if (response.success) {
+              setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+            } else {
+              Alert.alert("Hata", response.message);
+            }
+          } catch (err) {
+            Alert.alert("Hata", "İlan silinirken bir hata oluştu.");
+          }
         },
       },
     ]);
@@ -136,7 +149,19 @@ export default function ProfileScreen({ navigation }: Props) {
       )}
 
       {showFavorite && user && (
-        <FavoriteButton listingId={item.id} userId={user.id} size={22} />
+        <FavoriteButton
+          listingId={item.id}
+          userId={user.id}
+          size={22}
+          onToggle={async (removed) => {
+            if (removed) {
+              setMyFavorites((prev) => prev.filter((l) => l.id !== item.id));
+            } else {
+              const updatedFavorites = await fetchUserFavorites(user.id);
+              setMyFavorites(updatedFavorites);
+            }
+          }}
+        />
       )}
     </View>
   );
