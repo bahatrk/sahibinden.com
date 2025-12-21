@@ -138,7 +138,19 @@ export default function ProfileScreen({ navigation }: Props) {
       )}
 
       {showFavorite && user && (
-        <FavoriteButton listingId={item.id} userId={user.id} size={22} />
+        <FavoriteButton 
+          listingId={item.id} 
+          userId={user.id} 
+          size={22}
+          onToggle={async (removed) => {
+            if (removed) {
+              setMyFavorites(prev => prev.filter(l => l.id !== item.id));
+            } else {
+              const updatedFavorites = await fetchUserFavorites(user.id);
+              setMyFavorites(updatedFavorites);
+            }
+          }}
+        />
       )}
     </View>
   );

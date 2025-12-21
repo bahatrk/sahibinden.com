@@ -10,3 +10,33 @@ export const fetchUserFavorites = async (userId: number): Promise<ListingWithDat
     return [];
   }
 };
+
+
+export const addFavoriteApi = async (
+  userId: number,
+  listingId: number
+) => {
+  await api.post("/favorites", undefined, {
+    params: { user_id: userId, listing_id: listingId },
+  });
+};
+
+
+export const removeFavoriteApi = async (
+  userId: number,
+  listingId: number
+) => {
+  await api.delete("/favorites", {
+    params: { user_id: userId, listing_id: listingId },
+  });
+};
+
+export const isFavoriteApi = async (
+  userId: number,
+  listingId: number
+): Promise<boolean> => {
+  const res = await api.get("/favorites/is-favorite", {
+    params: { user_id: userId, listing_id: listingId },
+  });
+  return res.data.favorite;
+};
