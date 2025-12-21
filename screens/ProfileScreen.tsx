@@ -23,6 +23,8 @@ import { getUserFavorites } from "../lib/database/favorite";
 import FavoriteButton from "../components/FavoriteButton";
 import UserInfoCard from "../components/UserInfoCard";
 import { getUserConversations, ConversationEntity } from "../lib/database/conversation";
+import { fetchListingsByUser } from "../lib/api/listing";
+import { fetchUserFavorites } from "../lib/api/favorite";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -47,7 +49,7 @@ export default function ProfileScreen({ navigation }: Props) {
     const fetchListings = async () => {
       try {
         if (user?.id) {
-          const listings = await getUserListings(user.id);
+          const listings = await fetchListingsByUser(user.id);
           setMyListings(listings);
         }
       } catch (err) {
@@ -63,7 +65,7 @@ export default function ProfileScreen({ navigation }: Props) {
     const fetchFavorites = async () => {
       if (section === "favorites" && user?.id) {
         try {
-          const favs = await getUserFavorites(user.id);
+          const favs = await fetchUserFavorites(user.id);
           setMyFavorites(favs);
         } catch (err) {
           console.error(err);

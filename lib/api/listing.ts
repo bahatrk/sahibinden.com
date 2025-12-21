@@ -14,3 +14,14 @@ export const fetchListingByCategory = async (categoryId: number): Promise<Listin
     return [];
   }
 };
+
+// Kullanıcı ilanları
+export const fetchListingsByUser = async (userId: number): Promise<ListingWithData[]> => {
+  try {
+    const res = await api.get<ListingWithData[]>(`/listings/user/${userId}`);
+    return res.data;
+  } catch (err: any) {
+    console.error("Error fetching user listings:", err.message);
+    return [];
+  }
+};
