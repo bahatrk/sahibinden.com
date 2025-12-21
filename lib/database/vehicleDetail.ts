@@ -26,6 +26,34 @@ export type VehicleDetailEntity = {
   desc: string;
 };
 
+
+export type VehicleWithImagesOut = {
+  listing_id: number;
+  year?: number;
+  fuel?: string;
+  transmission?: string;
+  kilometer?: number;
+  body_type: string;
+  engine_cc: string;
+  instrumental: string;
+  color: string;
+
+  price: number;
+  creation_date: string;
+  listing_desc?: string;
+
+  images: {
+    id: number;
+    url: string;
+    alt?: string | null;
+    ui_order: number;
+  }[];
+};
+
+
+
+
+
 // listingId ile real_estate_detail çek
 export async function getVehicleDetail(listingId: number): Promise<VehicleDetailEntity | null> {
   const db = await openDb();
