@@ -23,7 +23,7 @@ import { getUserFavorites } from "../lib/database/favorite";
 import FavoriteButton from "../components/FavoriteButton";
 import UserInfoCard from "../components/UserInfoCard";
 import { getUserConversations, ConversationEntity } from "../lib/database/conversation";
-import { fetchListingsByUser } from "../lib/api/listing";
+import { deleteListingApi, fetchListingsByUser } from "../lib/api/listing";
 import { fetchUserFavorites } from "../lib/api/favorite";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
@@ -102,8 +102,16 @@ export default function ProfileScreen({ navigation }: Props) {
         text: "Sil",
         style: "destructive",
         onPress: async () => {
-          await deleteListing(listingId);
-          setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+          try {
+            const response = await deleteListingApi(listingId);
+            if (response.success) {
+              setMyListings((prev) => prev.filter((l) => l.id !== listingId));
+            } else {
+              Alert.alert("Hata", response.message);
+            }
+          } catch (err) {
+            Alert.alert("Hata", "İlan silinirken bir hata oluştu.");
+          }
         },
       },
     ]);
