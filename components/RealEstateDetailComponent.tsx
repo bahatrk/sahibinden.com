@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Dimensions, Image, TouchableOpacity } from "react-native";
 import { getListingFeatures, FeatureGroupEntity, FeatureEntity } from "../lib/database/listingFeature";
 import { RealEstateWithImagesOut } from "../lib/database/realEstateDetail";
+import { getListingFeaturesApi } from "../lib/api/listingFeature";
 
 type Props = {
   detail: RealEstateWithImagesOut;
@@ -23,7 +24,7 @@ export default function RealEstateDetailComponent({ detail }: Props) {
   // }
 
   async function loadFeatures() {
-    const feats = await getListingFeatures(detail.listing_id);
+    const feats = await getListingFeaturesApi(detail.listing_id);
     setListingFeatures(feats);
   }
 

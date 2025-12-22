@@ -25,6 +25,7 @@ import * as ImagePicker from "expo-image-picker";
 import LocationPicker from "../components/LocationPicker";
 import { getFeatureGroupsByCategoryType, getFeaturesByGroup, addListingFeatures, FeatureGroupEntity, FeatureEntity } from "../lib/database/listingFeature";
 import { fetchCategoriesByParent, fetchRootCategories } from "../lib/api/category";
+import { addListingFeaturesApi, getFeatureGroupsByCategoryTypeApi, getFeaturesByGroupApi } from "../lib/api/listingFeature";
 
 type NavProp = StackNavigationProp<RootStackParamList, "CreateListing">;
 type Props = { navigation: NavProp };
@@ -75,10 +76,10 @@ export default function CreateListingScreen({ navigation }: Props) {
   }
 
   async function loadFeatureGroups(categoryTypeId: number) {
-    const fg = await getFeatureGroupsByCategoryType(categoryTypeId);
+    const fg = await getFeatureGroupsByCategoryTypeApi(categoryTypeId);
     const withFeatures = await Promise.all(
       fg.map(async g => {
-        const feats = await getFeaturesByGroup(g.id);
+        const feats = await getFeaturesByGroupApi(g.id);
         return { ...g, features: feats.map(f => ({ ...f, selected: false })) };
       })
     );
@@ -134,7 +135,7 @@ export default function CreateListingScreen({ navigation }: Props) {
       // Feature seçilenleri kaydet
       const selectedFeatureIds = featureGroups.flatMap(g => g.features.filter(f => f.selected).map(f => f.id));
       if (selectedFeatureIds.length > 0) {
-        await addListingFeatures(listingId, selectedFeatureIds);
+        await addListingFeaturesApi(listingId, selectedFeatureIds);
       }
 
       if (selectedCategory.category_type_id === 1) {

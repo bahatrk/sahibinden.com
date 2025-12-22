@@ -4,6 +4,7 @@ import { VehicleDetailEntity } from "../lib/database/vehicleDetail";
 import { getListingImages, ImageEntity } from "../lib/database/image";
 import { getListingFeatures, FeatureGroupEntity, FeatureEntity } from "../lib/database/listingFeature";
 import { VehicleWithImagesOut } from "../lib/database/vehicleDetail";
+import { getListingFeaturesApi } from "../lib/api/listingFeature";
 
 type Props = {
   detail: VehicleWithImagesOut;
@@ -25,7 +26,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
   // }
 
   async function loadFeatures() {
-    const feats = await getListingFeatures(detail.listing_id);
+    const feats = await getListingFeaturesApi(detail.listing_id);
     setListingFeatures(feats);
   }
 
