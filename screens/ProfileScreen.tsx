@@ -23,6 +23,7 @@ import {
 } from "../lib/database/conversation";
 import { deleteListingApi, fetchListingsByUser } from "../lib/api/listing";
 import { fetchUserFavorites } from "../lib/api/favorite";
+import { getUserConversationsApi } from "../lib/api/conversation";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -77,7 +78,7 @@ export default function ProfileScreen({ navigation }: Props) {
     const fetchConversations = async () => {
       if (section === "messages" && user?.id) {
         try {
-          const convs = await getUserConversations(user.id);
+          const convs = await getUserConversationsApi(user.id);
           setConversations(convs);
         } catch (err) {
           console.error(err);

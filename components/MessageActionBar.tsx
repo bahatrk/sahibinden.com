@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ListingWithData } from "../lib/database/listing";
 import { AuthContext } from "../navigation/authContext";
 import { getOrCreateConversation } from "../lib/database/conversation";
+import { getOrCreateConversationApi } from "../lib/api/conversation";
 
 type Props = {
   listing: ListingWithData;
@@ -34,7 +35,7 @@ export default function MessageActionBar({ listing }: Props) {
     }
 
     try {
-      const conversation = await getOrCreateConversation(
+      const conversation = await getOrCreateConversationApi(
         listing.id,
         user.id, // buyer
         listing.user_id // seller
