@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Dimensions, Image, TouchableOpacity
 import { getListingFeatures, FeatureGroupEntity, FeatureEntity } from "../lib/database/listingFeature";
 import { RealEstateWithImagesOut } from "../lib/database/realEstateDetail";
 import { getListingFeaturesApi } from "../lib/api/listingFeature";
+import { DEFAULT_IMAGE, getImageUrl } from "../constant/apiConfig";
 
 type Props = {
   detail: RealEstateWithImagesOut;
@@ -51,7 +52,11 @@ export default function RealEstateDetailComponent({ detail }: Props) {
         {images.map((img) => (
           <Image
             key={img.id}
-            source={{ uri: img.url }}
+                    source={{
+                      uri: img.url
+                        ? getImageUrl(img.url)
+                        : DEFAULT_IMAGE,
+                    }}
             style={{ width: windowWidth * 0.8, height: 220, marginRight: 12 }}
             resizeMode="cover"
           />

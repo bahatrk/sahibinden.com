@@ -1,40 +1,37 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { ListingWithData } from "../lib/database/listing";
+import { DEFAULT_IMAGE, getImageUrl } from "../constant/apiConfig";
 
 type Props = {
   listing: ListingWithData;
   onPress?: () => void;
 };
 
-const DEFAULT_IMAGE = "https://placehold.co/300x300/png";
-
 export default function ListingItem({ listing, onPress }: Props) {
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
       <Image
-        source={{ uri: listing.image_url ?? DEFAULT_IMAGE }}
+        source={{
+          uri: listing.image_url
+            ? getImageUrl(listing.image_url)
+            : DEFAULT_IMAGE,
+        }}
         style={styles.thumbnail}
         resizeMode="cover"
       />
 
       <View style={styles.infoContainer}>
         {/* Title */}
-        <Text style={styles.title}>
-          {listing.title}
-        </Text>
+        <Text style={styles.title}>{listing.title}</Text>
 
         {/* Location + Price Row */}
         <View style={styles.row}>
           <View style={styles.locationContainer}>
             {listing.location_province && (
-              <Text style={styles.subtitle}>
-                {listing.location_province},
-              </Text>
+              <Text style={styles.subtitle}>{listing.location_province},</Text>
             )}
             {listing.location_district && (
-              <Text style={styles.subtitle}>
-                {listing.location_district}
-              </Text>
+              <Text style={styles.subtitle}>{listing.location_district}</Text>
             )}
           </View>
 
@@ -82,8 +79,8 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#222",
     marginBottom: 8,
-    flexShrink: 1,      // title uzunsa alt satıra geçer
-    flexWrap: "wrap",   // satır taşarsa wrap
+    flexShrink: 1, // title uzunsa alt satıra geçer
+    flexWrap: "wrap", // satır taşarsa wrap
   },
 
   row: {

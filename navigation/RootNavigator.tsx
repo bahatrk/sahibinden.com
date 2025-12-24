@@ -12,7 +12,7 @@ import ProfileScreen from "../screens/ProfileScreen";
 import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "./authContext";
 import HeaderProfileButton from "../components/HeaderProfileButton";
-import CreateListingScreen from "../screens/CreateListingScreen";
+import CreateListingScreen from "../screens/create/CreateListingScreen";
 import ChatScreen from "../screens/ChatScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
