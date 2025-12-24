@@ -42,8 +42,11 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
 
   // Kategori değiştiğinde veya component yüklendiğinde özellik gruarını çek
   useEffect(() => {
-    loadFeatureGroups(category.category_type_id);
-  }, [category]);
+    // Eğer kategori ID'si yoksa veya değişmediyse çalışma
+  if (!category?.id) return;
+
+  loadFeatureGroups(category.category_type_id);
+  }, [category.id]);
 
   async function loadFeatureGroups(typeId: number) {
     try {

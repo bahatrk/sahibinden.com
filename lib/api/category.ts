@@ -12,7 +12,6 @@ export const fetchRootCategories = async (): Promise<CategoryEntity[]> => {
 };
 
 export const fetchCategoriesByParent = async (parentId: number): Promise<CategoryEntity[]> => {
-    
   if (parentId == -1)
     return fetchRootCategories();
   
@@ -22,7 +21,7 @@ export const fetchCategoriesByParent = async (parentId: number): Promise<Categor
     });
     return res.data;
   } catch (err: any) {
-    console.error("Error fetching categories:", err.message);
+    console.error("Error fetching categories:" + parentId, err.message);
     return [];
   }
 };

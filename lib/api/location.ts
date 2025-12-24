@@ -10,6 +10,13 @@ export type District = {
   name: string;
 };
 
+export type Neigborhood = {
+  id: number;
+  name: string;
+  area_name: string;
+  postal_code: string;
+};
+
 
 export const fetchAllProvinces = async (): Promise<Province[]> => {
   try {
@@ -21,25 +28,25 @@ export const fetchAllProvinces = async (): Promise<Province[]> => {
   }
 };
 
-export const fetchProvinceIdDistricts = async (province_id: number): Promise<District[]> => {
+export const fetchDistrictsByProvinceId = async (province_id: number): Promise<District[]> => {
       
   try {
-    const res = await api.get<District[]>(`/locations/districts/province/${province_id}`);
+    const res = await api.get<District[]>(`/locations/districts/${province_id}`);
     return res.data;
   } catch (err: any) {
-    console.error("Error fetching categories:", err.message);
+    console.error("Error fetching Districts with province id:" + province_id, err.message);
     return [];
   }
 };
 
 
-export const fetchNeigborhoodByDistricts = async (district_id: number): Promise<District[]> => {
+export const fetchNeigborhoodByDistricts = async (district_id: number): Promise<Neigborhood[]> => {
       
   try {
     const res = await api.get<District[]>(`/locations/neighbourhoods/${district_id}`);
     return res.data;
   } catch (err: any) {
-    console.error("Error fetching categories:", err.message);
+    console.error("Error fetching fetchNeigborhoodByDistricts:"+ district_id, err.message);
     return [];
   }
 };
