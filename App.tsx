@@ -3,10 +3,10 @@ import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 import * as SQLite from "expo-sqlite";
 import { LoadingProvider } from "./components/LoadingProvider";
 
-const db = SQLite.openDatabaseSync("sahibinden.db");
+//const db = SQLite.openDatabaseSync("sahibinden.db");
 
 export default function App() {
-  useDrizzleStudio(db);
+  //useDrizzleStudio(db);
   //exportDatabase();
 
     
