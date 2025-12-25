@@ -3,7 +3,6 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   StyleSheet,
 } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
@@ -43,7 +42,6 @@ export default function ListingDetailScreen() {
     useState<RealEstateWithImagesOut | null>(null);
   const [vehicleDetail, setVehicleDetail] =
     useState<VehicleWithImagesOut  | null>(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadDetail();
@@ -70,12 +68,8 @@ export default function ListingDetailScreen() {
     } catch (err) {
       console.error("loadDetail - error:", err);
     } finally {
-      // loading her durumda kapat
-      setLoading(false);
     }
   }
-
-  if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
 
   if (!realEstateDetail && !vehicleDetail) return <Text>Detay bulunamadı</Text>;
 

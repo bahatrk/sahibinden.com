@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import {
-  View, Text, TextInput, Button, ScrollView, Image, Alert,
-  ActivityIndicator, Switch, StyleSheet
+  View, Text, TextInput, Button, ScrollView, Image, Alert, Switch, StyleSheet
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
@@ -28,7 +27,6 @@ type Props = {
 
 export default function ListingForm({ category, navigation, onCancel }: Props) {
   const { user } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
   
   // Form State
   const [title, setTitle] = useState("");
@@ -80,7 +78,6 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
     if (!title || !price) return Alert.alert("Hata", "Başlık ve Fiyat zorunludur.");
     if (!mapLocation) return Alert.alert("Hata", "Konum seçmelisiniz.");
     if (!user) return;
-    setLoading(true);
     try {
       const selectedFeatureIds = featureGroups.flatMap((g) =>
         g.features.filter((f) => f.selected).map((f) => f.id)
@@ -116,7 +113,6 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
     } catch (error: any) {
       Alert.alert("Hata", error.response?.data?.detail || "Bir hata oluştu");
     } finally {
-      setLoading(false);
     }
   };
 
@@ -165,8 +161,6 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
       {/* Dinamik Alt Formlar */}
       {category.category_type_id === 1 && <CreateRealEstateListing onSubmit={handleSubmit} />}
       {category.category_type_id === 2 && <CreateVehicleListing onSubmit={handleSubmit} />}
-
-      {loading && <ActivityIndicator size="large" style={{ marginTop: 20 }} />}
     </ScrollView>
   );
 }

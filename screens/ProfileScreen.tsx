@@ -6,7 +6,6 @@ import {
   FlatList,
   Image,
   StyleSheet,
-  ActivityIndicator,
   Alert,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -42,7 +41,6 @@ export default function ProfileScreen({ navigation }: Props) {
   const [myListings, setMyListings] = useState<ListingWithData[]>([]);
   const [myFavorites, setMyFavorites] = useState<ListingWithData[]>([]);
   const [conversations, setConversations] = useState<ConversationEntity[]>([]);
-  const [loading, setLoading] = useState(true);
   const [section, setSection] = useState<Section>("menu");
 
   useEffect(() => {
@@ -55,7 +53,6 @@ export default function ProfileScreen({ navigation }: Props) {
       } catch (err) {
         console.error(err);
       } finally {
-        setLoading(false);
       }
     };
     fetchListings();
@@ -204,7 +201,6 @@ export default function ProfileScreen({ navigation }: Props) {
   );
 
   const renderList = (data: ListingWithData[], showFavorite: boolean) => {
-    if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
 
     if (data.length === 0)
       return (
@@ -238,7 +234,6 @@ export default function ProfileScreen({ navigation }: Props) {
   };
 
   const renderConversations = () => {
-    if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
 
     if (conversations.length === 0)
       return (

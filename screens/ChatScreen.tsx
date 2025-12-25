@@ -27,12 +27,10 @@ export default function ChatScreen() {
 
   const [messages, setMessages] = useState<MessageEntity[]>([]);
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(true);
 
   async function loadMessages() {
     const data = await getMessagesApi(conversationId);
     setMessages(data);
-    setLoading(false);
   }
 
   async function handleSend() {

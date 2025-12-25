@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   View,
-  Text,
   StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
   FlatList,
 } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -35,7 +32,6 @@ type Props = {
 export default function CategoryScreen({ navigation, route }: Props) {
   const category = route.params; // because we passed {cat}
 
-  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
   const [listings, setListings] = useState<ListingWithData[]>([]);
 
@@ -54,19 +50,10 @@ export default function CategoryScreen({ navigation, route }: Props) {
       setListings(items);
     }
 
-    setLoading(false);
   }
 
   function handlePress(cat: CategoryEntity) {
     navigation.push("Category", cat );
-  }
-
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#104E8B" />
-      </View>
-    );
   }
 
   return (
@@ -108,10 +95,6 @@ const styles = StyleSheet.create({
   categoryText: {
     fontSize: 18,
     fontWeight: "500",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
   },
   listingHeader: {
     marginTop: 10,

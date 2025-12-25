@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ActivityIndicator, Button } from "react-native";
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { CategoryEntity } from "../../lib/database/category";
 import { fetchCategoriesByParent } from "../../lib/api/category";
 
@@ -9,7 +9,6 @@ type Props = {
 
 export default function CategorySelector({ onCategorySelected }: Props) {
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
-  const [loading, setLoading] = useState(true);
   
   // Seçim geçmişini tutarak "Geri" butonunu yönetebiliriz
   const [parentStack, setParentStack] = useState<number[]>([-1]); 
@@ -19,9 +18,7 @@ export default function CategorySelector({ onCategorySelected }: Props) {
   }, [parentStack]);
 
   async function loadCategories(parentId: number) {
-    setLoading(true);
     const data = await fetchCategoriesByParent(parentId);
-    setLoading(false);
 
     // Eğer veri gelmezse ve bir üst kategori seçiliyse, demek ki en alt kategoriye geldik.
     if (data.length === 0 && parentId !== -1) {
@@ -56,8 +53,7 @@ export default function CategorySelector({ onCategorySelected }: Props) {
     }
   }
 
-  if (loading) return <ActivityIndicator size="large" color="#0000ff" />;
-
+  
   return (
     <View style={{ flex: 1 }}>
       {parentStack.length > 1 && (

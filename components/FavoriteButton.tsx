@@ -20,7 +20,6 @@ export default function FavoriteButton({
   onToggle,
 }: Props) {
   const [favorite, setFavorite] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   // useEffect içinde async IIFE kullanıyoruz
   useEffect(() => {
@@ -33,7 +32,6 @@ export default function FavoriteButton({
       } catch (err) {
         console.error("FavoriteButton check error:", err);
       } finally {
-        setLoading(false);
       }
     })();
   }, [listingId, userId]);
@@ -55,8 +53,6 @@ export default function FavoriteButton({
       console.error("FavoriteButton toggle error:", err);
     }
   };
-
-  if (loading) return null;
 
   return (
     <TouchableOpacity onPress={toggleFavorite}>
