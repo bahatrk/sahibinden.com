@@ -18,6 +18,15 @@ export type Neigborhood = {
 };
 
 
+export type LocationOut = {
+  city_name: string;
+  district_name: string;
+  neighbourhood_name: string;
+  lat?: string;
+  lon?: string;
+};
+
+
 export const fetchAllProvinces = async (): Promise<Province[]> => {
   try {
     const res = await api.get<Province[]>(`/locations/cities`);

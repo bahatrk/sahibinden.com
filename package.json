@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
+    "prebuild": "expo prebuild --clean",
     "start": "expo start",
     "android": "expo run:android",
     "ios": "expo run:ios",
@@ -13,6 +14,7 @@
     "@react-navigation/native": "^7.1.21",
     "@react-navigation/stack": "^7.6.7",
     "axios": "^1.13.2",
+    "dotenv": "^17.2.3",
     "expo": "~54.0.25",
     "expo-asset": "~12.0.10",
     "expo-drizzle-studio-plugin": "^0.2.1",
@@ -26,6 +28,7 @@
     "react-dom": "19.1.0",
     "react-native": "0.81.5",
     "react-native-dropdown-picker": "^5.4.6",
+    "react-native-maps": "1.20.1",
     "react-native-safe-area-context": "~5.6.0",
     "react-native-screens": "~4.16.0",
     "react-native-web": "^0.21.0",

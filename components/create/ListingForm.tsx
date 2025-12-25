@@ -17,7 +17,8 @@ import { getFeatureGroupsByCategoryTypeApi, getFeaturesByGroupApi } from "../../
 import { createRealEstateListing } from "../../lib/api/realEstate";
 import { createVehicleListing } from "../../lib/api/vehicle";
 import { uploadListingImages } from "../../lib/api/listing";
-import MapLocationPicker, { MapLocationResult } from "../MapLocationPicker";
+import MapLocationPicker, { MapLocationResult } from "../map/MapLocationGeocode";
+import UniversalMap from "../map/MapComponent";
 
 type Props = {
   category: CategoryEntity;
@@ -138,7 +139,8 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
       </ScrollView>
 
       {/* LocationPicker */}
-      <MapLocationPicker
+      <UniversalMap
+        mode="edit"
         onLocationSelect={(loc) => {
             setLocation(loc); // now includes lat/lng
             console.log("Selected location:", loc);

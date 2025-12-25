@@ -8,16 +8,14 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import { VehicleDetailEntity } from "../lib/database/vehicleDetail";
-import { getListingImages, ImageEntity } from "../lib/database/image";
 import {
-  getListingFeatures,
   FeatureGroupEntity,
   FeatureEntity,
 } from "../lib/database/listingFeature";
 import { VehicleWithImagesOut } from "../lib/database/vehicleDetail";
 import { getListingFeaturesApi } from "../lib/api/listingFeature";
 import { DEFAULT_IMAGE, getImageUrl } from "../constant/apiConfig";
+import UniversalMap from "./map/MapComponent";
 
 type Props = {
   detail: VehicleWithImagesOut;
@@ -25,10 +23,23 @@ type Props = {
 
 export default function VehicleDetailComponent({ detail }: Props) {
   const images = detail.images ?? [];
-  const [activeTab, setActiveTab] = useState<"info" | "description">("info");
-  const [listingFeatures, setListingFeatures] = useState<
-    { group: FeatureGroupEntity; features: FeatureEntity[] }[]
-  >([]);
+    const [activeTab, setActiveTab] = useState<
+      "info" | "description" | "location"
+    >("info");
+    const [listingFeatures, setListingFeatures] = useState<
+      { group: FeatureGroupEntity; features: FeatureEntity[] }[]
+    >([]);
+  
+    // Koordinatları güvenli bir şekilde alıyoruz (API'den string gelebilir diye parseFloat yapıyoruz)
+    // NOT: detail objenin içinde latitude/longitude veya lat/lon olduğunu varsayıyorum.
+    // Eğer senin veritabanında isimleri farklıysa (örn: coordinate_x, coordinate_y) buraları düzelt.
+    const initialCoords = {
+      latitude: parseFloat(detail.location.lat || "0"),
+      longitude: parseFloat(detail.location.lon || "0"),
+    };
+  
+    // Koordinat 0 değilse haritayı göster
+    const hasLocation = initialCoords.latitude !== 0 && initialCoords.longitude !== 0;
 
   useEffect(() => {
     //loadImages();
@@ -60,9 +71,67 @@ export default function VehicleDetailComponent({ detail }: Props) {
 
   const windowWidth = Dimensions.get("window").width;
 
+  // Tab içeriğini render eden fonksiyon (Kod temizliği için ayırdım)
+  const renderContent = () => {
+    switch (activeTab) {
+      case "info":
+        return (
+          <View>
+            {rows.map((row, index) => (
+              <View key={index}>
+                <View style={styles.row}>
+                  <Text style={styles.label}>{row.label}</Text>
+                  <Text style={styles.value}>{row.value}</Text>
+                </View>
+                {index < rows.length - 1 && <View style={styles.separator} />}
+              </View>
+            ))}
+            {/* --- FEATURES --- */}
+            {listingFeatures.map((g) => (
+              <View key={g.group.id} style={{ marginVertical: 8 }}>
+                <Text style={{ fontWeight: "700" }}>{g.group.name}</Text>
+                {g.features.map((f) => (
+                  <Text key={f.id}>• {f.name}</Text>
+                ))}
+              </View>
+            ))}
+          </View>
+        );
+
+      case "description":
+        return (
+          <View style={{ marginTop: 8 }}>
+            <Text style={{ fontSize: 14, lineHeight: 20 }}>
+              {detail.listing_desc ?? "Açıklama bulunamadı."}
+            </Text>
+          </View>
+        );
+
+      case "location":
+        return (
+          <View style={{ marginTop: 8 }}>
+            {hasLocation ? (
+              <View style={styles.mapContainer}>
+                {/* mode="view" ve koordinatı veriyoruz */}
+                <UniversalMap mode="view" initialCoordinate={initialCoords} />
+              </View>
+            ) : (
+              <Text style={styles.locationText}>
+                {detail.location.city_name} / {detail.location.district_name} /{" "}
+                {detail.location.neighbourhood_name}
+              </Text>
+            )}
+          </View>
+        );
+
+      default:
+        return null;
+    }
+  };
+
   return (
     <View style={styles.container}>
-      {/* Resimler */}
+      {/* --- RESİMLER --- */}
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -74,12 +143,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
             source={{
               uri: img.url ? getImageUrl(img.url) : DEFAULT_IMAGE,
             }}
-            style={{
-              width: windowWidth * 0.8,
-              height: 220,
-              borderRadius: 10,
-              marginRight: 12,
-            }}
+            style={{ width: windowWidth * 0.8, height: 220, marginRight: 12 }}
             resizeMode="cover"
           />
         ))}
@@ -100,6 +164,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
             İlan Bilgileri
           </Text>
         </TouchableOpacity>
+
         <TouchableOpacity
           style={[
             styles.tabButton,
@@ -116,38 +181,27 @@ export default function VehicleDetailComponent({ detail }: Props) {
             Açıklama
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[
+            styles.tabButton,
+            activeTab === "location" && styles.tabActive,
+          ]}
+          onPress={() => setActiveTab("location")}
+        >
+          <Text
+            style={[
+              styles.tabText,
+              activeTab === "location" && styles.tabTextActive,
+            ]}
+          >
+            Konum
+          </Text>
+        </TouchableOpacity>
       </View>
 
       {/* --- TAB CONTENT --- */}
-      {activeTab === "info" ? (
-        <View>
-          {rows.map((row, index) => (
-            <View key={index}>
-              <View style={styles.row}>
-                <Text style={styles.label}>{row.label}</Text>
-                <Text style={styles.value}>{row.value}</Text>
-              </View>
-              {index < rows.length - 1 && <View style={styles.separator} />}
-            </View>
-          ))}
-
-          {/* --- FEATURE GRUPLARI --- */}
-          {listingFeatures.map((g) => (
-            <View key={g.group.id} style={{ marginVertical: 8 }}>
-              <Text style={{ fontWeight: "700" }}>{g.group.name}</Text>
-              {g.features.map((f) => (
-                <Text key={f.id}>• {f.name}</Text>
-              ))}
-            </View>
-          ))}
-        </View>
-      ) : (
-        <View style={{ marginTop: 8 }}>
-          <Text style={{ fontSize: 14, lineHeight: 20 }}>
-            {detail.listing_desc ?? "Açıklama bulunamadı."}
-          </Text>
-        </View>
-      )}
+      {renderContent()}
     </View>
   );
 }
@@ -164,7 +218,7 @@ const styles = StyleSheet.create({
   },
   tabButton: { flex: 1, paddingVertical: 10, alignItems: "center" },
   tabActive: { backgroundColor: "#104E8B" },
-  tabText: { fontSize: 14, color: "#555", fontWeight: "600" },
+  tabText: { fontSize: 13, color: "#555", fontWeight: "600" }, // Fontu biraz küçülttüm sığsın diye
   tabTextActive: { color: "#fff" },
   row: {
     flexDirection: "row",
@@ -174,4 +228,26 @@ const styles = StyleSheet.create({
   label: { color: "#555", fontSize: 14 },
   value: { color: "#000", fontSize: 14, fontWeight: "500" },
   separator: { height: 1, backgroundColor: "#e0e0e0" },
+  // Harita Stilleri
+  mapContainer: {
+    height: 300,
+    borderRadius: 10,
+    overflow: "hidden",
+    borderColor: "#ddd",
+    borderWidth: 1,
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+  },
+  locationText: {
+    position: "absolute",
+    bottom: 0,
+    width: "100%",
+    backgroundColor: "rgba(255,255,255,0.8)",
+    padding: 8,
+    textAlign: "center",
+    fontSize: 12,
+    fontWeight: "600",
+  },
 });

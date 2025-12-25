@@ -8,7 +8,6 @@ import { LoadingProvider } from "./components/LoadingProvider";
 export default function App() {
   //useDrizzleStudio(db);
   //exportDatabase();
-
     
   return (
     <LoadingProvider>

@@ -118,63 +118,103 @@ export default function LocationPicker({ onSelect }: Props) {
 
   return (
     <View style={{ marginBottom: 20, zIndex: 3000 }}>
-      {/* --- ŞEHİR --- */}
-      <Text style={{ marginBottom: 5, fontWeight: '600' }}>Şehir</Text>
-      <DropDownPicker
-        open={cityOpen}
-        value={selectedCity}
-        items={cities}
-        setOpen={setCityOpen}
-        setValue={setSelectedCity}
-        onOpen={onOpenCity}
-        placeholder="Şehir seçiniz"
-        searchable={true}
-        searchPlaceholder="Şehir ara..."
-        listMode="SCROLLVIEW"
-        zIndex={3000}
-        zIndexInverse={1000}
-        scrollViewProps={{ nestedScrollEnabled: true }}
-      />
+      
+      {/* --- CITY --- */}
+      <View style={{ zIndex: 3000 }}>
+        <Text style={{ marginBottom: 5, fontWeight: '600' }}>Şehir</Text>
+        <DropDownPicker
+          open={cityOpen}
+          value={selectedCity}
+          items={cities}
+          setOpen={setCityOpen}
+          setValue={setSelectedCity}
+          onOpen={onOpenCity}
+          placeholder="Şehir seçiniz"
+          searchable={true}
+          searchPlaceholder="Şehir ara..."
+          
+          // Z-INDEX FIX
+          zIndex={3000}
+          zIndexInverse={1000}
 
-      {/* --- İLÇE --- */}
-      <Text style={{ marginTop: 15, marginBottom: 5, fontWeight: '600' }}>İlçe</Text>
-      <DropDownPicker
-        open={districtOpen}
-        value={selectedDistrict}
-        items={districts}
-        setOpen={setDistrictOpen}
-        setValue={setSelectedDistrict}
-        onOpen={onOpenDistrict}
-        placeholder={selectedCity ? "İlçe seçiniz" : "Önce şehir seçiniz"}
-        disabled={!selectedCity} // 🔒 Şehir seçilmeden pasif
-        searchable={true}
-        searchPlaceholder="İlçe ara..."
-        listMode="SCROLLVIEW"
-        zIndex={2000}
-        zIndexInverse={2000}
-        scrollViewProps={{ nestedScrollEnabled: true }}
-        style={{ opacity: !selectedCity ? 0.5 : 1 }} // Pasifken soluk görünüm
-      />
+          // MODAL STYLING
+          listMode="MODAL"
+          modalTitle="Şehir Seçin"
+          modalProps={{ animationType: "slide" }}
+          modalContentContainerStyle={{
+            marginTop: "30%", // Leaves top 30% of screen empty
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            backgroundColor: "#fff",
+          }}
+        />
+      </View>
 
-      {/* --- MAHALLE --- */}
-      <Text style={{ marginTop: 15, marginBottom: 5, fontWeight: '600' }}>Mahalle</Text>
-      <DropDownPicker
-        open={neighbourhoodOpen}
-        value={selectedNeighbourhood}
-        items={neighbourhoods}
-        setOpen={setNeighbourhoodOpen}
-        setValue={setSelectedNeighbourhood}
-        onOpen={onOpenNeighbourhood}
-        placeholder={selectedDistrict ? "Mahalle seçiniz" : "Önce ilçe seçiniz"}
-        disabled={!selectedDistrict} // 🔒 İlçe seçilmeden pasif
-        searchable={true}
-        searchPlaceholder="Mahalle ara..."
-        listMode="SCROLLVIEW"
-        zIndex={1000}
-        zIndexInverse={3000}
-        scrollViewProps={{ nestedScrollEnabled: true }}
-        style={{ opacity: !selectedDistrict ? 0.5 : 1 }}
-      />
+      {/* --- DISTRICT --- */}
+      <View style={{ marginTop: 15, zIndex: 2000 }}>
+        <Text style={{ marginBottom: 5, fontWeight: '600' }}>İlçe</Text>
+        <DropDownPicker
+          open={districtOpen}
+          value={selectedDistrict}
+          items={districts}
+          setOpen={setDistrictOpen}
+          setValue={setSelectedDistrict}
+          onOpen={onOpenDistrict}
+          placeholder={selectedCity ? "İlçe seçiniz" : "Önce şehir seçiniz"}
+          disabled={!selectedCity}
+          searchable={true}
+          searchPlaceholder="İlçe ara..."
+          style={{ opacity: !selectedCity ? 0.5 : 1 }}
+
+          // Z-INDEX FIX
+          zIndex={2000}
+          zIndexInverse={2000}
+
+          // MODAL STYLING
+          listMode="MODAL"
+          modalTitle="İlçe Seçin"
+          modalProps={{ animationType: "slide" }}
+          modalContentContainerStyle={{
+            marginTop: "30%", 
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            backgroundColor: "#fff",
+          }}
+        />
+      </View>
+
+      {/* --- NEIGHBOURHOOD --- */}
+      <View style={{ marginTop: 15, zIndex: 1000 }}>
+        <Text style={{ marginBottom: 5, fontWeight: '600' }}>Mahalle</Text>
+        <DropDownPicker
+          open={neighbourhoodOpen}
+          value={selectedNeighbourhood}
+          items={neighbourhoods}
+          setOpen={setNeighbourhoodOpen}
+          setValue={setSelectedNeighbourhood}
+          onOpen={onOpenNeighbourhood}
+          placeholder={selectedDistrict ? "Mahalle seçiniz" : "Önce ilçe seçiniz"}
+          disabled={!selectedDistrict}
+          searchable={true}
+          searchPlaceholder="Mahalle ara..."
+          style={{ opacity: !selectedDistrict ? 0.5 : 1 }}
+
+          // Z-INDEX FIX
+          zIndex={1000}
+          zIndexInverse={3000}
+
+          // MODAL STYLING
+          listMode="MODAL"
+          modalTitle="Mahalle Seçin"
+          modalProps={{ animationType: "slide" }}
+          modalContentContainerStyle={{
+            marginTop: "30%", 
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            backgroundColor: "#fff",
+          }}
+        />
+      </View>
     </View>
-  );
+);
 }
