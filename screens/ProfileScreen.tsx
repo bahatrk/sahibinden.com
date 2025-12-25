@@ -24,6 +24,7 @@ import {
 import { deleteListingApi, fetchListingsByUser } from "../lib/api/listing";
 import { fetchUserFavorites } from "../lib/api/favorite";
 import { getUserConversationsApi } from "../lib/api/conversation";
+import { DEFAULT_IMAGE, getImageUrl } from "../constant/apiConfig";
 
 type ProfileScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -130,13 +131,22 @@ export default function ProfileScreen({ navigation }: Props) {
   }) => (
     <View style={styles.listingItem}>
       {item.image_url && (
-        <Image source={{ uri: item.image_url }} style={styles.listingImage} />
+        <Image
+          source={{
+            uri: item.image_url ? getImageUrl(item.image_url) : DEFAULT_IMAGE,
+          }}
+          style={styles.listingImage}
+        />
       )}
       <View style={{ flex: 1, marginLeft: 10 }}>
         <Text style={styles.listingTitle}>{item.title}</Text>
         <Text>{item.price} TL</Text>
         <Text>
-          {item.location_province} - {item.location_district}
+          {item.city_name}
+          {"\n"}
+          {item.district_name}
+          {"\n"}
+          {item.neighbourhood_name}
         </Text>
       </View>
 

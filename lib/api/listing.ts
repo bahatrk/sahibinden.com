@@ -101,35 +101,38 @@ export const createFullListing = async (data: FullListingPayload): Promise<Creat
   }
 };
 
-// B) Resim Yükleme (FormData ile)
-export const uploadListingImage = async (listingId: number, imageUri: string, uiOrder: number = 1) => {
+export const uploadListingImages = async (
+  listingId: number,
+  imageUris: string[]
+) => {
   try {
-    // Dosya ismini ve tipini URI'den çıkarıyoruz
-    const filename = imageUri.split('/').pop();
-    const match = /\.(\w+)$/.exec(filename ?? "");
-    const type = match ? `image/${match[1]}` : `image/jpeg`;
-
     const formData = new FormData();
-    
-    // React Native'de dosya append işlemi özel bir obje gerektirir:
-    formData.append('file', {
-      uri: imageUri,
-      name: filename,
-      type: type,
-    } as any);
 
-    // Query parametresi olarak ui_order gönderiyoruz
-    // Content-Type: multipart/form-data olmalı
-    const res = await api.post(`/images/${listingId}?ui_order=${uiOrder}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+    imageUris.forEach((uri, index) => {
+      const filename = uri.split("/").pop() ?? `image_${index}.jpg`;
+      const match = /\.(\w+)$/.exec(filename);
+      const type = match ? `image/${match[1]}` : "image/jpeg";
+
+      formData.append("images", {
+        uri,
+        name: filename,
+        type,
+      } as any);
     });
+
+    const res = await api.post(
+      `/listings/${listingId}/images`,
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     return res.data;
   } catch (err: any) {
-    console.error("Error uploading image:", err.message);
-    // Resim yüklenemezse tüm akışı bozmasın diye throw etmeyebiliriz,
-    // ama frontend bilsin istiyorsan throw err diyebilirsin.
+    console.error("Error uploading images:", err?.response?.data || err.message);
+    throw err;
   }
 };

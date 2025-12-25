@@ -12,8 +12,9 @@ export type ListingEntity = {
 
 export type ListingWithData = ListingEntity & {
   image_url?: string | null;
-  location_province?: string | null;
-  location_district?: string | null;
+  city_name?: string | null;
+  district_name?: string | null;
+  neighbourhood_name?: string | null;
   category_type_id?: number;
   user_phone: string | null;
 };

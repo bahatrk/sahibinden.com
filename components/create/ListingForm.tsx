@@ -9,7 +9,6 @@ import * as ImagePicker from "expo-image-picker";
 
 
 // Components
-import LocationPicker, { LocationResult } from "./LocationPicker";
 import CreateRealEstateListing from "./CreateRealEstateListing";
 import CreateVehicleListing from "./CreateVehicleListing";
 import { CategoryEntity } from "../../lib/database/category";
@@ -18,7 +17,8 @@ import { FeatureEntity, FeatureGroupEntity } from "../../lib/database/listingFea
 import { getFeatureGroupsByCategoryTypeApi, getFeaturesByGroupApi } from "../../lib/api/listingFeature";
 import { createRealEstateListing } from "../../lib/api/realEstate";
 import { createVehicleListing } from "../../lib/api/vehicle";
-import { uploadListingImage } from "../../lib/api/listing";
+import { uploadListingImages } from "../../lib/api/listing";
+import MapLocationPicker, { MapLocationResult } from "../MapLocationPicker";
 
 type Props = {
   category: CategoryEntity;
@@ -35,7 +35,7 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState("");
   const [images, setImages] = useState<string[]>([]);
-  const [location, setLocation] = useState<LocationResult>();
+  const [mapLocation, setLocation] = useState<MapLocationResult>();
   
   // Features State
   const [featureGroups, setFeatureGroups] = useState<(FeatureGroupEntity & { features: (FeatureEntity & { selected: boolean })[] })[]>([]);
@@ -78,9 +78,8 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
 
   const handleSubmit = async (detailData: any) => {
     if (!title || !price) return Alert.alert("Hata", "Başlık ve Fiyat zorunludur.");
-    if (!location) return Alert.alert("Hata", "Konum seçmelisiniz.");
+    if (!mapLocation) return Alert.alert("Hata", "Konum seçmelisiniz.");
     if (!user) return;
-
     setLoading(true);
     try {
       const selectedFeatureIds = featureGroups.flatMap((g) =>
@@ -92,17 +91,17 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
         price: parseFloat(price),
         desc,
         category_id: category.id,
-        location_id: 1, // Backend'de location ID yönetimi yoksa bu kısmı düzenleyin
+        location: {
+            lat: mapLocation.coor.lat,
+            lon: mapLocation.coor.lon,
+            neighbourhood_id: mapLocation.location.neighbourhoodId
+        },
         user_id: user.id,
         feature_ids: selectedFeatureIds,
+        ...detailData
       };
-
-      // Kategori tipine göre detay ekle
-      if (category.category_type_id === 1) { // Emlak
-         payload.real_estate_detail = { ...detailData }; // createFullListing logic'i buraya
-      } else if (category.category_type_id === 2) { // Vasıta
-         payload.vehicle_detail = { ...detailData };
-      }
+      console.log(payload)
+      
 
       // API Çağrısı
       let result;
@@ -110,9 +109,7 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
       else result = await createVehicleListing(payload);
 
       // Resim Yükleme
-      for (const img of images) {
-        await uploadListingImage(result.id, img);
-      }
+      await uploadListingImages(result.id, images);
 
       Alert.alert("Başarılı", "İlan oluşturuldu.");
       navigation.navigate("Home");
@@ -145,9 +142,12 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
       </ScrollView>
 
       {/* LocationPicker */}
-      <View style={{ zIndex: 3000 }}>
-         <LocationPicker onSelect={setLocation} />
-      </View>
+      <MapLocationPicker
+        onLocationSelect={(loc) => {
+            setLocation(loc); // now includes lat/lng
+            console.log("Selected location:", loc);
+        }}
+        />
 
       {/* Özellikler (Features) */}
       {featureGroups.map((g, gi) => (

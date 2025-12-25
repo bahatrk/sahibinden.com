@@ -17,10 +17,18 @@ export default function CreateVehicleListing({ onSubmit }: Props) {
 
   return (
     <View>
-      <TextInput style={styles.input} placeholder="Yıl" placeholderTextColor={"gray"} value={year} onChangeText={setYear} keyboardType="numeric" />
+      <TextInput style={styles.input} placeholder="Yıl" placeholderTextColor={"gray"} value={year} keyboardType="number-pad" maxLength={4}  
+      onChangeText={(text) => {
+        const onlyNumbers = text.replace(/[^0-9]/g, "");
+        setYear(onlyNumbers);
+      }} />
+      <TextInput style={styles.input} placeholder="KM" placeholderTextColor={"gray"} value={kilometer} keyboardType="number-pad"
+      onChangeText={(text) => {
+        const onlyNumbers = text.replace(/[^0-9]/g, "");
+        setKilometer(onlyNumbers);
+      }} />
       <TextInput style={styles.input} placeholder="Yakıt" placeholderTextColor={"gray"} value={fuel} onChangeText={setFuel} />
       <TextInput style={styles.input} placeholder="Vites" placeholderTextColor={"gray"} value={transmission} onChangeText={setTransmission} />
-      <TextInput style={styles.input} placeholder="KM" placeholderTextColor={"gray"} value={kilometer} onChangeText={setKilometer} keyboardType="numeric" />
       <TextInput style={styles.input} placeholder="Kasa Tipi" placeholderTextColor={"gray"} value={bodyType} onChangeText={setBodyType} />
       <TextInput style={styles.input} placeholder="Motor Hacmi" placeholderTextColor={"gray"} value={engineCC} onChangeText={setEngineCC} />
       <TextInput style={styles.input} placeholder="Araç Durumu" placeholderTextColor={"gray"} value={instrumental} onChangeText={setInstrumental} />
@@ -30,12 +38,12 @@ export default function CreateVehicleListing({ onSubmit }: Props) {
         title="İlanı Oluştur"
         onPress={() =>
           onSubmit({
-            year,
+            year: year ? Number(year) : null,
             fuel,
             transmission,
-            kilometer,
-            bodyType,
-            engineCC,
+            kilometer: kilometer ? Number(kilometer) : null,
+            body_type: bodyType,
+            engine_cc: engineCC,
             instrumental,
             color,
           })

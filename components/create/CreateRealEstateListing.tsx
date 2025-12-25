@@ -45,16 +45,16 @@ export default function CreateRealEstateListing({ onSubmit }: Props) {
         title="İlanı Oluştur"
         onPress={() =>
           onSubmit({
-            roomNumber,
-            bathroomNumber,
-            squareMeter,
-            floor,
-            buildingAge,
+            room_number:roomNumber,
+            bathroom_number : bathroomNumber ? Number(bathroomNumber) : null,
+            square_meter:squareMeter? Number(squareMeter) : null,
+            floor:floor? Number(floor) : null,
+            building_age:buildingAge? Number(buildingAge) : null,
             furnished,
             heat,
             lift,
             kitchen,
-            carPark,
+            car_park:carPark,
           })
         }
       />

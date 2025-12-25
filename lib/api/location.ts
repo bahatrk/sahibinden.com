@@ -43,7 +43,7 @@ export const fetchDistrictsByProvinceId = async (province_id: number): Promise<D
 export const fetchNeigborhoodByDistricts = async (district_id: number): Promise<Neigborhood[]> => {
       
   try {
-    const res = await api.get<District[]>(`/locations/neighbourhoods/${district_id}`);
+    const res = await api.get<Neigborhood[]>(`/locations/neighbourhoods/${district_id}`);
     return res.data;
   } catch (err: any) {
     console.error("Error fetching fetchNeigborhoodByDistricts:"+ district_id, err.message);

@@ -27,12 +27,14 @@ export default function ListingItem({ listing, onPress }: Props) {
         {/* Location + Price Row */}
         <View style={styles.row}>
           <View style={styles.locationContainer}>
-            {listing.location_province && (
-              <Text style={styles.subtitle}>{listing.location_province},</Text>
-            )}
-            {listing.location_district && (
-              <Text style={styles.subtitle}>{listing.location_district}</Text>
-            )}
+            <Text style={styles.subtitle}>
+              {listing.city_name}
+              {"\n"}
+              {listing.district_name}
+              {"\n"}
+              {listing.neighbourhood_name}
+            </Text>
+
           </View>
 
           {listing.price && (
