@@ -1,27 +1,33 @@
 import { api } from "../api/gateway";
 import { CategoryEntity } from "../database/category";
 
-export const fetchRootCategories = async (): Promise<CategoryEntity[]> => {
+const getEndpoint = (isAdmin: boolean) => isAdmin ? "/admin/categories" : "/categories";
+
+export const fetchRootCategories = async (isAdmin: boolean = false): Promise<CategoryEntity[]> => {
+  const endpoint = getEndpoint(isAdmin);
   try {
-    const res = await api.get<CategoryEntity[]>(`/categories`);
+    // Assuming backend returns roots when no params provided, or you can add ?root=true
+    const res = await api.get<CategoryEntity[]>(endpoint);
     return res.data;
   } catch (err: any) {
-    console.error(err +' API');
+    console.error("Error fetching root categories:", err);
     return [];
   }
 };
 
-export const fetchCategoriesByParent = async (parentId: number): Promise<CategoryEntity[]> => {
-  if (parentId == -1)
-    return fetchRootCategories();
-  
+export const fetchCategoriesByParent = async (parentId: number, isAdmin: boolean = false): Promise<CategoryEntity[]> => {
+  if (parentId === -1) {
+    return fetchRootCategories(isAdmin);
+  }
+
+  const endpoint = getEndpoint(isAdmin);
   try {
-    const res = await api.get<CategoryEntity[]>("/categories", {
-      params: { parent_id: parentId }, // <-- query parameter
+    const res = await api.get<CategoryEntity[]>(endpoint, {
+      params: { parent_id: parentId }, 
     });
     return res.data;
   } catch (err: any) {
-    console.error("Error fetching categories:" + parentId, err.message);
+    console.error(`Error fetching children for ${parentId}:`, err.message);
     return [];
   }
 };

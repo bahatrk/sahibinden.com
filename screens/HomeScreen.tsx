@@ -21,12 +21,19 @@ export default function HomeScreen({ navigation }: Props) {
   // Modal State
   const [isModalVisible, setModalVisible] = useState(false);
 
+  const isAdmin = user?.role === "admin";
+
   useEffect(() => {
     loadRootCategories();
   }, []);
 
+  useEffect(() => {
+    loadRootCategories();
+  }, [user]); // <--- Reload if user changes (login/logout)
+
   async function loadRootCategories() {
-    const data = await fetchRootCategories();
+    // 3. Pass the flag
+    const data = await fetchRootCategories(isAdmin);
     setCategories(data);
   }
 

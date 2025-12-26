@@ -29,13 +29,15 @@ export default function CategoryScreen({ navigation, route }: Props) {
   const [listings, setListings] = useState<ListingWithData[]>([]);
   const [isModalVisible, setModalVisible] = useState(false); // <--- Modal State
 
+  const isAdmin = user?.role === "admin"; // <--- Check Role
+
   useEffect(() => {
     load();
-  }, []);
+  }, [user]); // Reload if auth state changes
 
   async function load() {
     // Reload logic
-    const childCats = await fetchCategoriesByParent(category.id);
+    const childCats = await fetchCategoriesByParent(category.id, isAdmin);
     if (childCats.length > 0) {
       setCategories(childCats);
       setListings([]);
