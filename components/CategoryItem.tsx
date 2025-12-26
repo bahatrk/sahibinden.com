@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, View, Text, StyleSheet, Image } from "react-native";
 import { CategoryEntity } from "../lib/database/category";
+import { DEFAULT_IMAGE, getImageUrl, getLogoImageUrl } from "../constant/apiConfig";
 
 type Props = {
   category: CategoryEntity;
@@ -11,7 +12,9 @@ export default function CategoryItem({ category, onPress }: Props) {
   return (
     <TouchableOpacity style={styles.item} onPress={() => onPress(category)}>
       {category.logo_url && (
-        <Image source={{ uri: category.logo_url }} style={styles.logo} />
+        <Image source={{
+          uri: getLogoImageUrl(category.logo_url),
+        }} style={styles.logo} />
       )}
       <Text style={styles.text}>{category.name}</Text>
     </TouchableOpacity>

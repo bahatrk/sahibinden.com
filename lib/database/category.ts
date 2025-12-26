@@ -9,6 +9,9 @@ export type CategoryEntity = {
   logo_id: number | null;      // yeni
   logo_url?: string | null;    // yeni, join ile logosu gelecek
 };
+export type CategoryAdminEntity = CategoryEntity & {
+  is_active:boolean
+};
 
 export async function getChildCategories(parentId: number | null): Promise<CategoryEntity[]> {
   const database = await openDb();
