@@ -10,9 +10,10 @@ import {
 import Feather from "@expo/vector-icons/Feather";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
-import AsyncStorage from "expo-sqlite/kv-store";
+import AsyncStorage from "expo-sqlite/kv-store"; // Keeping your import
 import { AuthContext } from "../navigation/authContext";
-import { loginUser } from "../lib/api/login";
+// Import the new function
+import { loginUser, getMyProfile } from "../lib/api/login"; 
 
 type LoginScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -35,16 +36,36 @@ export default function LoginScreen({ navigation }: Props) {
       return;
     }
 
-    const result = await loginUser(email, password);
+    // ADIM 1: Token Al (Login)
+    const loginResult = await loginUser(email, password);
 
-    if (result.success) {
-      await AsyncStorage.setItem("user", JSON.stringify(result.user));
-      if (result.user){
-        setUser(result.user); 
-        navigation.replace("Profile");
-      }
+    if (!loginResult.success) {
+      Alert.alert("Hata", loginResult.message || "Giriş yapılamadı!");
+      return;
+    }
+
+    // Token'ı kaydet (Gelecekteki API istekleri için)
+    // Not: loginUser fonksiyonu içinde setAuthToken() çalıştığı için
+    // API client şu an hazır. Token'ı telefona da kaydedelim:
+    if (loginResult.token) {
+        await AsyncStorage.setItem("token", loginResult.token);
+    }
+
+    // ADIM 2: Kullanıcı Bilgilerini Çek (/users/me)
+    // Token artık elimizde olduğu için kim olduğumuzu sorabiliriz.
+    const profileResult = await getMyProfile();
+
+    if (profileResult.success && profileResult.user) {
+      // User'ı telefona kaydet (Offline kullanım için vs)
+      await AsyncStorage.setItem("user", JSON.stringify(profileResult.user));
+      
+      // Context'i güncelle
+      setUser(profileResult.user);
+      
+      // Yönlendir
+      navigation.replace("Profile");
     } else {
-      Alert.alert("Hata", result.message || "Giriş yapılamadı!");
+      Alert.alert("Hata", "Kullanıcı bilgileri alınamadı.");
     }
 
     setEmail("");
@@ -53,6 +74,8 @@ export default function LoginScreen({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
+      {/* ... (Rest of your UI stays exactly the same) ... */}
+      
       {/* HomeScreen Dönüş */}
       <TouchableOpacity
         style={styles.homePageReturnButton}
@@ -61,10 +84,8 @@ export default function LoginScreen({ navigation }: Props) {
         <Feather name="x" style={styles.homePageReturnIcon} />
       </TouchableOpacity>
 
-      {/* Başlık */}
       <Text style={styles.title}>İlan vermek için giriş yap</Text>
 
-      {/* Email input */}
       <TextInput
         style={styles.input}
         placeholder="E-posta adresi"
@@ -75,7 +96,6 @@ export default function LoginScreen({ navigation }: Props) {
         onChangeText={setEmail}
       />
 
-      {/* Şifre input */}
       <View style={styles.sifreContainer}>
         <TextInput
           style={styles.sifreInput}
@@ -91,7 +111,6 @@ export default function LoginScreen({ navigation }: Props) {
         </TouchableOpacity>
       </View>
 
-      {/* Giriş Yap Butonu */}
       <TouchableOpacity style={styles.button} onPress={loginUserUI}>
         <Text style={styles.buttonText}>E-posta ile giriş yap</Text>
       </TouchableOpacity>
@@ -106,6 +125,7 @@ export default function LoginScreen({ navigation }: Props) {
   );
 }
 
+// ... styles remain the same ...
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -179,6 +199,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sifreInput: {
+    flex: 1, // Added flex:1 to ensure input takes available space
     fontSize: 16,
     color: "black",
   },

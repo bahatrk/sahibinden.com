@@ -7,6 +7,15 @@ export const api = axios.create({
   timeout: 10000,
 });
 
+export const setAuthToken = (token: string | null) => {
+  if (token) {
+    // Apply to every request going forward
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    // Logout: Remove header
+    delete api.defaults.headers.common["Authorization"];
+  }
+};
 
 if (__DEV__) { 
   api.interceptors.response.use(

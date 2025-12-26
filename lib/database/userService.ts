@@ -7,6 +7,7 @@ export type UserEntity = {
   email: string;
   password_hash: string;
   phone: string;
+  role: "user" | "admin";
 };
 
 // Kullanıcı kaydı

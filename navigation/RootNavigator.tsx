@@ -15,6 +15,7 @@ import HeaderProfileButton from "../components/HeaderProfileButton";
 import CreateListingScreen from "../screens/create/CreateListingScreen";
 import ChatScreen from "../screens/ChatScreen";
 import UpdateListingScreen from "../screens/update/UpdateListingScreen";
+import AdminDashboardScreen from "../screens/admin/AdminDashboardScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -92,6 +93,11 @@ export default function RootNavigator() {
               title: "Mesajlaşma",
               headerBackTitleVisible: false,
             })}
+          />
+          <Stack.Screen
+            name="AdminDashboard"
+            component={AdminDashboardScreen}
+            options={{ title: "Admin" }}
           />
         </Stack.Navigator>
       </NavigationContainer>

@@ -15,5 +15,6 @@ export type RootStackParamList = {
     conversationId: number;
     listing: ListingWithData;
   };
+  AdminDashboard: undefined;
   
 };
