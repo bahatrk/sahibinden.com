@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useContext } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
 import SearchBar from "../components/SearchBar";
 import CategoryItem from "../components/CategoryItem";
 import { CategoryEntity } from "../lib/database/category";
 import { AuthContext } from "../navigation/authContext";
-import { fetchRootCategories } from "../lib/api/category";
+import { deleteCategory, fetchRootCategories, restoreCategory } from "../lib/api/category";
 import Feather from "@expo/vector-icons/Feather"; // <--- For icons
 import AddCategoryModal from "../components/admin/AddCategoryModal";
 
@@ -22,6 +22,16 @@ export default function HomeScreen({ navigation }: Props) {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const isAdmin = user?.role === "admin";
+
+  function handleSearch() {
+    if (search.trim().length >= 2) {
+      // Navigate to SearchResults screen passing the query
+      navigation.navigate("SearchResults", { query: search });
+      setSearch(""); // Optional: Clear search bar after searching
+    } else {
+        Alert.alert("Uyarı", "Lütfen en az 2 karakter giriniz.");
+    }
+  }
 
   useEffect(() => {
     loadRootCategories();
@@ -41,15 +51,69 @@ export default function HomeScreen({ navigation }: Props) {
     navigation.navigate("Category", cat);
   }
 
+  function handleLongPress(cat: CategoryEntity) {
+  // 1. Security Check
+  if (user?.role !== "admin") return;
+
+  const isActive = cat.is_active !== false;
+
+  // 2. Define Messages based on Status
+  const title = isActive ? "Kategoriyi Sil (Pasif)" : "Kategoriyi Geri Yükle (Aktif)";
+  const message = isActive 
+      ? `"${cat.name}" kategorisini pasife almak istediğine emin misin? Kullanıcılar artık göremeyecek.` 
+      : `"${cat.name}" kategorisini tekrar aktif etmek istediğine emin misin?`;
+
+  const actionText = isActive ? "Sil (Pasif)" : "Geri Yükle";
+  const actionStyle = isActive ? "destructive" : "default";
+
+  // 3. Show Alert
+  Alert.alert(
+    title,
+    message,
+    [
+      { text: "İptal", style: "cancel" },
+      { 
+        text: actionText, 
+        style: actionStyle, 
+        onPress: async () => {
+           // 4. Toggle Logic
+           let res;
+           if (isActive) {
+               res = await deleteCategory(cat.id);
+           } else {
+               res = await restoreCategory(cat.id);
+           }
+
+           if (res.success) {
+             // 5. Refresh List
+             // Make sure this function fetches BOTH active and passive for admins
+             loadRootCategories(); 
+           } else {
+             Alert.alert("Hata", res.message || "İşlem başarısız.");
+           }
+        } 
+      }
+    ]
+  );
+}
+
   return (
     <View style={styles.container}>
-      <SearchBar value={search} onChangeText={setSearch} placeholder="Araba, ev ara..." />
+      <SearchBar 
+         value={search} 
+         onChangeText={setSearch} 
+         onSearch={handleSearch} // <--- Pass the function here
+         placeholder="Araba, ev ara..." 
+      />
 
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <CategoryItem category={item} onPress={handleCategoryPress} />
+          <CategoryItem 
+          category={item} 
+          onPress={handleCategoryPress}
+          onLongPress={handleLongPress} />
         )}
       />
 

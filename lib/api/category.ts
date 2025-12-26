@@ -76,3 +76,26 @@ export async function createCategory(
     return { success: false, message: "Kategori oluşturulamadı" };
   }
 }
+
+
+export async function deleteCategory(id: number) {
+  try {
+    // Calls the DELETE endpoint (Deactivates)
+    await api.delete(`/categories/${id}`);
+    return { success: true };
+  } catch (err: any) {
+    console.error("Delete failed", err);
+    return { success: false, message: "Pasife alınamadı" };
+  }
+}
+
+export async function restoreCategory(id: number) {
+  try {
+    // Calls the RESTORE endpoint (Activates)
+    await api.post(`/categories/${id}/restore`);
+    return { success: true };
+  } catch (err: any) {
+    console.error("Restore failed", err);
+    return { success: false, message: "Aktife alınamadı" };
+  }
+}

@@ -44,3 +44,5 @@ export const updateRealEstateListing = async (
   return res.data;
 };
 
+
+export { RealEstateWithImagesOut };

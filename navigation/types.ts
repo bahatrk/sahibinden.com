@@ -4,6 +4,7 @@ import { ListingWithData } from "../lib/database/listing";
 
 export type RootStackParamList = {
   Home: undefined;
+  SearchResults: { query: string };
   Category: CategoryEntity;
   ListingDetail: { listing: ListingWithData };
   Login: undefined;

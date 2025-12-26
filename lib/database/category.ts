@@ -8,8 +8,6 @@ export type CategoryEntity = {
   desc: string | null;
   logo_id: number | null;      // yeni
   logo_url?: string | null;    // yeni, join ile logosu gelecek
-};
-export type CategoryAdminEntity = CategoryEntity & {
   is_active:boolean
 };
 

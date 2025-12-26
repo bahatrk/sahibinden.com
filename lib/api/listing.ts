@@ -152,3 +152,33 @@ export const uploadListingImages = async (
     throw err;
   }
 };
+
+
+export interface PriceHistoryItem {
+  old_price: number;
+  new_price: number;
+  change_date: string;
+}
+
+export async function fetchListingHistory(id: number): Promise<PriceHistoryItem[]> {
+  try {
+    const res = await api.get<PriceHistoryItem[]>(`/listings/${id}/history`);
+    return res.data;
+  } catch (err) {
+    console.error("History fetch failed", err);
+    return [];
+  }
+}
+
+export async function searchListings(query: string): Promise<ListingWithData[]> {
+  try {
+    // Calls the new simplified endpoint
+    const res = await api.get<ListingWithData[]>(`/listings/search`, {
+      params: { q: query }
+    });
+    return res.data;
+  } catch (err) {
+    console.error("Search failed", err);
+    return [];
+  }
+}

@@ -44,3 +44,5 @@ export const updateVehicleListing = async (
   const res = await api.put<CreateListingResponse>(`/vehicle/${listingId}`, data);
   return res.data;
 };
+
+export { VehicleWithImagesOut };

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, Dimensions } from "react-native";
-import MapView, { Marker, Region } from "react-native-maps";
+import { View, Text, StyleSheet, Dimensions, ActivityIndicator } from "react-native";
+import { WebView } from "react-native-webview"; 
 import LocationPicker, { LocationResult } from "../create/LocationPicker";
 
-// --- TYPES ---
 export type Coordinate = {
   latitude: number;
   longitude: number;
@@ -11,10 +10,7 @@ export type Coordinate = {
 
 export type MapLocationResult = {
   location: LocationResult; 
-  coor: {
-    lat: string;
-    lon: string;
-  };
+  coor: { lat: string; lon: string; };
 };
 
 export type InitialLocation = {
@@ -42,20 +38,16 @@ export default function UniversalMap({
 }: Props) {
   
   const [locationInfo, setLocationInfo] = useState<LocationResult | null>(null);
-
-  // Keep track of the last emitted coordinate to prevent duplicate/micro updates
   const lastEmittedCoord = useRef<{ lat: number; lon: number } | null>(null);
 
   // 1. Initialize Region
-  const [region, setRegion] = useState<Region>({
+  const [region, setRegion] = useState({
     latitude: initialLocation?.lat 
       ? parseFloat(initialLocation.lat) 
       : (initialCoordinate?.latitude || 39.925533),
     longitude: initialLocation?.lon 
       ? parseFloat(initialLocation.lon) 
       : (initialCoordinate?.longitude || 32.866287),
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
   });
 
   // 2. View Mode Update Logic
@@ -64,76 +56,109 @@ export default function UniversalMap({
       setRegion({
         latitude: initialCoordinate.latitude,
         longitude: initialCoordinate.longitude,
-        latitudeDelta: 0.01,
-        longitudeDelta: 0.01,
       });
     }
   }, [initialCoordinate, mode]);
 
   // --- HANDLERS ---
-
-  // A. Triggered when the DROPDOWN changes
   const handleDropdownSelect = (loc: LocationResult) => {
     setLocationInfo(loc);
-    
-    // Immediately notify parent using the CURRENT region
-    // This fixes the issue where data wouldn't save until you touched the map
     if (onLocationSelect) {
       onLocationSelect({
         location: loc,
-        coor: {
-          lat: String(region.latitude),
-          lon: String(region.longitude),
-        },
+        coor: { lat: String(region.latitude), lon: String(region.longitude) },
       });
     }
   };
 
-  // B. Triggered when the MAP is dragged
-  const onRegionChangeComplete = (newRegion: Region) => {
+  const handleWebViewMessage = (event: any) => {
+    // SECURITY: Strictly ignore updates if not in EDIT mode
     if (mode !== "edit") return;
 
-    setRegion(newRegion);
-    
-    // 1. Safety Check: Do we have dropdown info yet?
-    if (!locationInfo || !onLocationSelect) return;
+    try {
+        const data = JSON.parse(event.nativeEvent.data);
+        const newLat = data.lat;
+        const newLon = data.lng;
 
-    // 2. Anti-Chatter Check (The Fix for "Too Many Updates")
-    // Only fire if moved more than ~10 meters (0.0001 degrees)
-    const prev = lastEmittedCoord.current;
-    if (prev) {
-        const deltaLat = Math.abs(prev.lat - newRegion.latitude);
-        const deltaLon = Math.abs(prev.lon - newRegion.longitude);
-        if (deltaLat < 0.0001 && deltaLon < 0.0001) {
-            return; // Ignore micro-movements
+        if (!locationInfo || !onLocationSelect) return;
+
+        // Anti-Chatter Check
+        const prev = lastEmittedCoord.current;
+        if (prev) {
+            const deltaLat = Math.abs(prev.lat - newLat);
+            const deltaLon = Math.abs(prev.lon - newLon);
+            if (deltaLat < 0.0001 && deltaLon < 0.0001) return; 
         }
+
+        lastEmittedCoord.current = { lat: newLat, lon: newLon };
+        
+        onLocationSelect({
+            location: locationInfo,
+            coor: { lat: String(newLat), lon: String(newLon) },
+        });
+    } catch (e) {
+        console.error("Map parse error", e);
     }
-
-    // Update the Ref
-    lastEmittedCoord.current = { lat: newRegion.latitude, lon: newRegion.longitude };
-
-    // Fire Event
-    onLocationSelect({
-      location: locationInfo,
-      coor: {
-        lat: String(newRegion.latitude),
-        lon: String(newRegion.longitude),
-      },
-    });
   };
+
+  // --- HTML GENERATOR ---
+  const getMapHtml = () => `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+        <style>
+            body { margin: 0; padding: 0; }
+            #map { width: 100%; height: 100vh; }
+        </style>
+    </head>
+    <body>
+        <div id="map"></div>
+        <script>
+            var map = L.map('map', { zoomControl: true }).setView([${region.latitude}, ${region.longitude}], 13);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 19,
+                attribution: 'OpenStreetMap'
+            }).addTo(map);
+
+            // --- VIEW MODE LOGIC ---
+            if ("${mode}" === "view") {
+                // 1. Add a REAL marker at the specific location
+                // This marker stays at that Lat/Lon even if you drag the map away.
+                L.marker([${region.latitude}, ${region.longitude}]).addTo(map);
+                
+                // 2. Do NOT add any listeners for movement.
+                // The user can drag the map, but the marker stays geographically fixed.
+            }
+
+            // --- EDIT MODE LOGIC ---
+            if ("${mode}" === "edit") {
+                // 1. We do NOT add a marker here.
+                // React Native renders the Red Pin Overlay in the center of the screen.
+
+                // 2. Listen for movements to update the center coordinate
+                map.on('moveend', function() {
+                    var center = map.getCenter();
+                    window.ReactNativeWebView.postMessage(JSON.stringify({ lat: center.lat, lng: center.lng }));
+                });
+            }
+        </script>
+    </body>
+    </html>
+  `;
 
   return (
     <View style={styles.container}>
       
-      {/* --- EDIT MODE: LOCATION PICKER --- */}
       {mode === "edit" && (
         <View style={{ marginBottom: 10 }}>
           <LocationPicker 
-            // [!] Use the specific handler here
             onSelect={handleDropdownSelect} 
             initialValues={initialLocation} 
           />
-          
           {locationInfo && (
             <Text style={styles.infoText}>
               {locationInfo.cityName} - {locationInfo.districtName}
@@ -142,26 +167,22 @@ export default function UniversalMap({
         </View>
       )}
 
-      {/* --- MAP AREA --- */}
       {(mode === "view" || (mode === "edit" && (locationInfo || initialLocation))) && (
         <View style={styles.mapWrapper}>
-          <MapView
-            style={styles.map}
-            region={region} 
-            // [!] Use the debounced handler
-            onRegionChangeComplete={onRegionChangeComplete}
-            scrollEnabled={true}
-            zoomEnabled={true}
-          >
-            {mode === "view" && (
-              <Marker 
-                coordinate={region} 
-                title={viewTitle || "Konum"}
-              />
-            )}
-          </MapView>
+          <WebView
+             // Key forces a full reload if the coordinate changes drastically (like opening a new listing)
+             key={`${initialCoordinate?.latitude}-${initialCoordinate?.longitude}`}
+             originWhitelist={['*']}
+             source={{ html: getMapHtml() }}
+             style={styles.map}
+             onMessage={handleWebViewMessage}
+             javaScriptEnabled={true}
+             scrollEnabled={false} 
+             renderLoading={() => <ActivityIndicator style={{position:'absolute', top:'50%', left:'50%'}} color="#2E5894" />}
+             startInLoadingState={true}
+          />
 
-          {/* Center Pin for Edit Mode */}
+          {/* EDIT MODE OVERLAY (The Red Pin stuck to screen center) */}
           {mode === "edit" && (
             <View style={styles.centerMarkerContainer} pointerEvents="none">
               <View style={styles.markerDot} />
@@ -169,6 +190,7 @@ export default function UniversalMap({
             </View>
           )}
 
+          {/* Label at bottom */}
           <View style={styles.overlayLabel}>
             <Text style={styles.labelText}>
               {mode === "edit" ? "Konumu belirlemek için haritayı kaydırın" : viewTitle || "İlan Konumu"}
@@ -192,8 +214,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     position: "relative",
     alignSelf: "center",
+    backgroundColor: '#f5f5f5'
   },
   map: { width: "100%", height: "100%" },
+  
+  // Custom Pin Styles (Only used in Edit Mode)
   centerMarkerContainer: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "center",

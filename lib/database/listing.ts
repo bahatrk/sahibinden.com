@@ -6,7 +6,7 @@ export type ListingEntity = {
   price: number;
   category_id: number;
   desc: string;
-  creation_date: number;
+  creation_date: string;
   user_id: number;
 };
 
