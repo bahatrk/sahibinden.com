@@ -16,32 +16,47 @@ export type LocationResult = {
   neighbourhoodName?: string;
 };
 
-type Props = {
-  onSelect: (location: LocationResult) => void;
+// Define the shape of the incoming location object
+type InitialLocation = {
+  city_id: number;
+  district_id: number;
+  neighbourhood_id: number;
+  lat?: string;
+  lon?: string;
 };
 
-export default function LocationPicker({ onSelect }: Props) {
-  // --- STATE TANIMLARI ---
+type Props = {
+  onSelect: (location: LocationResult) => void;
+  // New Prop for Edit Mode
+  initialValues?: InitialLocation | null; 
+};
+
+export default function LocationPicker({ onSelect, initialValues }: Props) {
+  // --- STATE DEFINITIONS ---
   const [cities, setCities] = useState<{ label: string; value: number }[]>([]);
   const [districts, setDistricts] = useState<{ label: string; value: number }[]>([]);
   const [neighbourhoods, setNeighbourhoods] = useState<{ label: string; value: number }[]>([]);
 
-  // Dropdown Açık/Kapalı Durumları
+  // Dropdown Open States
   const [cityOpen, setCityOpen] = useState(false);
   const [districtOpen, setDistrictOpen] = useState(false);
   const [neighbourhoodOpen, setNeighbourhoodOpen] = useState(false);
 
-  // Seçili Değerler
-  const [selectedCity, setSelectedCity] = useState<number | null>(null);
+  // Selected Values
+  // 1. Initialize City immediately if initialValues exists
+  const [selectedCity, setSelectedCity] = useState<number | null>(
+    initialValues?.city_id || null
+  );
+  
+  // District and Neighbourhood must start null, they will be filled by the useEffect chain
   const [selectedDistrict, setSelectedDistrict] = useState<number | null>(null);
   const [selectedNeighbourhood, setSelectedNeighbourhood] = useState<number | null>(null);
 
-  // Sonsuz döngüyü engellemek için son gönderilen veriyi tutar
   const lastEmittedRef = useRef<string>("");
 
-  // --- VERİ YÜKLEME ---
+  // --- DATA LOADING ---
 
-  // 1. Şehirleri Yükle (Sadece bir kere çalışır)
+  // 1. Load Cities
   useEffect(() => {
     let mounted = true;
     fetchAllProvinces().then((res) => {
@@ -50,41 +65,61 @@ export default function LocationPicker({ onSelect }: Props) {
     return () => { mounted = false; };
   }, []);
 
-  // 2. Şehir Değişince -> İlçeleri Yükle
+  // 2. City Changed -> Load Districts
   useEffect(() => {
     if (!selectedCity) {
       setDistricts([]);
       return;
     }
     
-    // Şehir değiştiyse alt seçimleri sıfırla!
-    setSelectedDistrict(null);
-    setSelectedNeighbourhood(null);
-    setNeighbourhoods([]);
+    // Reset children if the user manually changes the city
+    // But if we are in the initialization phase, we might want to keep logic flow
+    const isInitializing = initialValues && initialValues.city_id === selectedCity;
+
+    if (!isInitializing) {
+        setSelectedDistrict(null);
+        setSelectedNeighbourhood(null);
+        setNeighbourhoods([]);
+    }
 
     fetchDistrictsByProvinceId(selectedCity).then((res) => {
       setDistricts(res.map((d) => ({ label: d.name, value: d.id })));
+
+      // AUTO-SELECT DISTRICT
+      // If we have initial values AND the currently selected city matches the initial city
+      if (initialValues && initialValues.city_id === selectedCity) {
+          setSelectedDistrict(initialValues.district_id);
+      }
     });
   }, [selectedCity]);
 
-  // 3. İlçe Değişince -> Mahalleleri Yükle
+  // 3. District Changed -> Load Neighbourhoods
   useEffect(() => {
     if (!selectedDistrict) {
       setNeighbourhoods([]);
       return;
     }
 
-    // İlçe değiştiyse mahalleyi sıfırla!
-    setSelectedNeighbourhood(null);
+    // Reset neighbourhood if user manually changes district
+    const isInitializing = initialValues && initialValues.district_id === selectedDistrict;
+    
+    if (!isInitializing) {
+        setSelectedNeighbourhood(null);
+    }
 
     fetchNeigborhoodByDistricts(selectedDistrict).then((res) => {
-      setNeighbourhoods(res.map((n) => ({ label: n.name + '-'+ n.area_name, value: n.id })));
+      setNeighbourhoods(res.map((n) => ({ label: n.name + ' - ' + n.area_name, value: n.id })));
+
+      // AUTO-SELECT NEIGHBOURHOOD
+      // If we have initial values AND the currently selected district matches the initial district
+      if (initialValues && initialValues.district_id === selectedDistrict) {
+          setSelectedNeighbourhood(initialValues.neighbourhood_id);
+      }
     });
   }, [selectedDistrict]);
 
-  // --- ÜST BİLEŞENE HABER VERME ---
+  // --- NOTIFY PARENT ---
   useEffect(() => {
-    // Sadece Şehir ve İlçe seçiliyse haber ver (Mahalle opsiyonel olabilir veya zorunluysa buraya ekleyin)
     if (selectedCity && selectedDistrict && selectedNeighbourhood) {
       const cityName = cities.find((c) => c.value === selectedCity)?.label || "";
       const districtName = districts.find((d) => d.value === selectedDistrict)?.label || "";
@@ -101,17 +136,15 @@ export default function LocationPicker({ onSelect }: Props) {
         neighbourhoodName,
       };
 
-      // 🛑 KRİTİK KONTROL: Eğer veri değişmediyse `onSelect`i çağırma!
-      // Bu sonsuz döngüyü ve API re-trigger sorununu engeller.
       const resultString = JSON.stringify(result);
       if (lastEmittedRef.current !== resultString) {
         lastEmittedRef.current = resultString;
         onSelect(result);
       }
     }
-  }, [selectedCity, selectedDistrict, selectedNeighbourhood]);
+  }, [selectedCity, selectedDistrict, selectedNeighbourhood, cities, districts, neighbourhoods]);
 
-  // Dropdown'ların çakışmaması için birini açınca diğerlerini kapatan yardımcı fonksiyon
+  // UI Helpers
   const onOpenCity = () => { setDistrictOpen(false); setNeighbourhoodOpen(false); };
   const onOpenDistrict = () => { setCityOpen(false); setNeighbourhoodOpen(false); };
   const onOpenNeighbourhood = () => { setCityOpen(false); setDistrictOpen(false); };
@@ -132,21 +165,10 @@ export default function LocationPicker({ onSelect }: Props) {
           placeholder="Şehir seçiniz"
           searchable={true}
           searchPlaceholder="Şehir ara..."
-          
-          // Z-INDEX FIX
           zIndex={3000}
           zIndexInverse={1000}
-
-          // MODAL STYLING
           listMode="MODAL"
           modalTitle="Şehir Seçin"
-          modalProps={{ animationType: "slide" }}
-          modalContentContainerStyle={{
-            marginTop: "30%", // Leaves top 30% of screen empty
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            backgroundColor: "#fff",
-          }}
         />
       </View>
 
@@ -165,21 +187,10 @@ export default function LocationPicker({ onSelect }: Props) {
           searchable={true}
           searchPlaceholder="İlçe ara..."
           style={{ opacity: !selectedCity ? 0.5 : 1 }}
-
-          // Z-INDEX FIX
           zIndex={2000}
           zIndexInverse={2000}
-
-          // MODAL STYLING
           listMode="MODAL"
           modalTitle="İlçe Seçin"
-          modalProps={{ animationType: "slide" }}
-          modalContentContainerStyle={{
-            marginTop: "30%", 
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            backgroundColor: "#fff",
-          }}
         />
       </View>
 
@@ -198,23 +209,12 @@ export default function LocationPicker({ onSelect }: Props) {
           searchable={true}
           searchPlaceholder="Mahalle ara..."
           style={{ opacity: !selectedDistrict ? 0.5 : 1 }}
-
-          // Z-INDEX FIX
           zIndex={1000}
           zIndexInverse={3000}
-
-          // MODAL STYLING
           listMode="MODAL"
           modalTitle="Mahalle Seçin"
-          modalProps={{ animationType: "slide" }}
-          modalContentContainerStyle={{
-            marginTop: "30%", 
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
-            backgroundColor: "#fff",
-          }}
         />
       </View>
     </View>
-);
+  );
 }

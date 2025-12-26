@@ -34,3 +34,13 @@ export const createVehicleListing = async (
   const res = await api.post<CreateListingResponse>("/vehicle", data);
   return res.data;
 };
+
+
+export const updateVehicleListing = async (
+  listingId: number,
+  data: FullListingPayload
+): Promise<CreateListingResponse> => {
+  // Corresponds to @router.put("/{listing_id}")
+  const res = await api.put<CreateListingResponse>(`/vehicle/${listingId}`, data);
+  return res.data;
+};

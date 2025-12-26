@@ -17,7 +17,7 @@ import { getFeatureGroupsByCategoryTypeApi, getFeaturesByGroupApi } from "../../
 import { createRealEstateListing } from "../../lib/api/realEstate";
 import { createVehicleListing } from "../../lib/api/vehicle";
 import { uploadListingImages } from "../../lib/api/listing";
-import MapLocationPicker, { MapLocationResult } from "../map/MapLocationGeocode";
+import { MapLocationResult } from "../map/MapLocationGeocode";
 import UniversalMap from "../map/MapComponent";
 
 type Props = {

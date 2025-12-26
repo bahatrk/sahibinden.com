@@ -1,5 +1,6 @@
 import { api } from "./gateway";
 import { ListingWithData } from "../database/listing";
+import { CategoryEntity } from "../database/category";
 
 // ----------------------------------------------------------------------------
 // 1. TİP TANIMLAMALARI (Backend'in beklediği JSON yapısı)
@@ -72,6 +73,21 @@ export const fetchListingsByUser = async (userId: number): Promise<ListingWithDa
   } catch (err: any) {
     console.error("Error fetching user listings:", err.message);
     return [];
+  }
+};
+
+export const fetchFullListingDetails = async (listingId: number) => {
+  const res = await api.get(`/listings/${listingId}/full-details`);
+  return res.data; 
+};
+
+export const fetchCategoryOfListing = async (listingId: number): Promise<CategoryEntity|undefined> => {
+  try {
+    const res = await api.get<CategoryEntity>(`/listings/${listingId}/category`);
+    return res.data;
+  } catch (err: any) {
+    console.error("Error fetching user listings:", err.message);
+    return undefined;
   }
 };
 

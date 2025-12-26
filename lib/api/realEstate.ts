@@ -35,3 +35,12 @@ export const createRealEstateListing = async (
   return res.data;
 };
 
+export const updateRealEstateListing = async (
+  listingId: number,
+  data: FullListingPayload
+): Promise<CreateListingResponse> => {
+  // Corresponds to @router.put("/{listing_id}")
+  const res = await api.put<CreateListingResponse>(`/real-estate/${listingId}`, data);
+  return res.data;
+};
+

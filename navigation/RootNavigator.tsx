@@ -14,6 +14,7 @@ import { AuthContext } from "./authContext";
 import HeaderProfileButton from "../components/HeaderProfileButton";
 import CreateListingScreen from "../screens/create/CreateListingScreen";
 import ChatScreen from "../screens/ChatScreen";
+import UpdateListingScreen from "../screens/update/UpdateListingScreen";
 
 const Stack = createStackNavigator<RootStackParamList>();
 
@@ -62,6 +63,11 @@ export default function RootNavigator() {
             name="ListingDetail"
             component={ListingDetailScreen}
             options={({ route }) => ({ title: route.params.listing.title })}
+          />
+          <Stack.Screen 
+          name="UpdateListing" 
+          component={UpdateListingScreen} 
+          options={{ title: "İlanı Düzenle" }} // Optional: Sets the header title
           />
 
           <Stack.Screen name="Login" component={LoginScreen} />

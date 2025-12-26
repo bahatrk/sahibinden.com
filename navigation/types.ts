@@ -9,9 +9,11 @@ export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
   Profile: undefined;
-  CreateListing: undefined;
+  CreateListing: undefined; 
+  UpdateListing: { listing: any };
   Chat: {
     conversationId: number;
     listing: ListingWithData;
   };
+  
 };

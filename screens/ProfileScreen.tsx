@@ -20,7 +20,7 @@ import {
   getUserConversations,
   ConversationEntity,
 } from "../lib/database/conversation";
-import { deleteListingApi, fetchListingsByUser } from "../lib/api/listing";
+import { deleteListingApi, fetchFullListingDetails, fetchListingsByUser } from "../lib/api/listing";
 import { fetchUserFavorites } from "../lib/api/favorite";
 import { getUserConversationsApi } from "../lib/api/conversation";
 import { DEFAULT_IMAGE, getImageUrl } from "../constant/apiConfig";
@@ -119,6 +119,16 @@ export default function ProfileScreen({ navigation }: Props) {
     ]);
   };
 
+  const handleEditPress = async (listingId: number) => {
+    try {
+      const fullData = await fetchFullListingDetails(listingId);
+      // Navigate to the SPECIFIC Update Screen
+      navigation.navigate("UpdateListing", { listing: fullData });
+    } catch (e) {
+      Alert.alert("Hata");
+    }
+  }
+
   const renderListingItem = ({
     item,
     showFavorite = false,
@@ -147,15 +157,30 @@ export default function ProfileScreen({ navigation }: Props) {
         </Text>
       </View>
 
+      {/* ACTION BUTTONS */}
       {section === "listings" && (
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => handleDeleteListing(item.id)}
-        >
-          <Text style={{ color: "#fff" }}>Sil</Text>
-        </TouchableOpacity>
+        <View style={{ alignItems: 'flex-end' }}>
+          
+          
+          {/* EDIT BUTTON */}
+          <TouchableOpacity
+            style={[styles.deleteButton, { backgroundColor: "#FFA500", marginBottom: 5 }]} // Orange for edit
+            onPress={() => handleEditPress(item.id)}
+          >
+            <Text style={{ color: "#fff" }}>Düzenle</Text>
+          </TouchableOpacity>
+
+          {/* DELETE BUTTON */}
+          <TouchableOpacity
+            style={styles.deleteButton}
+            onPress={() => handleDeleteListing(item.id)}
+          >
+            <Text style={{ color: "#fff" }}>Sil</Text>
+          </TouchableOpacity>
+        </View>
       )}
 
+      {/* ... Favorite Button logic ... */}
       {showFavorite && user && (
         <FavoriteButton
           listingId={item.id}
@@ -172,7 +197,7 @@ export default function ProfileScreen({ navigation }: Props) {
         />
       )}
     </View>
-  );
+);
 
   const renderConversationItem = ({ item }: { item: ConversationEntity }) => (
     <TouchableOpacity
