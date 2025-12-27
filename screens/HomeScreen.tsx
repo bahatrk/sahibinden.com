@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }: Props) {
       navigation.navigate("SearchResults", { query: search });
       setSearch(""); // Optional: Clear search bar after searching
     } else {
-        Alert.alert("Uyarı", "Lütfen en az 2 karakter giriniz.");
+        Alert.alert("Warning", "Please enter at least 2 characters.");
     }
   }
 
@@ -58,12 +58,12 @@ export default function HomeScreen({ navigation }: Props) {
   const isActive = cat.is_active !== false;
 
   // 2. Define Messages based on Status
-  const title = isActive ? "Kategoriyi Sil (Pasif)" : "Kategoriyi Geri Yükle (Aktif)";
+  const title = isActive ? "Delete Category (Inactive)" : "Restore Category (Active)";
   const message = isActive 
-      ? `"${cat.name}" kategorisini pasife almak istediğine emin misin? Kullanıcılar artık göremeyecek.` 
-      : `"${cat.name}" kategorisini tekrar aktif etmek istediğine emin misin?`;
+      ? `Are you sure you want to deactivate the "${cat.name}" category? Users will no longer be able to see it.` 
+      : `Are you sure you want to reactivate the "${cat.name}" category?`;
 
-  const actionText = isActive ? "Sil (Pasif)" : "Geri Yükle";
+  const actionText = isActive ? "Delete (Passive)" : "Restore";
   const actionStyle = isActive ? "destructive" : "default";
 
   // 3. Show Alert
@@ -71,7 +71,7 @@ export default function HomeScreen({ navigation }: Props) {
     title,
     message,
     [
-      { text: "İptal", style: "cancel" },
+      { text: "Cancel", style: "cancel" },
       { 
         text: actionText, 
         style: actionStyle, 
@@ -89,7 +89,7 @@ export default function HomeScreen({ navigation }: Props) {
              // Make sure this function fetches BOTH active and passive for admins
              loadRootCategories(); 
            } else {
-             Alert.alert("Hata", res.message || "İşlem başarısız.");
+             Alert.alert("Mistake", res.message || "The operation failed.");
            }
         } 
       }
@@ -103,7 +103,7 @@ export default function HomeScreen({ navigation }: Props) {
          value={search} 
          onChangeText={setSearch} 
          onSearch={handleSearch} // <--- Pass the function here
-         placeholder="Araba, ev ara..." 
+         placeholder="Car, house search..." 
       />
 
       <FlatList

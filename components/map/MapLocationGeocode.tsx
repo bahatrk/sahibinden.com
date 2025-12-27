@@ -129,7 +129,7 @@ export default function MapLocationPicker({ onLocationSelect }: Props) {
            />
 
            <View style={styles.hintBubble}>
-             <Text style={styles.hintText}>Pini sürükleyin veya haritaya tıklayın</Text>
+             <Text style={styles.hintText}>Drag the pin or click on the map.</Text>
            </View>
         </View>
       )}

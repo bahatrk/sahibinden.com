@@ -15,7 +15,7 @@ export default function SearchBar({ value, onChangeText, onSearch, placeholder }
       <Ionicons name="search" size={22} color="gray" style={styles.icon} />
       <TextInput
         style={styles.input}
-        placeholder={placeholder || "Arama..."}
+        placeholder={placeholder || "Search..."}
         placeholderTextColor="gray"
         value={value}
         onChangeText={onChangeText}

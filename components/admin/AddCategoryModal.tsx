@@ -57,11 +57,11 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
   };
 
   async function handleSubmit() {
-    if (!name.trim()) return Alert.alert("Hata", "Kategori adı gerekli");
+    if (!name.trim()) return Alert.alert("Mistake", "Category name required");
     
     // Validation for Type
     if (isCreatingNewType && !newTypeName.trim()) 
-        return Alert.alert("Hata", "Yeni Tip adı giriniz");
+        return Alert.alert("Mistake", "Enter a new type name.");
     
     setLoading(true);
     
@@ -77,7 +77,7 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
       onSuccess();
       onClose();
     } else {
-      Alert.alert("Hata", "Kategori oluşturulamadı.");
+      Alert.alert("Mistake", "The category could not be created.");
     }
   }
 
@@ -87,19 +87,19 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
         <View style={styles.modalContainer}>
             <ScrollView>
               <Text style={styles.title}>
-                {parentId ? "Alt Kategori Ekle" : "Ana Kategori Ekle"}
+                {parentId ? "Add Subcategory" : "Add Main Category"}
               </Text>
 
               {/* 1. Name Input */}
               <TextInput
                 style={styles.input}
-                placeholder="Kategori Adı"
+                placeholder="Category Name"
                 value={name}
                 onChangeText={setName}
               />
 
               {/* 2. Type Selection (Only if Root or if you want to allow changing type for subs) */}
-              <Text style={styles.label}>Kategori Tipi:</Text>
+              <Text style={styles.label}>Category Type:</Text>
               
               {!isCreatingNewType ? (
                   <View style={styles.typeSelector}>
@@ -120,7 +120,7 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
                       {/* Only show "Add New" button if it is a Root Category */}
                       {!parentId && (
                           <TouchableOpacity onPress={() => setIsCreatingNewType(true)}>
-                              <Text style={styles.linkText}>+ Yeni Tip Oluştur</Text>
+                              <Text style={styles.linkText}>+ Create New Type</Text>
                           </TouchableOpacity>
                       )}
                   </View>
@@ -128,12 +128,12 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
                   <View>
                       <TextInput 
                         style={styles.input} 
-                        placeholder="Yeni Tip Adı (Örn: Emlak, Vasıta)"
+                        placeholder="New Type Name (e.g., Real Estate, Vehicle)"
                         value={newTypeName}
                         onChangeText={setNewTypeName}
                       />
                       <TouchableOpacity onPress={() => setIsCreatingNewType(false)}>
-                          <Text style={styles.linkText}>Listeden Seç</Text>
+                          <Text style={styles.linkText}>Select from List</Text>
                       </TouchableOpacity>
                   </View>
               )}
@@ -145,7 +145,7 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
                 ) : (
                   <View style={styles.imagePlaceholder}>
                     <Feather name="camera" size={24} color="gray" />
-                    <Text style={{color:'gray'}}>Logo Seç</Text>
+                    <Text style={{color:'gray'}}>Select Logo</Text>
                   </View>
                 )}
               </TouchableOpacity>
@@ -153,10 +153,10 @@ export default function AddCategoryModal({ visible, onClose, parentId, onSuccess
               {/* 4. Buttons */}
               <View style={styles.buttons}>
                 <TouchableOpacity onPress={onClose} style={styles.cancelBtn}>
-                  <Text style={{ color: "red" }}>İptal</Text>
+                  <Text style={{ color: "red" }}>Cancel</Text>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={handleSubmit} style={styles.saveBtn}>
-                  {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: "#fff" }}>Kaydet</Text>}
+                  {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: "#fff" }}>Save</Text>}
                 </TouchableOpacity>
               </View>
           </ScrollView>

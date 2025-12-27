@@ -39,7 +39,7 @@ export default function RegisterScreen({ navigation }: Props) {
 
   const registerUser = async () => {
     if (!name || !surname || !email || !password || !phone) {
-      Alert.alert("Hata", "Lütfen tüm alanları doldurun.");
+      Alert.alert("Mistake", "Please fill in all fields.");
       return;
     }
 
@@ -57,7 +57,7 @@ export default function RegisterScreen({ navigation }: Props) {
 
       navigation.replace("Profile");
     } else {
-      Alert.alert("Hata", result.message || "Kayıt yapılamadı");
+      Alert.alert("Mistake", result.message || "Registration failed");
     }
   };
 
@@ -72,12 +72,12 @@ export default function RegisterScreen({ navigation }: Props) {
       </TouchableOpacity>
 
       {/* Başlık */}
-      <Text style={styles.title}>Hesap aç</Text>
+      <Text style={styles.title}>Open an account</Text>
 
       {/* Email input */}
       <TextInput
         style={styles.input}
-        placeholder="E-posta adresi"
+        placeholder="Email address"
         placeholderTextColor={"gray"}
         keyboardType="email-address"
         autoCapitalize="none"
@@ -89,7 +89,7 @@ export default function RegisterScreen({ navigation }: Props) {
       <View style={styles.adSoyadInput}>
         <TextInput
           style={styles.halfInput}
-          placeholder="Ad"
+          placeholder="Name"
           placeholderTextColor={"gray"}
           autoCapitalize="none"
           value={name}
@@ -98,7 +98,7 @@ export default function RegisterScreen({ navigation }: Props) {
 
         <TextInput
           style={styles.halfInput}
-          placeholder="Soyad"
+          placeholder="Surname"
           placeholderTextColor={"gray"}
           autoCapitalize="none"
           value={surname}
@@ -109,7 +109,7 @@ export default function RegisterScreen({ navigation }: Props) {
       {/* Telefon input */}
       <TextInput
         style={styles.input}
-        placeholder="Telefon"
+        placeholder="Phone"
         placeholderTextColor={"gray"}
         keyboardType="phone-pad" // numara klavyesi açılır
         value={phone}
@@ -120,7 +120,7 @@ export default function RegisterScreen({ navigation }: Props) {
       <View style={styles.sifreContainer}>
         <TextInput
           style={styles.sifreInput}
-          placeholder="Şifre"
+          placeholder="Password"
           placeholderTextColor={"gray"}
           secureTextEntry={!showPassword}
           value={password}
@@ -134,13 +134,13 @@ export default function RegisterScreen({ navigation }: Props) {
 
       {/* Giriş Yap Butonu */}
       <TouchableOpacity style={styles.button} onPress={registerUser}>
-        <Text style={styles.buttonText}>Hesap aç</Text>
+        <Text style={styles.buttonText}>Open an account</Text>
       </TouchableOpacity>
 
       <View style={styles.hesapAc}>
-        <Text style={{ fontSize: 16 }}>Zaten hesabın var mı? </Text>
+        <Text style={{ fontSize: 16 }}>Do you already have an account? </Text>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.hesapAcButton}>Giriş yap</Text>
+          <Text style={styles.hesapAcButton}>Log in</Text>
         </TouchableOpacity>
       </View>
     </View>

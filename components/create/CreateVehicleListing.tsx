@@ -17,7 +17,7 @@ export default function CreateVehicleListing({ onSubmit }: Props) {
 
   return (
     <View>
-      <TextInput style={styles.input} placeholder="Yıl" placeholderTextColor={"gray"} value={year} keyboardType="number-pad" maxLength={4}  
+      <TextInput style={styles.input} placeholder="Year" placeholderTextColor={"gray"} value={year} keyboardType="number-pad" maxLength={4}  
       onChangeText={(text) => {
         const onlyNumbers = text.replace(/[^0-9]/g, "");
         setYear(onlyNumbers);
@@ -27,15 +27,15 @@ export default function CreateVehicleListing({ onSubmit }: Props) {
         const onlyNumbers = text.replace(/[^0-9]/g, "");
         setKilometer(onlyNumbers);
       }} />
-      <TextInput style={styles.input} placeholder="Yakıt" placeholderTextColor={"gray"} value={fuel} onChangeText={setFuel} />
-      <TextInput style={styles.input} placeholder="Vites" placeholderTextColor={"gray"} value={transmission} onChangeText={setTransmission} />
-      <TextInput style={styles.input} placeholder="Kasa Tipi" placeholderTextColor={"gray"} value={bodyType} onChangeText={setBodyType} />
-      <TextInput style={styles.input} placeholder="Motor Hacmi" placeholderTextColor={"gray"} value={engineCC} onChangeText={setEngineCC} />
-      <TextInput style={styles.input} placeholder="Araç Durumu" placeholderTextColor={"gray"} value={instrumental} onChangeText={setInstrumental} />
-      <TextInput style={styles.input} placeholder="Renk" placeholderTextColor={"gray"} value={color} onChangeText={setColor} />
+      <TextInput style={styles.input} placeholder="Fuel" placeholderTextColor={"gray"} value={fuel} onChangeText={setFuel} />
+      <TextInput style={styles.input} placeholder="Transmission" placeholderTextColor={"gray"} value={transmission} onChangeText={setTransmission} />
+      <TextInput style={styles.input} placeholder="Body Type" placeholderTextColor={"gray"} value={bodyType} onChangeText={setBodyType} />
+      <TextInput style={styles.input} placeholder="Engine CC" placeholderTextColor={"gray"} value={engineCC} onChangeText={setEngineCC} />
+      <TextInput style={styles.input} placeholder="Vehicle Status" placeholderTextColor={"gray"} value={instrumental} onChangeText={setInstrumental} />
+      <TextInput style={styles.input} placeholder="Color" placeholderTextColor={"gray"} value={color} onChangeText={setColor} />
 
       <Button
-        title="İlanı Oluştur"
+        title="Create Listing"
         onPress={() =>
           onSubmit({
             year: year ? Number(year) : null,

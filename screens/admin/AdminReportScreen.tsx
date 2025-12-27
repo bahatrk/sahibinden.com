@@ -34,7 +34,7 @@ export default function AdminReportScreen() {
     <ScrollView style={styles.container}>
       
       {/* 2. Category Distribution Chart */}
-      <Text style={styles.chartTitle}>Kategori Dağılımı</Text>
+      <Text style={styles.chartTitle}>Category Distribution</Text>
       <PieChart
         data={pieData}
         width={screenWidth - 40}
@@ -47,7 +47,7 @@ export default function AdminReportScreen() {
       />
 
       {/* 3. Average Price List */}
-      <Text style={styles.chartTitle}>Ortalama Fiyatlar (Root)</Text>
+      <Text style={styles.chartTitle}>Average Prices (Root)</Text>
       {catStats.map((c) => (
           <View key={c.id} style={styles.row}>
               <Text>{c.name}</Text>

@@ -28,7 +28,7 @@ export default function AdminDashboardScreen() {
         setListings(data);
       }
     } catch (e) {
-      Alert.alert("Hata", "Veri yüklenemedi");
+      Alert.alert("Mistake", "failed to load data");
     } finally {
       setLoading(false);
     }
@@ -37,19 +37,19 @@ export default function AdminDashboardScreen() {
   const handleDeleteUser = (userId: number, userName: string) => {
     // ... (Keep your delete logic same as before)
      Alert.alert(
-      "Kullanıcıyı Sil",
-      `${userName} isimli kullanıcıyı silmek istediğine emin misin?`,
+      "Delete User",
+      `Are you sure you want to delete the user named ${userName}?`,
       [
-        { text: "İptal", style: "cancel" },
+        { text: "Cancel", style: "cancel" },
         {
-          text: "Sil",
+          text: "Delete",
           style: "destructive",
           onPress: async () => {
             try {
               await deleteUserAsAdmin(userId);
               setUsers(users.filter((u) => u.id !== userId));
             } catch (e) {
-              Alert.alert("Hata", "Silme başarısız.");
+              Alert.alert("Mistake", "Deletion failed.");
             }
           },
         },
@@ -59,24 +59,24 @@ export default function AdminDashboardScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Yönetici Paneli</Text>
+      <Text style={styles.header}>Admin Panel</Text>
 
       {/* TABS */}
       <View style={styles.tabContainer}>
         <TouchableOpacity 
             style={[styles.tab, activeTab === "users" && styles.activeTab]} 
             onPress={() => setActiveTab("users")}>
-            <Text style={[styles.tabText, activeTab === "users" && styles.activeTabText]}>Kullanıcılar</Text>
+            <Text style={[styles.tabText, activeTab === "users" && styles.activeTabText]}>Users</Text>
         </TouchableOpacity>
         <TouchableOpacity 
             style={[styles.tab, activeTab === "listings" && styles.activeTab]} 
             onPress={() => setActiveTab("listings")}>
-            <Text style={[styles.tabText, activeTab === "listings" && styles.activeTabText]}>İlanlar</Text>
+            <Text style={[styles.tabText, activeTab === "listings" && styles.activeTabText]}>Listings</Text>
         </TouchableOpacity>
         <TouchableOpacity 
             style={[styles.tab, activeTab === "reports" && styles.activeTab]} 
             onPress={() => setActiveTab("reports")}>
-            <Text style={[styles.tabText, activeTab === "reports" && styles.activeTabText]}>Raporlar</Text>
+            <Text style={[styles.tabText, activeTab === "reports" && styles.activeTabText]}>Reports</Text>
         </TouchableOpacity>
       </View>
 
@@ -101,7 +101,7 @@ export default function AdminDashboardScreen() {
                    </View>
                    {item.role !== 'admin' && (
                      <TouchableOpacity style={styles.deleteBtn} onPress={() => handleDeleteUser(item.id, item.name)}>
-                       <Text style={{color: 'white', fontWeight: 'bold'}}>Sil</Text>
+                       <Text style={{color: 'white', fontWeight: 'bold'}}>Delete</Text>
                      </TouchableOpacity>
                    )}
                  </View>

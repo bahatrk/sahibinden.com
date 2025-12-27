@@ -18,7 +18,7 @@ export default function SearchResultsScreen() {
 
   useEffect(() => {
     // Dynamic Header Title
-    navigation.setOptions({ title: `"${query}" sonuçları` });
+    navigation.setOptions({ title: `Results of "${query}"` });
     
     async function doSearch() {
       const data = await searchListings(query);
@@ -44,7 +44,7 @@ export default function SearchResultsScreen() {
         )}
         ListEmptyComponent={
           <Text style={{ textAlign: "center", marginTop: 50, color: "#666" }}>
-            Sonuç bulunamadı.
+            No results found.
           </Text>
         }
       />

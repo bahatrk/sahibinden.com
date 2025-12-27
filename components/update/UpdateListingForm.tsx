@@ -74,11 +74,11 @@ const initialMapLocation = {
         await uploadListingImages(listing.id, newImages);
       }
 
-      Alert.alert("Başarılı", "İlan güncellendi.");
+      Alert.alert("Success", "The listing has been updated.");
       navigation.goBack();
       
     } catch (error: any) {
-      Alert.alert("Hata", "Güncelleme başarısız.");
+      Alert.alert("Mistake", "Update failed.");
     }
   };
 
@@ -91,7 +91,7 @@ const initialMapLocation = {
 
   return (
     <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: 100 }}>
-      <Text style={styles.header}>İlanı Düzenle</Text>
+      <Text style={styles.header}>Edit Listing</Text>
 
       <TextInput style={styles.input} value={title} onChangeText={setTitle} />
       <TextInput
@@ -120,7 +120,7 @@ const initialMapLocation = {
           />
         ))}
       </View>
-      <Button title="Yeni Resim Ekle" onPress={pickImages} />
+      <Button title="Add New Image" onPress={pickImages} />
 
       {/* Location */}
       <UniversalMap

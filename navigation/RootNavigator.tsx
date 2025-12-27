@@ -53,7 +53,7 @@ export default function RootNavigator() {
           <Stack.Screen 
             name="SearchResults" 
             component={SearchResultsScreen} 
-            options={{ title: "Arama Sonuçları" }} 
+            options={{ title: "Search Results" }} 
           />
 
           <Stack.Screen
@@ -71,7 +71,7 @@ export default function RootNavigator() {
           <Stack.Screen 
             name="UpdateListing" 
             component={UpdateListingScreen} 
-            options={{ title: "İlanı Düzenle" }} 
+            options={{ title: "Edit Listing" }} 
           />
 
           <Stack.Screen name="Login" component={LoginScreen} />
@@ -80,19 +80,19 @@ export default function RootNavigator() {
           <Stack.Screen
             name="Profile"
             component={ProfileScreen}
-            options={{ title: "Profil" }}
+            options={{ title: "Profile" }}
           />
 
           <Stack.Screen
             name="CreateListing"
             component={CreateListingScreen}
-            options={{ title: "Yeni İlan Oluştur" }}
+            options={{ title: "Create New Ad" }}
           />
 
           <Stack.Screen
             name="Chat"
             component={ChatScreen}
-            options={{ title: "Mesajlaşma", headerBackTitle:"" }}
+            options={{ title: "Messaging", headerBackTitle:"" }}
           />
 
           <Stack.Screen

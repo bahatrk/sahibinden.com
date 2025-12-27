@@ -32,7 +32,7 @@ export default function LoginScreen({ navigation }: Props) {
 
   const loginUserUI = async () => {
     if (!email || !password) {
-      Alert.alert("Lütfen tüm alanları doldurun!");
+      Alert.alert("Please fill in all the fields!");
       return;
     }
 
@@ -40,7 +40,7 @@ export default function LoginScreen({ navigation }: Props) {
     const loginResult = await loginUser(email, password);
 
     if (!loginResult.success) {
-      Alert.alert("Hata", loginResult.message || "Giriş yapılamadı!");
+      Alert.alert("Mistake", loginResult.message || "Login failed!");
       return;
     }
 
@@ -65,7 +65,7 @@ export default function LoginScreen({ navigation }: Props) {
       // Yönlendir
       navigation.replace("Profile");
     } else {
-      Alert.alert("Hata", "Kullanıcı bilgileri alınamadı.");
+      Alert.alert("Mistake", "User information could not be retrieved.");
     }
 
     setEmail("");
@@ -84,11 +84,11 @@ export default function LoginScreen({ navigation }: Props) {
         <Feather name="x" style={styles.homePageReturnIcon} />
       </TouchableOpacity>
 
-      <Text style={styles.title}>İlan vermek için giriş yap</Text>
+      <Text style={styles.title}>Log in to post an ad.</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="E-posta adresi"
+        placeholder="Email address"
         placeholderTextColor={"gray"}
         keyboardType="email-address"
         autoCapitalize="none"
@@ -99,7 +99,7 @@ export default function LoginScreen({ navigation }: Props) {
       <View style={styles.sifreContainer}>
         <TextInput
           style={styles.sifreInput}
-          placeholder="Şifre"
+          placeholder="Password"
           placeholderTextColor={"gray"}
           secureTextEntry={!showPassword}
           value={password}
@@ -112,13 +112,13 @@ export default function LoginScreen({ navigation }: Props) {
       </View>
 
       <TouchableOpacity style={styles.button} onPress={loginUserUI}>
-        <Text style={styles.buttonText}>E-posta ile giriş yap</Text>
+        <Text style={styles.buttonText}>Log in with email</Text>
       </TouchableOpacity>
 
       <View style={styles.hesapAc}>
-        <Text style={{ fontSize: 16 }}>Henüz hesabın yok mu? </Text>
+        <Text style={{ fontSize: 16 }}>Don't have an account yet?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-          <Text style={styles.hesapAcButton}>Hesap aç</Text>
+          <Text style={styles.hesapAcButton}>Open an account</Text>
         </TouchableOpacity>
       </View>
     </View>

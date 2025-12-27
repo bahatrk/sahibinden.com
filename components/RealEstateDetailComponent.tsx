@@ -58,20 +58,21 @@ export default function RealEstateDetailComponent({ detail }: Props) {
   }
 
   const rows = [
-    { label: "Fiyat", value: `${detail.price} TL` },
-    { label: "İlan Tarihi", value: detail.creation_date },
-    { label: "Metrekare", value: `${detail.square_meter} m²` },
-    { label: "Oda Sayısı", value: detail.room_number },
-    { label: "Bina Yaşı", value: `${detail.building_age} yıl` },
-    { label: "Bulunduğu Kat", value: detail.floor },
-    { label: "Banyo Sayısı", value: detail.bathroom_number },
-    { label: "Mutfak", value: detail.kitchen },
-    { label: "Asansör", value: detail.lift ? "Var" : "Yok" },
+    { label: "Price", value: `${detail.price} TL` },
+    { label: "Listing Date", value: detail.creation_date },
+    { label: "Square meters", value: `${detail.square_meter} m²` },
+    { label: "Number of Rooms", value: detail.room_number },
+    { label: "Building Age", value: `${detail.building_age} year` },
+    { label: "Floor", value: detail.floor },
+    { label: "Number of Bathrooms", value: detail.bathroom_number },
+    { label: "Heat", value: detail.heat },
+    { label: "Kitchen", value: detail.kitchen },
+    { label: "Lift", value: detail.lift ? "There is" : "There is not" },
     {
-      label: "Otopark",
-      value: detail.car_park ? "Açık & Kapalı Otopark" : "Yok",
+      label: "Parking",
+      value: detail.car_park ? "Outdoor & Indoor Parking" : "There is not",
     },
-    { label: "Eşyalı", value: detail.furnished ? "Evet" : "Hayır" },
+    { label: "Furnished", value: detail.furnished ? "Yes" : "No" },
   ];
 
   const windowWidth = Dimensions.get("window").width;
@@ -107,7 +108,7 @@ export default function RealEstateDetailComponent({ detail }: Props) {
         return (
           <View style={{ marginTop: 8 }}>
             <Text style={{ fontSize: 14, lineHeight: 20 }}>
-              {detail.listing_desc ?? "Açıklama bulunamadı."}
+              {detail.listing_desc ?? "No explanation found."}
             </Text>
           </View>
         );
@@ -170,7 +171,7 @@ export default function RealEstateDetailComponent({ detail }: Props) {
               activeTab === "info" && styles.tabTextActive,
             ]}
           >
-            İlan Bilgileri
+            Listing Information
           </Text>
         </TouchableOpacity>
 
@@ -187,7 +188,7 @@ export default function RealEstateDetailComponent({ detail }: Props) {
               activeTab === "description" && styles.tabTextActive,
             ]}
           >
-            Açıklama
+            Description
           </Text>
         </TouchableOpacity>
 
@@ -204,7 +205,7 @@ export default function RealEstateDetailComponent({ detail }: Props) {
               activeTab === "location" && styles.tabTextActive,
             ]}
           >
-            Konum
+            Location
           </Text>
         </TouchableOpacity>
       </View>

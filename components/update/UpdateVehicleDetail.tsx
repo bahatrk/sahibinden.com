@@ -26,7 +26,7 @@ export default function UpdateVehicleDetail({ initialData, onSubmit }: Props) {
       
       <TextInput 
         style={styles.input} 
-        placeholder="Yıl" 
+        placeholder="Year" 
         placeholderTextColor={"gray"} 
         value={year} 
         keyboardType="number-pad" 
@@ -49,17 +49,17 @@ export default function UpdateVehicleDetail({ initialData, onSubmit }: Props) {
         }} 
       />
       
-      <TextInput style={styles.input} placeholder="Yakıt" value={fuel} onChangeText={setFuel} />
-      <TextInput style={styles.input} placeholder="Vites" value={transmission} onChangeText={setTransmission} />
-      <TextInput style={styles.input} placeholder="Kasa Tipi" value={bodyType} onChangeText={setBodyType} />
-      <TextInput style={styles.input} placeholder="Motor Hacmi" value={engineCC} onChangeText={setEngineCC} />
-      <TextInput style={styles.input} placeholder="Araç Durumu" value={instrumental} onChangeText={setInstrumental} />
-      <TextInput style={styles.input} placeholder="Renk" value={color} onChangeText={setColor} />
+      <TextInput style={styles.input} placeholder="Fuel" value={fuel} onChangeText={setFuel} />
+      <TextInput style={styles.input} placeholder="Transmission" value={transmission} onChangeText={setTransmission} />
+      <TextInput style={styles.input} placeholder="Body Type" value={bodyType} onChangeText={setBodyType} />
+      <TextInput style={styles.input} placeholder="Engine CC" value={engineCC} onChangeText={setEngineCC} />
+      <TextInput style={styles.input} placeholder="Vehicle Status" value={instrumental} onChangeText={setInstrumental} />
+      <TextInput style={styles.input} placeholder="Color" value={color} onChangeText={setColor} />
 
       {/* 3. Update Button */}
       <View style={{ marginTop: 20 }}>
         <Button
-            title="Değişiklikleri Kaydet"
+            title="Save Changes"
             color="#FFA500" // Orange to indicate 'Edit' action
             onPress={() =>
             onSubmit({

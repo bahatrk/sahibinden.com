@@ -57,16 +57,16 @@ export default function VehicleDetailComponent({ detail }: Props) {
   }
 
   const rows = [
-    { label: "Fiyat", value: `${detail.price} TL` },
-    { label: "İlan Tarihi", value: detail.creation_date },
-    { label: "Yıl", value: detail.year },
-    { label: "Yakıt Tipi", value: detail.fuel },
-    { label: "Vites", value: detail.transmission },
-    { label: "Araç Durumu", value: detail.instrumental },
+    { label: "Price", value: `${detail.price} TL` },
+    { label: "Listing Date", value: detail.creation_date },
+    { label: "Year", value: detail.year },
+    { label: "Fuel Type", value: detail.fuel },
+    { label: "Transmission", value: detail.transmission },
+    { label: "Vehicle Status", value: detail.instrumental },
     { label: "KM", value: detail.kilometer },
-    { label: "Kasa Tipi", value: detail.body_type },
-    { label: "Motor Hacmi", value: detail.engine_cc },
-    { label: "Renk", value: detail.color },
+    { label: "Body Type", value: detail.body_type },
+    { label: "Engine CC", value: detail.engine_cc },
+    { label: "Color", value: detail.color },
   ];
 
   const windowWidth = Dimensions.get("window").width;
@@ -102,7 +102,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
         return (
           <View style={{ marginTop: 8 }}>
             <Text style={{ fontSize: 14, lineHeight: 20 }}>
-              {detail.listing_desc ?? "Açıklama bulunamadı."}
+              {detail.listing_desc ?? "No explanation found."}
             </Text>
           </View>
         );
@@ -161,7 +161,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
               activeTab === "info" && styles.tabTextActive,
             ]}
           >
-            İlan Bilgileri
+            Listing Information
           </Text>
         </TouchableOpacity>
 
@@ -178,7 +178,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
               activeTab === "description" && styles.tabTextActive,
             ]}
           >
-            Açıklama
+            Description
           </Text>
         </TouchableOpacity>
 
@@ -195,7 +195,7 @@ export default function VehicleDetailComponent({ detail }: Props) {
               activeTab === "location" && styles.tabTextActive,
             ]}
           >
-            Konum
+            Location
           </Text>
         </TouchableOpacity>
       </View>

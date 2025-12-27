@@ -98,10 +98,10 @@ export default function ProfileScreen({ navigation }: Props) {
   };
 
   const handleDeleteListing = async (listingId: number) => {
-    Alert.alert("Sil", "Bu ilanı silmek istediğine emin misin?", [
-      { text: "İptal", style: "cancel" },
+    Alert.alert("Delete", "Are you sure you want to delete this ad?", [
+      { text: "Cancel", style: "cancel" },
       {
-        text: "Sil",
+        text: "Delete",
         style: "destructive",
         onPress: async () => {
           try {
@@ -109,10 +109,10 @@ export default function ProfileScreen({ navigation }: Props) {
             if (response.success) {
               setMyListings((prev) => prev.filter((l) => l.id !== listingId));
             } else {
-              Alert.alert("Hata", response.message);
+              Alert.alert("Mistake", response.message);
             }
           } catch (err) {
-            Alert.alert("Hata", "İlan silinirken bir hata oluştu.");
+            Alert.alert("Mistake", "An error occurred while deleting the listing.");
           }
         },
       },
@@ -125,7 +125,7 @@ export default function ProfileScreen({ navigation }: Props) {
       // Navigate to the SPECIFIC Update Screen
       navigation.navigate("UpdateListing", { listing: fullData });
     } catch (e) {
-      Alert.alert("Hata");
+      Alert.alert("Mistake");
     }
   }
 
@@ -167,7 +167,7 @@ export default function ProfileScreen({ navigation }: Props) {
             style={[styles.deleteButton, { backgroundColor: "#FFA500", marginBottom: 5 }]} // Orange for edit
             onPress={() => handleEditPress(item.id)}
           >
-            <Text style={{ color: "#fff" }}>Düzenle</Text>
+            <Text style={{ color: "#fff" }}>Edit</Text>
           </TouchableOpacity>
 
           {/* DELETE BUTTON */}
@@ -175,7 +175,7 @@ export default function ProfileScreen({ navigation }: Props) {
             style={styles.deleteButton}
             onPress={() => handleDeleteListing(item.id)}
           >
-            <Text style={{ color: "#fff" }}>Sil</Text>
+            <Text style={{ color: "#fff" }}>Delete</Text>
           </TouchableOpacity>
         </View>
       )}
@@ -207,7 +207,7 @@ export default function ProfileScreen({ navigation }: Props) {
           conversationId: item.id,
           listing: {
             id: item.listing_id,
-            title: item.listing_title || "İlan",
+            title: item.listing_title || "Ad",
             user_id: item.seller_id,
           } as ListingWithData,
         })
@@ -215,7 +215,7 @@ export default function ProfileScreen({ navigation }: Props) {
     >
       <View style={{ flex: 1 }}>
         <Text style={styles.listingTitle}>{item.listing_title}</Text>
-        <Text numberOfLines={1}>{item.last_message || "Mesaj yok"}</Text>
+        <Text numberOfLines={1}>{item.last_message || "No message"}</Text>
       </View>
       <Text style={{ color: "gray", fontSize: 12 }}>
         {item.last_message_time
@@ -230,12 +230,12 @@ export default function ProfileScreen({ navigation }: Props) {
     if (data.length === 0)
       return (
         <View>
-          <Text>Henüz ilan yok.</Text>
+          <Text>No announcement yet.</Text>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => setSection("menu")}
           >
-            <Text style={{ color: "#fff" }}>Geri</Text>
+            <Text style={{ color: "#fff" }}>Back</Text>
           </TouchableOpacity>
         </View>
       );
@@ -251,7 +251,7 @@ export default function ProfileScreen({ navigation }: Props) {
             style={styles.backButton}
             onPress={() => setSection("menu")}
           >
-            <Text style={{ color: "#fff" }}>Geri</Text>
+            <Text style={{ color: "#fff" }}>Back</Text>
           </TouchableOpacity>
         }
       />
@@ -263,12 +263,12 @@ export default function ProfileScreen({ navigation }: Props) {
     if (conversations.length === 0)
       return (
         <View>
-          <Text>Henüz mesaj yok.</Text>
+          <Text>No messages yet.</Text>
           <TouchableOpacity
             style={styles.backButton}
             onPress={() => setSection("menu")}
           >
-            <Text style={{ color: "#fff" }}>Geri</Text>
+            <Text style={{ color: "#fff" }}>Back</Text>
           </TouchableOpacity>
         </View>
       );
@@ -284,7 +284,7 @@ export default function ProfileScreen({ navigation }: Props) {
             style={styles.backButton}
             onPress={() => setSection("menu")}
           >
-            <Text style={{ color: "#fff" }}>Geri</Text>
+            <Text style={{ color: "#fff" }}>Back</Text>
           </TouchableOpacity>
         }
       />
@@ -294,7 +294,7 @@ export default function ProfileScreen({ navigation }: Props) {
   return (
     <ProtectedRoute navigation={navigation}>
       <View style={{ flex: 1, padding: 12 }}>
-        <Text style={styles.header}>Hoşgeldin, {user?.name}!</Text>
+        <Text style={styles.header}>Welcome, {user?.name}!</Text>
 
         {section === "menu" && (
           <View style={{ marginTop: 20 }}>
@@ -302,32 +302,32 @@ export default function ProfileScreen({ navigation }: Props) {
               style={styles.menuButton}
               onPress={() => setSection("info")}
             >
-              <Text style={styles.menuText}>Kullanıcı Bilgilerim</Text>
+              <Text style={styles.menuText}>My User Information</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => setSection("listings")}
             >
-              <Text style={styles.menuText}>İlanlarım</Text>
+              <Text style={styles.menuText}>My Listings</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => setSection("favorites")}
             >
-              <Text style={styles.menuText}>Favorilerim</Text>
+              <Text style={styles.menuText}>My Favorites</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={styles.menuButton}
               onPress={() => setSection("messages")}
             >
-              <Text style={styles.menuText}>Mesajlarım</Text>
+              <Text style={styles.menuText}>My Messages</Text>
             </TouchableOpacity>
 
             <TouchableOpacity style={styles.menuButton} onPress={handleLogout}>
-              <Text style={styles.menuText}>Çıkış Yap</Text>
+              <Text style={styles.menuText}>Log Out</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -344,7 +344,7 @@ export default function ProfileScreen({ navigation }: Props) {
               style={styles.backButton}
               onPress={() => setSection("menu")}
             >
-              <Text style={{ color: "#fff" }}>Geri</Text>
+              <Text style={{ color: "#fff" }}>Back</Text>
             </TouchableOpacity>
           </View>
         )}

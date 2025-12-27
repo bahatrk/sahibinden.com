@@ -95,7 +95,7 @@ export default function ChatScreen() {
         <View style={[styles.inputBar, { paddingBottom: 8 }]}>
           <TextInput
             style={styles.input}
-            placeholder="Mesaj yaz..."
+            placeholder="Write a message..."
             placeholderTextColor={"gray"}
             value={text}
             onChangeText={setText}

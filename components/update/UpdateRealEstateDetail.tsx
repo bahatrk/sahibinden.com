@@ -31,7 +31,7 @@ export default function UpdateRealEstateDetail({ initialData, onSubmit }: Props)
       
       <TextInput 
         style={styles.input} 
-        placeholder="Oda Sayısı" 
+        placeholder="Number of Rooms" 
         placeholderTextColor={"gray"} 
         value={roomNumber} 
         onChangeText={setRoomNumber} 
@@ -40,7 +40,7 @@ export default function UpdateRealEstateDetail({ initialData, onSubmit }: Props)
       
       <TextInput 
         style={styles.input} 
-        placeholder="Banyo Sayısı" 
+        placeholder="Number of Bathrooms" 
         placeholderTextColor={"gray"} 
         value={bathroomNumber} 
         onChangeText={setBathroomNumber} 
@@ -49,7 +49,7 @@ export default function UpdateRealEstateDetail({ initialData, onSubmit }: Props)
       
       <TextInput 
         style={styles.input} 
-        placeholder="Metrekare" 
+        placeholder="Square meters" 
         placeholderTextColor={"gray"} 
         value={squareMeter} 
         onChangeText={setSquareMeter} 
@@ -58,7 +58,7 @@ export default function UpdateRealEstateDetail({ initialData, onSubmit }: Props)
       
       <TextInput 
         style={styles.input} 
-        placeholder="Kat" 
+        placeholder="Floor" 
         placeholderTextColor={"gray"} 
         value={floor} 
         onChangeText={setFloor} 
@@ -67,7 +67,7 @@ export default function UpdateRealEstateDetail({ initialData, onSubmit }: Props)
       
       <TextInput 
         style={styles.input} 
-        placeholder="Bina Yaşı" 
+        placeholder="Building Age" 
         placeholderTextColor={"gray"} 
         value={buildingAge} 
         onChangeText={setBuildingAge} 
@@ -75,40 +75,40 @@ export default function UpdateRealEstateDetail({ initialData, onSubmit }: Props)
       />
 
       <View style={styles.row}>
-        <Text>Eşyalı:</Text>
+        <Text>Furnished:</Text>
         <Switch value={furnished} onValueChange={setFurnished} />
       </View>
 
       <TextInput 
         style={styles.input} 
-        placeholder="Isıtma" 
+        placeholder="Heating" 
         placeholderTextColor={"gray"} 
         value={heat} 
         onChangeText={setHeat} 
       />
       
       <View style={styles.row}>
-        <Text>Asansör:</Text>
+        <Text>Lift:</Text>
         <Switch value={lift} onValueChange={setLift} />
       </View>
       
       <TextInput 
         style={styles.input} 
-        placeholder="Mutfak Tipi" 
+        placeholder="Kitchen" 
         placeholderTextColor={"gray"} 
         value={kitchen} 
         onChangeText={setKitchen} 
       />
       
       <View style={styles.row}>
-        <Text>Otopark:</Text>
+        <Text>Parking:</Text>
         <Switch value={carPark} onValueChange={setCarPark} />
       </View>
 
       {/* 3. Update Button */}
       <View style={{ marginTop: 20 }}>
         <Button
-          title="Değişiklikleri Kaydet"
+          title="Save Changes"
           color="#FFA500" // Orange to indicate Update
           onPress={() =>
             onSubmit({

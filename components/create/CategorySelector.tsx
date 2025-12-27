@@ -58,7 +58,7 @@ export default function CategorySelector({ onCategorySelected }: Props) {
     <View style={{ flex: 1 }}>
       {parentStack.length > 1 && (
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <Text style={{ color: "blue" }}>← Geri Dön</Text>
+          <Text style={{ color: "blue" }}>← Go back</Text>
         </TouchableOpacity>
       )}
       
@@ -71,7 +71,7 @@ export default function CategorySelector({ onCategorySelected }: Props) {
             <Text style={{color: 'gray'}}>›</Text>
           </TouchableOpacity>
         )}
-        ListHeaderComponent={<Text style={styles.header}>Kategori Seçin</Text>}
+        ListHeaderComponent={<Text style={styles.header}>Select Category</Text>}
         contentContainerStyle={{ padding: 12 }}
       />
     </View>

@@ -12,11 +12,11 @@ type Props = {
 export default function UserInfoCard({ name, surname, email, phone, onPress }: Props) {
   return (
     <TouchableOpacity style={styles.card} onPress={onPress}>
-      <Text style={styles.sectionTitle}>Kullanıcı Bilgileri</Text>
-      <Text>Ad: {name}</Text>
-      <Text>Soyad: {surname}</Text>
+      <Text style={styles.sectionTitle}>User Information</Text>
+      <Text>Name: {name}</Text>
+      <Text>Surname: {surname}</Text>
       <Text>Email: {email}</Text>
-      <Text>Telefon: {phone || "-"}</Text>
+      <Text>Phone: {phone || "-"}</Text>
     </TouchableOpacity>
   );
 }

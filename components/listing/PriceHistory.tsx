@@ -28,7 +28,7 @@ export default function PriceHistory({ listingId }: Props) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Fiyat Geçmişi</Text>
+      <Text style={styles.title}>Price History</Text>
       
       {history.map((item, index) => {
         const isDrop = item.new_price < item.old_price;

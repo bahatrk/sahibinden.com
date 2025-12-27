@@ -193,7 +193,7 @@ export default function UniversalMap({
           {/* Label at bottom */}
           <View style={styles.overlayLabel}>
             <Text style={styles.labelText}>
-              {mode === "edit" ? "Konumu belirlemek için haritayı kaydırın" : viewTitle || "İlan Konumu"}
+              {mode === "edit" ? "Scroll the map to determine your location." : viewTitle || "Listing Location"}
             </Text>
           </View>
         </View>

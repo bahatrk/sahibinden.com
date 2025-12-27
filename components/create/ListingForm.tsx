@@ -76,8 +76,8 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
   };
 
   const handleSubmit = async (detailData: any) => {
-    if (!title || !price) return Alert.alert("Hata", "Başlık ve Fiyat zorunludur.");
-    if (!mapLocation) return Alert.alert("Hata", "Konum seçmelisiniz.");
+    if (!title || !price) return Alert.alert("Mistake", "Title and Price are mandatory.");
+    if (!mapLocation) return Alert.alert("Mistake", "You must choose a location.");
     if (!user) return;
     try {
       const selectedFeatureIds = featureGroups.flatMap((g) =>
@@ -109,10 +109,10 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
       // Resim Yükleme
       await uploadListingImages(result.id, images);
 
-      Alert.alert("Başarılı", "İlan oluşturuldu.");
+      Alert.alert("Success", "Listing created.");
       navigation.navigate("Home");
     } catch (error: any) {
-      Alert.alert("Hata", error.response?.data?.detail || "Bir hata oluştu");
+      Alert.alert("Mistake", error.response?.data?.detail || "An error occurred");
     } finally {
     }
   };
@@ -124,14 +124,14 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
         <Text style={styles.header}>İlan Detayları: {category.name}</Text>
-        <Button title="Değiştir" onPress={onCancel} color="red" />
+        <Button title="Change" onPress={onCancel} color="red" />
       </View>
 
-      <TextInput style={styles.input} placeholder="Başlık" value={title} onChangeText={setTitle} />
-      <TextInput style={styles.input} placeholder="Fiyat" keyboardType="numeric" value={price} onChangeText={setPrice} />
-      <TextInput style={[styles.input, { minHeight: 80 }]} placeholder="Açıklama" multiline value={desc} onChangeText={setDesc} />
+      <TextInput style={styles.input} placeholder="Title" value={title} onChangeText={setTitle} />
+      <TextInput style={styles.input} placeholder="Price" keyboardType="numeric" value={price} onChangeText={setPrice} />
+      <TextInput style={[styles.input, { minHeight: 80 }]} placeholder="Description" multiline value={desc} onChangeText={setDesc} />
 
-      <Button title="Resim Ekle" onPress={pickImages} />
+      <Button title="Add Image" onPress={pickImages} />
       <ScrollView horizontal style={{ marginVertical: 10 }}>
         {images.map((uri, i) => (
           <Image key={i} source={{ uri }} style={{ width: 80, height: 80, marginRight: 5, borderRadius: 5 }} />

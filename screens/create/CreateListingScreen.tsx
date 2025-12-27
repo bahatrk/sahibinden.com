@@ -22,8 +22,8 @@ export default function CreateListingScreen({ navigation }: Props) {
   if (!user) {
     return (
       <View style={styles.center}>
-        <Text>Lütfen giriş yapın.</Text>
-        <Button title="Giriş Yap" onPress={() => navigation.navigate("Home")} />
+        <Text>Please log in.</Text>
+        <Button title="Log in" onPress={() => navigation.navigate("Home")} />
       </View>
     );
   }

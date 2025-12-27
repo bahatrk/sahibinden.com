@@ -63,7 +63,7 @@ export default function ListingDetailScreen() {
   }
 
   if (loading) return <ActivityIndicator style={{marginTop: 50}} size="large" color="#2E5894" />;
-  if (!realEstateDetail && !vehicleDetail) return <Text style={{padding: 20}}>Detay bulunamadı</Text>;
+  if (!realEstateDetail && !vehicleDetail) return <Text style={{padding: 20}}>No details found</Text>;
 
   return (
     <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>

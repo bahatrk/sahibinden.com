@@ -154,7 +154,7 @@ export default function LocationPicker({ onSelect, initialValues }: Props) {
       
       {/* --- CITY --- */}
       <View style={{ zIndex: 3000 }}>
-        <Text style={{ marginBottom: 5, fontWeight: '600' }}>Şehir</Text>
+        <Text style={{ marginBottom: 5, fontWeight: '600' }}>City</Text>
         <DropDownPicker
           open={cityOpen}
           value={selectedCity}
@@ -162,19 +162,19 @@ export default function LocationPicker({ onSelect, initialValues }: Props) {
           setOpen={setCityOpen}
           setValue={setSelectedCity}
           onOpen={onOpenCity}
-          placeholder="Şehir seçiniz"
+          placeholder="Select city"
           searchable={true}
-          searchPlaceholder="Şehir ara..."
+          searchPlaceholder="Search city..."
           zIndex={3000}
           zIndexInverse={1000}
           listMode="MODAL"
-          modalTitle="Şehir Seçin"
+          modalTitle="Select City"
         />
       </View>
 
       {/* --- DISTRICT --- */}
       <View style={{ marginTop: 15, zIndex: 2000 }}>
-        <Text style={{ marginBottom: 5, fontWeight: '600' }}>İlçe</Text>
+        <Text style={{ marginBottom: 5, fontWeight: '600' }}>District</Text>
         <DropDownPicker
           open={districtOpen}
           value={selectedDistrict}
@@ -182,21 +182,21 @@ export default function LocationPicker({ onSelect, initialValues }: Props) {
           setOpen={setDistrictOpen}
           setValue={setSelectedDistrict}
           onOpen={onOpenDistrict}
-          placeholder={selectedCity ? "İlçe seçiniz" : "Önce şehir seçiniz"}
+          placeholder={selectedCity ? "Select district" : "Select city first"}
           disabled={!selectedCity}
           searchable={true}
-          searchPlaceholder="İlçe ara..."
+          searchPlaceholder="Search district..."
           style={{ opacity: !selectedCity ? 0.5 : 1 }}
           zIndex={2000}
           zIndexInverse={2000}
           listMode="MODAL"
-          modalTitle="İlçe Seçin"
+          modalTitle="Select District"
         />
       </View>
 
       {/* --- NEIGHBOURHOOD --- */}
       <View style={{ marginTop: 15, zIndex: 1000 }}>
-        <Text style={{ marginBottom: 5, fontWeight: '600' }}>Mahalle</Text>
+        <Text style={{ marginBottom: 5, fontWeight: '600' }}>Neighbourhood</Text>
         <DropDownPicker
           open={neighbourhoodOpen}
           value={selectedNeighbourhood}
@@ -204,15 +204,15 @@ export default function LocationPicker({ onSelect, initialValues }: Props) {
           setOpen={setNeighbourhoodOpen}
           setValue={setSelectedNeighbourhood}
           onOpen={onOpenNeighbourhood}
-          placeholder={selectedDistrict ? "Mahalle seçiniz" : "Önce ilçe seçiniz"}
+          placeholder={selectedDistrict ? "Select neighborhood" : "First select the district"}
           disabled={!selectedDistrict}
           searchable={true}
-          searchPlaceholder="Mahalle ara..."
+          searchPlaceholder="Search the neighborhood..."
           style={{ opacity: !selectedDistrict ? 0.5 : 1 }}
           zIndex={1000}
           zIndexInverse={3000}
           listMode="MODAL"
-          modalTitle="Mahalle Seçin"
+          modalTitle="Select Neighborhood"
         />
       </View>
     </View>

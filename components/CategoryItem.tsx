@@ -40,7 +40,7 @@ export default function CategoryItem({ category, onPress, onLongPress }: Props) 
         {!isActive && (
             <View style={styles.badgeContainer}>
                 <Feather name="eye-off" size={12} color="white" />
-                <Text style={styles.badgeText}>PASİF</Text>
+                <Text style={styles.badgeText}>PASSIVE</Text>
             </View>
         )}
       </View>

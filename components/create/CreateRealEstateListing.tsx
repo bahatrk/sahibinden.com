@@ -19,30 +19,30 @@ export default function CreateRealEstateListing({ onSubmit }: Props) {
 
   return (
     <View>
-      <TextInput style={styles.input} placeholder="Oda Sayısı" placeholderTextColor={"gray"} value={roomNumber} onChangeText={setRoomNumber} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Banyo Sayısı" placeholderTextColor={"gray"} value={bathroomNumber} onChangeText={setBathroomNumber} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Metrekare" placeholderTextColor={"gray"} value={squareMeter} onChangeText={setSquareMeter} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Kat" placeholderTextColor={"gray"} value={floor} onChangeText={setFloor} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Bina Yaşı" placeholderTextColor={"gray"} value={buildingAge} onChangeText={setBuildingAge} keyboardType="numeric" />
+      <TextInput style={styles.input} placeholder="Number of Rooms" placeholderTextColor={"gray"} value={roomNumber} onChangeText={setRoomNumber} keyboardType="numeric" />
+      <TextInput style={styles.input} placeholder="Number of Bathrooms" placeholderTextColor={"gray"} value={bathroomNumber} onChangeText={setBathroomNumber} keyboardType="numeric" />
+      <TextInput style={styles.input} placeholder="Square meters" placeholderTextColor={"gray"} value={squareMeter} onChangeText={setSquareMeter} keyboardType="numeric" />
+      <TextInput style={styles.input} placeholder="Floor" placeholderTextColor={"gray"} value={floor} onChangeText={setFloor} keyboardType="numeric" />
+      <TextInput style={styles.input} placeholder="Building Age" placeholderTextColor={"gray"} value={buildingAge} onChangeText={setBuildingAge} keyboardType="numeric" />
 
       <View style={styles.row}>
-        <Text>Eşyalı:</Text>
+        <Text>Furnished:</Text>
         <Switch value={furnished} onValueChange={setFurnished} />
       </View>
 
-      <TextInput style={styles.input} placeholder="Isıtma" placeholderTextColor={"gray"} value={heat} onChangeText={setHeat} />
+      <TextInput style={styles.input} placeholder="Heating" placeholderTextColor={"gray"} value={heat} onChangeText={setHeat} />
       <View style={styles.row}>
-        <Text>Asansör:</Text>
+        <Text>Lift:</Text>
         <Switch value={lift} onValueChange={setLift} />
       </View>
-      <TextInput style={styles.input} placeholder="Mutfak Tipi" placeholderTextColor={"gray"} value={kitchen} onChangeText={setKitchen} />
+      <TextInput style={styles.input} placeholder="Kitchen Type" placeholderTextColor={"gray"} value={kitchen} onChangeText={setKitchen} />
       <View style={styles.row}>
-        <Text>Otopark:</Text>
+        <Text>Parking:</Text>
         <Switch value={carPark} onValueChange={setCarPark} />
       </View>
 
       <Button
-        title="İlanı Oluştur"
+        title="Create Listing"
         onPress={() =>
           onSubmit({
             room_number:roomNumber,
