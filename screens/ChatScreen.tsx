@@ -13,11 +13,10 @@ import { RouteProp, useRoute } from "@react-navigation/native";
 import { RootStackParamList } from "../navigation/types";
 import { AuthContext } from "../navigation/authContext";
 import {
-  getMessages,
-  sendMessage,
   MessageEntity,
 } from "../lib/database/message";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getMessagesApi, sendMessageApi } from "../lib/api/message";
 
 type ChatRouteProp = RouteProp<RootStackParamList, "Chat">;
 
@@ -28,12 +27,10 @@ export default function ChatScreen() {
 
   const [messages, setMessages] = useState<MessageEntity[]>([]);
   const [text, setText] = useState("");
-  const [loading, setLoading] = useState(true);
 
   async function loadMessages() {
-    const data = await getMessages(conversationId);
+    const data = await getMessagesApi(conversationId);
     setMessages(data);
-    setLoading(false);
   }
 
   async function handleSend() {
@@ -47,8 +44,8 @@ export default function ChatScreen() {
       return;
     }
 
-    await sendMessage(conversationId, user.id, messageText);
-    const updateMessages = await getMessages(conversationId);
+    await sendMessageApi(conversationId, user.id, messageText);
+    const updateMessages = await getMessagesApi(conversationId);
     setMessages(updateMessages);
   }
 
@@ -98,7 +95,7 @@ export default function ChatScreen() {
         <View style={[styles.inputBar, { paddingBottom: 8 }]}>
           <TextInput
             style={styles.input}
-            placeholder="Mesaj yaz..."
+            placeholder="Write a message..."
             placeholderTextColor={"gray"}
             value={text}
             onChangeText={setText}

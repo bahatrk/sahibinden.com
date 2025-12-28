@@ -9,7 +9,7 @@ type Props = {
 export default function CallButton({ phone, size = 16 }: Props) {
   const handlePress = () => {
     if (!phone) {
-      Alert.alert("Telefon numarası bulunamadı");
+      Alert.alert("Phone number not found");
       return;
     }
     Linking.openURL(`tel:${phone}`);
@@ -17,7 +17,7 @@ export default function CallButton({ phone, size = 16 }: Props) {
 
   return (
     <TouchableOpacity style={styles.button} onPress={handlePress}>
-      <Text style={[styles.buttonText, { fontSize: size }]}>📞 Ara</Text>
+      <Text style={[styles.buttonText, { fontSize: size }]}>📞 Call</Text>
     </TouchableOpacity>
   );
 }

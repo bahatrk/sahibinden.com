@@ -1,32 +1,49 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TouchableOpacity } from "react-native";
+import React, { useEffect, useState, useContext } from "react";
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert } from "react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { RootStackParamList } from "../navigation/types";
 import SearchBar from "../components/SearchBar";
 import CategoryItem from "../components/CategoryItem";
 import { CategoryEntity } from "../lib/database/category";
-
 import { AuthContext } from "../navigation/authContext";
-import { useContext } from "react";
-import { fetchRootCategories } from "../lib/api/category";
+import { deleteCategory, fetchRootCategories, restoreCategory } from "../lib/api/category";
+import Feather from "@expo/vector-icons/Feather"; // <--- For icons
+import AddCategoryModal from "../components/admin/AddCategoryModal";
 
 type HomeScreenNavigationProp = StackNavigationProp<RootStackParamList, "Home">;
-
-type Props = {
-  navigation: HomeScreenNavigationProp;
-};
+type Props = { navigation: HomeScreenNavigationProp; };
 
 export default function HomeScreen({ navigation }: Props) {
   const [search, setSearch] = useState("");
   const [categories, setCategories] = useState<CategoryEntity[]>([]);
   const { user } = useContext(AuthContext);
+  
+  // Modal State
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const isAdmin = user?.role === "admin";
+
+  function handleSearch() {
+    if (search.trim().length >= 2) {
+      // Navigate to SearchResults screen passing the query
+      navigation.navigate("SearchResults", { query: search });
+      setSearch(""); // Optional: Clear search bar after searching
+    } else {
+        Alert.alert("Warning", "Please enter at least 2 characters.");
+    }
+  }
 
   useEffect(() => {
     loadRootCategories();
   }, []);
 
+  useEffect(() => {
+    loadRootCategories();
+  }, [user]); // <--- Reload if user changes (login/logout)
+
   async function loadRootCategories() {
-    const data = await fetchRootCategories();
+    // 3. Pass the flag
+    const data = await fetchRootCategories(isAdmin);
     setCategories(data);
   }
 
@@ -34,57 +51,122 @@ export default function HomeScreen({ navigation }: Props) {
     navigation.navigate("Category", cat);
   }
 
+  function handleLongPress(cat: CategoryEntity) {
+  // 1. Security Check
+  if (user?.role !== "admin") return;
+
+  const isActive = cat.is_active !== false;
+
+  // 2. Define Messages based on Status
+  const title = isActive ? "Delete Category (Inactive)" : "Restore Category (Active)";
+  const message = isActive 
+      ? `Are you sure you want to deactivate the "${cat.name}" category? Users will no longer be able to see it.` 
+      : `Are you sure you want to reactivate the "${cat.name}" category?`;
+
+  const actionText = isActive ? "Delete (Passive)" : "Restore";
+  const actionStyle = isActive ? "destructive" : "default";
+
+  // 3. Show Alert
+  Alert.alert(
+    title,
+    message,
+    [
+      { text: "Cancel", style: "cancel" },
+      { 
+        text: actionText, 
+        style: actionStyle, 
+        onPress: async () => {
+           // 4. Toggle Logic
+           let res;
+           if (isActive) {
+               res = await deleteCategory(cat.id);
+           } else {
+               res = await restoreCategory(cat.id);
+           }
+
+           if (res.success) {
+             // 5. Refresh List
+             // Make sure this function fetches BOTH active and passive for admins
+             loadRootCategories(); 
+           } else {
+             Alert.alert("Mistake", res.message || "The operation failed.");
+           }
+        } 
+      }
+    ]
+  );
+}
+
   return (
     <View style={styles.container}>
-      <SearchBar
-        value={search}
-        onChangeText={setSearch}
-        placeholder="Araba, ev ara..."
+      <SearchBar 
+         value={search} 
+         onChangeText={setSearch} 
+         onSearch={handleSearch} // <--- Pass the function here
+         placeholder="Car, house search..." 
       />
 
       <FlatList
         data={categories}
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
-          <CategoryItem category={item} onPress={handleCategoryPress} />
+          <CategoryItem 
+          category={item} 
+          onPress={handleCategoryPress}
+          onLongPress={handleLongPress} />
         )}
       />
 
-      {/* İlan Ver Button */}
+      {/* --- ADMIN ADD BUTTON (Left Side) --- */}
+      {user?.role === "admin" && (
+        <TouchableOpacity
+          style={styles.adminAddButton}
+          onPress={() => setModalVisible(true)}
+        >
+          <Feather name="plus" size={30} color="white" />
+        </TouchableOpacity>
+      )}
+
+      {/* --- EXISTING: ILAN VER BUTTON (Right Side) --- */}
       <TouchableOpacity
         style={styles.handleIlanVerButton}
         onPress={() => {
-          if (!user) {
-            navigation.navigate("Login");
-          } else {
-            navigation.navigate("CreateListing"); // sonra ilan ekleme ekranı gelecek
-          }
+          if (!user) navigation.navigate("Login");
+          else navigation.navigate("CreateListing");
         }}
       >
-        <Text style={styles.handleIlanVerText}>+</Text>
+         <Text style={styles.handleIlanVerText}>+</Text>
       </TouchableOpacity>
+
+      {/* --- MODAL --- */}
+      <AddCategoryModal 
+        visible={isModalVisible}
+        parentId={null} // Root category has no parent
+        onClose={() => setModalVisible(false)}
+        onSuccess={loadRootCategories} // Reload list after adding
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: "#fff" },
-
+  
+  // Existing Button (Right)
   handleIlanVerButton: {
-    position: "absolute",
-    bottom: 70,
-    right: 20,
-    width: 55,
-    height: 55,
-    borderRadius: 50,
-    backgroundColor: "#2E5894",
-    justifyContent: "center",
-    alignItems: "center",
+    position: "absolute", bottom: 40, right: 20,
+    width: 60, height: 60, borderRadius: 30,
+    backgroundColor: "#2E5894", justifyContent: "center", alignItems: "center",
+    elevation: 5
   },
+  handleIlanVerText: { fontSize: 30, color: "white" },
 
-  handleIlanVerText: {
-    fontSize: 30,
-    color: "white",
-  },
+  // New Admin Button (Left)
+  adminAddButton: {
+    position: "absolute", bottom: 40, left: 20,
+    width: 60, height: 60, borderRadius: 30,
+    backgroundColor: "#E63946", // Different color for Admin
+    justifyContent: "center", alignItems: "center",
+    elevation: 5
+  }
 });
- 

@@ -1,3 +1,4 @@
+import { LocationOut } from "../api/location";
 import { openDb } from "./db";
 
 export type VehicleDetailEntity = {
@@ -48,6 +49,7 @@ export type VehicleWithImagesOut = {
     alt?: string | null;
     ui_order: number;
   }[];
+  location:LocationOut
 };
 
 

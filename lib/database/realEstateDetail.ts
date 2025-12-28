@@ -1,4 +1,5 @@
 // lib/database/realEstateDetail.ts
+import { LocationOut } from "../api/location";
 import { openDb } from "./db";
 
 export type RealEstateDetailEntity = {
@@ -37,6 +38,7 @@ export type RealEstateWithImagesOut = {
   creation_date: string;
   listing_desc?: string | null;
   images: { id: number; url: string; alt?: string | null; ui_order: number }[];
+  location:LocationOut
 };
 
 

@@ -8,6 +8,7 @@ export type CategoryEntity = {
   desc: string | null;
   logo_id: number | null;      // yeni
   logo_url?: string | null;    // yeni, join ile logosu gelecek
+  is_active:boolean
 };
 
 export async function getChildCategories(parentId: number | null): Promise<CategoryEntity[]> {

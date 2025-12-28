@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ListingWithData } from "../lib/database/listing";
 import { AuthContext } from "../navigation/authContext";
 import { getOrCreateConversation } from "../lib/database/conversation";
+import { getOrCreateConversationApi } from "../lib/api/conversation";
 
 type Props = {
   listing: ListingWithData;
@@ -24,17 +25,17 @@ export default function MessageActionBar({ listing }: Props) {
 
   async function handlePress() {
     if (!user) {
-      Alert.alert("Giriş gerekli", "Mesaj göndermek için giriş yapmalısın");
+      Alert.alert("Login required", "You must log in to send a message.");
       return;
     }
 
     if (user.id === listing.user_id) {
-      Alert.alert("Uyarı", "Kendi ilanına mesaj atamazsın");
+      Alert.alert("Warning", "You can't post a message to your own ad.");
       return;
     }
 
     try {
-      const conversation = await getOrCreateConversation(
+      const conversation = await getOrCreateConversationApi(
         listing.id,
         user.id, // buyer
         listing.user_id // seller
@@ -45,13 +46,13 @@ export default function MessageActionBar({ listing }: Props) {
         listing,
       });
     } catch (err) {
-      Alert.alert("Hata", "Mesaj başlatılamadı");
+      Alert.alert("Mistake", "Failed to initialize message");
     }
   }
 
   return (
       <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Text style={styles.buttonText}>💬 Satıcıya Mesaj Gönder</Text>
+        <Text style={styles.buttonText}>💬 Send Message to Seller</Text>
       </TouchableOpacity>
   );
 }

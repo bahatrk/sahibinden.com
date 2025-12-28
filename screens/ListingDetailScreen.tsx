@@ -3,117 +3,103 @@ import {
   View,
   Text,
   ScrollView,
-  ActivityIndicator,
   StyleSheet,
+  ActivityIndicator
 } from "react-native";
 import { useRoute, RouteProp } from "@react-navigation/native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+// Components
 import RealEstateDetailComponent from "../components/RealEstateDetailComponent";
 import VehicleDetailComponent from "../components/VehicleDetailComponent";
-import {
-  RealEstateDetailEntity,
-  RealEstateWithImagesOut,
-  getRealEstateDetail,
-} from "../lib/database/realEstateDetail";
-import {
-  VehicleDetailEntity,
-  VehicleWithImagesOut,
-  getVehicleDetail,
-} from "../lib/database/vehicleDetail";
-import { ListingWithData } from "../lib/database/listing";
-import { RootStackParamList } from "../navigation/types";
 import FavoriteButton from "../components/FavoriteButton";
-import { AuthContext } from "../navigation/authContext";
 import MessageActionBar from "../components/MessageActionBar";
 import CallButton from "../components/CallButton";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { fetchRealEstate } from "../lib/api/realEstate";
-import { fetchVehicle } from "../lib/api/vehicle";
+import PriceHistory from "../components/listing/PriceHistory"; // <--- 1. Import New Component
+
+// Data / API
+import {
+  RealEstateWithImagesOut,
+  fetchRealEstate,
+} from "../lib/api/realEstate";
+import {
+  VehicleWithImagesOut,
+  fetchVehicle,
+} from "../lib/api/vehicle";
+import { ListingWithData } from "../lib/database/listing";
+import { RootStackParamList } from "../navigation/types";
+import { AuthContext } from "../navigation/authContext";
 
 type ListingDetailRouteProp = RouteProp<RootStackParamList, "ListingDetail">;
 
 export default function ListingDetailScreen() {
   const route = useRoute<ListingDetailRouteProp>();
   const listing: ListingWithData = route.params.listing;
-  const { user } = useContext(AuthContext); // login kullanıcı
+  const { user } = useContext(AuthContext); 
+  const insets = useSafeAreaInsets();
 
-  const insets = useSafeAreaInsets(); //tab ı aşmasın dıye 
-
-  const [realEstateDetail, setRealEstateDetail] =
-    useState<RealEstateWithImagesOut | null>(null);
-  const [vehicleDetail, setVehicleDetail] =
-    useState<VehicleWithImagesOut  | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [realEstateDetail, setRealEstateDetail] = useState<RealEstateWithImagesOut | null>(null);
+  const [vehicleDetail, setVehicleDetail] = useState<VehicleWithImagesOut | null>(null);
+  const [loading, setLoading] = useState(true); // Added loading state
 
   useEffect(() => {
     loadDetail();
   }, []);
 
-  // screens/ListingDetailScreen.tsx (sadece loadDetail fonksiyonunu değiştir)
   async function loadDetail() {
     try {
-      console.log("loadDetail - listing:", listing);
       if (listing.category_type_id === 1) {
         const data = await fetchRealEstate(listing.id);
-        console.log("loadDetail - RealEstateDetail API result:", data);
         setRealEstateDetail(data);
       } else if (listing.category_type_id === 2) {
         const data = await fetchVehicle(listing.id);
-        console.log("loadDetail - VehicleDetail API result:", data);
         setVehicleDetail(data);
-      } else {
-        console.warn(
-          "loadDetail - unknown category_type_id:",
-          listing.category_type_id
-        );
       }
     } catch (err) {
       console.error("loadDetail - error:", err);
     } finally {
-      // loading her durumda kapat
       setLoading(false);
     }
   }
 
-  if (loading) return <ActivityIndicator size="large" color="#104E8B" />;
-
-  if (!realEstateDetail && !vehicleDetail) return <Text>Detay bulunamadı</Text>;
+  if (loading) return <ActivityIndicator style={{marginTop: 50}} size="large" color="#2E5894" />;
+  if (!realEstateDetail && !vehicleDetail) return <Text style={{padding: 20}}>No details found</Text>;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: "#f9f9f9" }}>
       <ScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ padding: 12, paddingBottom: 90 }}
+        contentContainerStyle={{ padding: 12, paddingBottom: 100 }} // Increased bottom padding for action bar
       >
         {/* ===== Title + Favorite ===== */}
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: 12,
-          }}
-        >
-          <Text style={{ fontSize: 20, fontWeight: "700", flex: 1 }}>
-            {listing.title}
-          </Text>
-
+        <View style={styles.headerRow}>
+          <Text style={styles.titleText}>{listing.title}</Text>
           {user && <FavoriteButton listingId={listing.id} userId={user.id} />}
         </View>
 
+        {/* ===== Specific Details (Images, Attributes, Description) ===== */}
         {realEstateDetail && (
           <RealEstateDetailComponent detail={realEstateDetail} />
         )}
 
-        {vehicleDetail && <VehicleDetailComponent detail={vehicleDetail} />}
+        {vehicleDetail && (
+            <VehicleDetailComponent detail={vehicleDetail} />
+        )}
+        
+        {/* ===== PRICE HISTORY SECTION ===== */}
+        {/* 2. Added Here: Shows only if there is history */}
+        <View style={{ marginTop: 20 }}>
+            <PriceHistory listingId={listing.id} />
+        </View>
+
       </ScrollView>
 
-      {/* Mesaj ve Ara butonları, ilan sahibi göremez buunları */}
+      {/* ===== Action Buttons (Only for non-owners) ===== */}
       {user?.id !== listing.user_id && (
         <View
           style={[
             styles.actionBar,
-            { bottom: insets.bottom + 10 }, // 20px kadar yukarı taşıdık
+            { bottom: insets.bottom + 10 },
           ]}
         >
           <CallButton phone={listing.user_phone} />
@@ -125,6 +111,19 @@ export default function ListingDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    marginBottom: 15,
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: "700",
+    color: "#333",
+    flex: 1,
+    marginRight: 10
+  },
   actionBar: {
     flexDirection: "row",
     justifyContent: "space-between",
