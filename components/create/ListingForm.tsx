@@ -123,13 +123,13 @@ export default function ListingForm({ category, navigation, onCancel }: Props) {
       nestedScrollEnabled={true} // LocationPicker içindeki scroll hatasını önler
     >
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-        <Text style={styles.header}>İlan Detayları: {category.name}</Text>
+        <Text style={styles.header}>Listing Details: {category.name}</Text>
         <Button title="Change" onPress={onCancel} color="red" />
       </View>
 
-      <TextInput style={styles.input} placeholder="Title" value={title} onChangeText={setTitle} />
-      <TextInput style={styles.input} placeholder="Price" keyboardType="numeric" value={price} onChangeText={setPrice} />
-      <TextInput style={[styles.input, { minHeight: 80 }]} placeholder="Description" multiline value={desc} onChangeText={setDesc} />
+      <TextInput style={styles.input} placeholder="Title" placeholderTextColor={"gray"} value={title} onChangeText={setTitle} />
+      <TextInput style={styles.input} placeholder="Price" placeholderTextColor={"gray"} keyboardType="numeric" value={price} onChangeText={setPrice} />
+      <TextInput style={[styles.input, { minHeight: 80 }]} placeholder="Description" placeholderTextColor={"gray"} multiline value={desc} onChangeText={setDesc} />
 
       <Button title="Add Image" onPress={pickImages} />
       <ScrollView horizontal style={{ marginVertical: 10 }}>
