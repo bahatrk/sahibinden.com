@@ -11,6 +11,17 @@ export const deleteUserAsAdmin = async (userId: number) => {
   return res.data;
 };
 
+export async function restoreUserAsAdmin(id: number) {
+  try {
+    // Calls the RESTORE endpoint (Activates)
+    await api.post(`/admin/users/${id}/restore`);
+    return { success: true };
+  } catch (err: any) {
+    console.error("Restore failed", err);
+    return { success: false, message: "Aktife alınamadı" };
+  }
+}
+
 export const fetchAllListingsAdmin = async () => {
   const res = await api.get("/admin/listings");
   return res.data;

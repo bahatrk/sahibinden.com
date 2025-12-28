@@ -8,6 +8,7 @@ export type UserEntity = {
   password_hash: string;
   phone: string;
   role: "user" | "admin";
+  is_active: boolean;
 };
 
 // Kullanıcı kaydı
