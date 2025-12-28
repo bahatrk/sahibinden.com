@@ -1,5 +1,4 @@
-export const API_KEY = "bac08a86a080a3fd988899fde351dda9";
-export const BASE_URL = "http://192.168.1.2:8000";
+export const BASE_URL = process.env.EXPO_PUBLIC_BACKEND_API_URL;
 
 
 const IMAGE_URL = BASE_URL + "/images/";
